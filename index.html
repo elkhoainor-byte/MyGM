@@ -108,41 +108,215 @@
   .empty { text-align: center; color: var(--muted); padding: 40px; }
 
   /* Noticias carrusel */
-  .news-carousel-wrapper { position: relative; overflow: hidden; border-radius: 12px; }
-  .news-track { display: flex; transition: transform 0.6s ease-in-out; }
-  .news-card {
-    min-width: 100%; background: #1f1f1f; border-radius: 12px; overflow: hidden; border: 1px solid #333;
-    display: flex; flex-direction: column;
+    /* ========== NOTICIAS (cuadrados + difuminado + flechas) ========== */
+  .news-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
   }
-  .news-image-area {
-    height: 180px; background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-    display: flex; align-items: center; justify-content: center; gap: 20px; position: relative; overflow: hidden;
+  .news-section-header h3 {
+    margin: 0;
+    color: var(--gold);
+    font-size: 18px;
   }
-  .news-image-area::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(circle at center, rgba(212,175,55,0.08), transparent 70%);
-  }
-  .avatar {
-    width: 110px; height: 110px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 32px; font-weight: 700; color: white; border: 3px solid var(--gold);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5); position: relative; z-index: 2; overflow: hidden;
-  }
-  .avatar.small { width: 85px; height: 85px; font-size: 24px; }
-  .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-  .news-content { padding: 18px 20px 20px; }
-  .news-week { font-size: 12px; color: var(--gold); margin-bottom: 6px; font-weight: 600; }
-  .news-text { font-size: 15px; line-height: 1.5; color: #eee; }
-  .news-dots { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
-  .news-dot { width: 9px; height: 9px; border-radius: 50%; background: #444; cursor: pointer; transition: 0.3s; }
-  .news-dot.active { background: var(--gold); transform: scale(1.2); }
 
-  .roster-avatar {
-    width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #444;
-    vertical-align: middle; margin-right: 8px;
+  .news-carousel-outer {
+    position: relative;
+    padding: 0 48px; /* espacio para las flechas */
   }
-  .roster-avatar.placeholder {
-    display: inline-flex; align-items: center; justify-content: center; background: #333; color: #aaa;
-    font-size: 13px; font-weight: 600;
+
+  .news-carousel-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    /* máscara de difuminado izquierda → derecha */
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 8%,
+      black 72%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 8%,
+      black 72%,
+      transparent 100%
+    );
+  }
+
+  .news-track {
+    display: flex;
+    gap: 18px;
+    transition: transform 0.55s cubic-bezier(0.25, 0.8, 0.25, 1);
+    will-change: transform;
+  }
+
+  .news-card {
+    /* CUADRADO */
+    flex: 0 0 260px;
+    width: 260px;
+    height: 260px;
+    background: #1f1f1f;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    transition: transform 0.3s, border-color 0.3s, opacity 0.3s;
+  }
+
+  .news-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+  }
+
+  .news-image-area {
+    height: 130px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .news-image-area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(212,175,55,0.1), transparent 70%);
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+    border: 2px solid var(--gold);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .avatar.small {
+    width: 56px;
+    height: 56px;
+    font-size: 16px;
+  }
+
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .news-content {
+    padding: 12px 14px 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .news-week {
+    font-size: 11px;
+    color: var(--gold);
+    margin-bottom: 6px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .news-text {
+    font-size: 13.5px;
+    line-height: 1.4;
+    color: #eee;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
+
+  .news-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .news-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #444;
+    cursor: pointer;
+    transition: 0.25s;
+  }
+
+  .news-dot.active {
+    background: var(--gold);
+    transform: scale(1.25);
+  }
+
+  /* FLECHAS */
+  .news-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #444;
+    background: rgba(26, 26, 26, 0.9);
+    color: var(--gold);
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    user-select: none;
+  }
+
+  .news-arrow:hover {
+    background: var(--gold);
+    color: #111;
+    border-color: var(--gold);
+  }
+
+  .news-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .news-arrow.prev { left: 0; }
+  .news-arrow.next { right: 0; }
+
+  @media (max-width: 700px) {
+    .news-carousel-outer { padding: 0 36px; }
+    .news-card {
+      flex: 0 0 220px;
+      width: 220px;
+      height: 220px;
+    }
+    .news-image-area { height: 110px; }
+    .avatar { width: 60px; height: 60px; font-size: 18px; }
+    .avatar.small { width: 48px; height: 48px; }
   }
 
   /* Draft */
@@ -275,8 +449,16 @@
         </div>
       </div>
       <div class="card">
-        <h3>📰 Noticias del Universo</h3>
-        <div class="news-carousel-wrapper"><div class="news-track" id="news-track"></div></div>
+        <div class="news-section-header">
+          <h3>📰 Noticias del Universo</h3>
+        </div>
+        <div class="news-carousel-outer">
+          <button class="news-arrow prev" id="news-prev" onclick="prevNews()" title="Anterior">‹</button>
+          <div class="news-carousel-wrapper">
+            <div class="news-track" id="news-track"></div>
+          </div>
+          <button class="news-arrow next" id="news-next" onclick="nextNews()" title="Siguiente">›</button>
+        </div>
         <div class="news-dots" id="news-dots"></div>
       </div>
       <div class="card">
