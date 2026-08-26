@@ -13,196 +13,70 @@
     --text: #f0f0f0;
     --muted: #888;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+  body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-  }
-
-  /* ========== PANTALLAS DE INICIO ========== */
   #start-screen {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background: linear-gradient(135deg, #0d0d0d 0%, #1a0a0a 50%, #0d0d0d 100%);
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
+    z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 20px;
   }
-
   #start-screen.hidden { display: none; }
-
   .start-logo { margin-bottom: 40px; }
-  .start-logo h1 {
-    font-size: 48px;
-    color: var(--gold);
-    letter-spacing: 3px;
-    text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-  }
-  .start-logo span {
-    display: block;
-    font-size: 18px;
-    color: var(--muted);
-    margin-top: 8px;
-    letter-spacing: 4px;
-  }
-
-  .start-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    width: 100%;
-    max-width: 420px;
-  }
-
+  .start-logo h1 { font-size: 48px; color: var(--gold); letter-spacing: 3px; text-shadow: 0 0 20px rgba(212,175,55,0.4); }
+  .start-logo span { display: block; font-size: 18px; color: var(--muted); margin-top: 8px; letter-spacing: 4px; }
+  .start-buttons { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 420px; }
   .start-btn {
-    padding: 18px 24px;
-    font-size: 17px;
-    font-weight: 600;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.25s;
-    letter-spacing: 0.5px;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    padding: 18px 24px; font-size: 17px; font-weight: 600; border: none; border-radius: 12px;
+    cursor: pointer; transition: 0.25s; text-align: left; display: flex; flex-direction: column; gap: 4px;
   }
-
   .start-btn .btn-title { font-size: 17px; }
   .start-btn .btn-sub { font-size: 13px; font-weight: 400; opacity: 0.85; }
-
   .start-btn.new { background: var(--gold); color: #111; }
   .start-btn.new:hover { background: #e0c040; transform: scale(1.02); }
-
-  .start-btn.load {
-    background: #222;
-    color: white;
-    border: 2px solid #444;
-  }
+  .start-btn.load { background: #222; color: white; border: 2px solid #444; }
   .start-btn.load:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
   .start-btn.load:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .start-btn.option {
-    background: #1a1a1a;
-    color: white;
-    border: 2px solid #333;
-  }
+  .start-btn.option { background: #1a1a1a; color: white; border: 2px solid #333; }
   .start-btn.option:hover { border-color: var(--gold); background: #222; }
-
-  .start-btn.back {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid #333;
-    text-align: center;
-    margin-top: 10px;
-  }
+  .start-btn.back { background: transparent; color: var(--muted); border: 1px solid #333; text-align: center; margin-top: 10px; }
   .start-btn.back:hover { color: white; border-color: #666; }
-
   .start-footer { margin-top: 50px; font-size: 13px; color: #555; }
-
   .start-panel { display: none; width: 100%; max-width: 420px; }
   .start-panel.active { display: block; }
 
-  /* ========== SIDEBAR & MAIN ========== */
   .sidebar {
-    width: 260px;
-    background: #111;
-    border-right: 1px solid #333;
-    padding: 20px 0;
-    display: flex;
-    flex-direction: column;
+    width: 260px; background: #111; border-right: 1px solid #333; padding: 20px 0;
+    display: flex; flex-direction: column;
   }
-
-  .logo {
-    text-align: center;
-    padding: 10px 20px 25px;
-    border-bottom: 1px solid #333;
-    margin-bottom: 20px;
-  }
+  .logo { text-align: center; padding: 10px 20px 25px; border-bottom: 1px solid #333; margin-bottom: 20px; }
   .logo h1 { font-size: 22px; color: var(--gold); letter-spacing: 1px; }
   .logo span { font-size: 12px; color: var(--muted); display: block; margin-top: 4px; }
-
   .nav-btn {
-    padding: 14px 25px;
-    background: none;
-    border: none;
-    color: var(--text);
-    text-align: left;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    padding: 14px 25px; background: none; border: none; color: var(--text); text-align: left;
+    font-size: 15px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 12px;
   }
-  .nav-btn:hover, .nav-btn.active {
-    background: #222;
-    color: var(--gold);
-    border-left: 4px solid var(--gold);
-  }
+  .nav-btn:hover, .nav-btn.active { background: #222; color: var(--gold); border-left: 4px solid var(--gold); }
 
-  .main {
-    flex: 1;
-    padding: 30px;
-    overflow-y: auto;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-  }
+  .main { flex: 1; padding: 30px; overflow-y: auto; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
   .header h2 { font-size: 28px; color: var(--gold); }
+  .week-info { background: var(--card); padding: 8px 16px; border-radius: 20px; font-size: 14px; border: 1px solid #333; }
 
-  .week-info {
-    background: var(--card);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 14px;
-    border: 1px solid #333;
-  }
-
-  .card {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 1px solid #2a2a2a;
-  }
+  .card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #2a2a2a; }
   .card h3 { margin-bottom: 15px; color: var(--gold); font-size: 18px; }
 
   input, select, textarea, button {
-    background: #222;
-    border: 1px solid #444;
-    color: white;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 14px;
+    background: #222; border: 1px solid #444; color: white; padding: 10px 14px; border-radius: 8px; font-size: 14px;
   }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); }
-
-  .btn { background: var(--gold); color: #111; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; }
+  input:focus, select:focus { outline: none; border-color: var(--gold); }
+  .btn { background: var(--gold); color: #111; font-weight: 600; border: none; cursor: pointer; }
   .btn:hover { background: #e0c040; }
   .btn-red { background: var(--red); color: white; }
   .btn-red:hover { background: #e03050; }
-  .btn-sm { padding: 5px 10px; font-size: 12px; }
 
-  .form-row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-  }
+  .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
   .form-row > * { flex: 1; min-width: 140px; }
 
   table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -210,26 +84,14 @@
   th { color: var(--gold); font-weight: 600; }
   tr:hover { background: #222; }
 
-  .badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-  }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
   .raw { background: #c41e3a; }
   .smackdown { background: #1e90ff; }
   .nxt { background: #ffd700; color: #111; }
   .free { background: #555; }
 
   .actions button { padding: 5px 10px; font-size: 12px; margin-right: 5px; }
-
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 900px) {
     body { flex-direction: column; }
     .sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
@@ -241,193 +103,72 @@
   .section.active { display: block; }
 
   .match-card {
-    background: #222;
-    border-left: 4px solid var(--gold);
-    padding: 15px;
-    margin-bottom: 12px;
-    border-radius: 0 8px 8px 0;
+    background: #222; border-left: 4px solid var(--gold); padding: 15px; margin-bottom: 12px; border-radius: 0 8px 8px 0;
   }
-
   .empty { text-align: center; color: var(--muted); padding: 40px; }
 
-  /* ========== NOTICIAS CARRUSEL ========== */
-  .news-carousel-wrapper {
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px;
-  }
-
-  .news-track {
-    display: flex;
-    transition: transform 0.6s ease-in-out;
-  }
-
+  /* Noticias carrusel */
+  .news-carousel-wrapper { position: relative; overflow: hidden; border-radius: 12px; }
+  .news-track { display: flex; transition: transform 0.6s ease-in-out; }
   .news-card {
-    min-width: 100%;
-    background: #1f1f1f;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #333;
-    display: flex;
-    flex-direction: column;
+    min-width: 100%; background: #1f1f1f; border-radius: 12px; overflow: hidden; border: 1px solid #333;
+    display: flex; flex-direction: column;
   }
-
   .news-image-area {
-    height: 180px;
-    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    position: relative;
-    overflow: hidden;
+    height: 180px; background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+    display: flex; align-items: center; justify-content: center; gap: 20px; position: relative; overflow: hidden;
   }
-
   .news-image-area::before {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: radial-gradient(circle at center, rgba(212,175,55,0.08), transparent 70%);
   }
-
   .avatar {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    font-weight: 700;
-    color: white;
-    border: 3px solid var(--gold);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    position: relative;
-    z-index: 2;
-    object-fit: cover;
-    background-size: cover;
-    background-position: center;
+    width: 110px; height: 110px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 700; color: white; border: 3px solid var(--gold);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); position: relative; z-index: 2; overflow: hidden;
   }
+  .avatar.small { width: 85px; height: 85px; font-size: 24px; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .news-content { padding: 18px 20px 20px; }
+  .news-week { font-size: 12px; color: var(--gold); margin-bottom: 6px; font-weight: 600; }
+  .news-text { font-size: 15px; line-height: 1.5; color: #eee; }
+  .news-dots { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+  .news-dot { width: 9px; height: 9px; border-radius: 50%; background: #444; cursor: pointer; transition: 0.3s; }
+  .news-dot.active { background: var(--gold); transform: scale(1.2); }
 
-  .avatar.small {
-    width: 85px;
-    height: 85px;
-    font-size: 24px;
-  }
-
-  .avatar img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  .news-content {
-    padding: 18px 20px 20px;
-  }
-
-  .news-week {
-    font-size: 12px;
-    color: var(--gold);
-    margin-bottom: 6px;
-    font-weight: 600;
-  }
-
-  .news-text {
-    font-size: 15px;
-    line-height: 1.5;
-    color: #eee;
-  }
-
-  .news-dots {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 14px;
-  }
-
-  .news-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #444;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-
-  .news-dot.active {
-    background: var(--gold);
-    transform: scale(1.2);
-  }
-
-  /* Mini avatar en tabla de roster */
   .roster-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #444;
-    vertical-align: middle;
-    margin-right: 8px;
+    width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #444;
+    vertical-align: middle; margin-right: 8px;
   }
-
   .roster-avatar.placeholder {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #333;
-    color: #aaa;
-    font-size: 13px;
-    font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center; background: #333; color: #aaa;
+    font-size: 13px; font-weight: 600;
   }
 
-  /* DRAFT */
+  /* Draft */
   #draft-screen {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.95);
-    z-index: 1000;
-    overflow-y: auto;
-    padding: 40px 20px;
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000;
+    overflow-y: auto; padding: 40px 20px;
   }
   #draft-screen.active { display: block; }
-
   .draft-container { max-width: 1100px; margin: 0 auto; }
   .draft-header { text-align: center; margin-bottom: 30px; }
   .draft-header h2 { font-size: 32px; color: var(--gold); margin-bottom: 8px; }
   .draft-pick-info { font-size: 18px; margin-bottom: 25px; text-align: center; }
   .draft-pick-info strong { color: var(--gold); }
-
-  .draft-grid {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 25px;
-  }
+  .draft-grid { display: grid; grid-template-columns: 1fr 300px; gap: 25px; }
   @media (max-width: 800px) { .draft-grid { grid-template-columns: 1fr; } }
-
   .wrestler-pool {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
-    max-height: 60vh;
-    overflow-y: auto;
-    padding-right: 8px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;
+    max-height: 60vh; overflow-y: auto; padding-right: 8px;
   }
-
   .wrestler-card {
-    background: #222;
-    border: 1px solid #444;
-    border-radius: 10px;
-    padding: 12px;
-    cursor: pointer;
-    transition: 0.2s;
-    text-align: center;
+    background: #222; border: 1px solid #444; border-radius: 10px; padding: 12px; cursor: pointer;
+    transition: 0.2s; text-align: center;
   }
   .wrestler-card:hover { border-color: var(--gold); transform: translateY(-2px); }
   .wrestler-card .name { font-weight: 600; margin-bottom: 4px; }
   .wrestler-card .ovr { color: var(--gold); font-size: 13px; }
-
   .brand-columns { display: flex; flex-direction: column; gap: 15px; }
   .brand-box { background: #1a1a1a; border-radius: 10px; padding: 12px; border: 1px solid #333; }
   .brand-box h4 { margin-bottom: 8px; font-size: 15px; }
@@ -435,37 +176,28 @@
   .brand-box.smackdown h4 { color: #1e90ff; }
   .brand-box.nxt h4 { color: #ffd700; }
   .brand-box.free h4 { color: #aaa; }
-
   .brand-list { font-size: 13px; color: #ccc; min-height: 40px; }
   .brand-list div { padding: 3px 0; border-bottom: 1px solid #333; }
 
   #app { display: none; width: 100%; }
   #app.visible { display: flex; }
-
-  /* Input file oculto */
   .hidden-file { display: none; }
 </style>
 </head>
 <body>
 
-<!-- PANTALLA DE INICIO -->
+<!-- START SCREEN -->
 <div id="start-screen">
   <div class="start-logo">
     <h1>WWE 2K26</h1>
     <span>MODO GM • UNIVERSO</span>
   </div>
-
   <div class="start-panel active" id="panel-main">
     <div class="start-buttons">
-      <button class="start-btn new" onclick="mostrarOpcionesNueva()">
-        <span class="btn-title">Nueva Partida</span>
-      </button>
-      <button class="start-btn load" id="btn-cargar" onclick="cargarPartida()" disabled>
-        <span class="btn-title">Cargar Partida</span>
-      </button>
+      <button class="start-btn new" onclick="mostrarOpcionesNueva()"><span class="btn-title">Nueva Partida</span></button>
+      <button class="start-btn load" id="btn-cargar" onclick="cargarPartida()" disabled><span class="btn-title">Cargar Partida</span></button>
     </div>
   </div>
-
   <div class="start-panel" id="panel-nueva">
     <div class="start-buttons">
       <button class="start-btn option" onclick="iniciarRosterDefault()">
@@ -483,8 +215,7 @@
       <button class="start-btn back" onclick="volverPanelMain()">← Volver</button>
     </div>
   </div>
-
-  <div class="start-footer">Los datos se guardan automáticamente en tu navegador</div>
+  <div class="start-footer">Las imágenes se guardan en IndexedDB (mucho más espacio que localStorage)</div>
 </div>
 
 <!-- DRAFT -->
@@ -492,33 +223,19 @@
   <div class="draft-container">
     <div class="draft-header">
       <h2>WWE 2K26 - Draft de Marcas</h2>
-      <p>Asigna a cada superestrella su marca. ¡El futuro del Universo empieza aquí!</p>
+      <p>Asigna a cada superestrella su marca.</p>
     </div>
-    <div class="draft-pick-info">
-      Turno de: <strong id="current-brand">Raw</strong> • Pick #<span id="pick-number">1</span>
-    </div>
+    <div class="draft-pick-info">Turno de: <strong id="current-brand">Raw</strong> • Pick #<span id="pick-number">1</span></div>
     <div class="draft-grid">
       <div>
-        <h3 style="margin-bottom:15px; color:var(--gold)">Pool de Luchadores</h3>
+        <h3 style="margin-bottom:15px;color:var(--gold)">Pool de Luchadores</h3>
         <div class="wrestler-pool" id="draft-pool"></div>
       </div>
       <div class="brand-columns">
-        <div class="brand-box raw">
-          <h4>Raw (<span id="count-draft-raw">0</span>)</h4>
-          <div class="brand-list" id="list-raw"></div>
-        </div>
-        <div class="brand-box smackdown">
-          <h4>SmackDown (<span id="count-draft-sd">0</span>)</h4>
-          <div class="brand-list" id="list-sd"></div>
-        </div>
-        <div class="brand-box nxt">
-          <h4>NXT (<span id="count-draft-nxt">0</span>)</h4>
-          <div class="brand-list" id="list-nxt"></div>
-        </div>
-        <div class="brand-box free">
-          <h4>Agentes Libres (<span id="count-draft-free">0</span>)</h4>
-          <div class="brand-list" id="list-free"></div>
-        </div>
+        <div class="brand-box raw"><h4>Raw (<span id="count-draft-raw">0</span>)</h4><div class="brand-list" id="list-raw"></div></div>
+        <div class="brand-box smackdown"><h4>SmackDown (<span id="count-draft-sd">0</span>)</h4><div class="brand-list" id="list-sd"></div></div>
+        <div class="brand-box nxt"><h4>NXT (<span id="count-draft-nxt">0</span>)</h4><div class="brand-list" id="list-nxt"></div></div>
+        <div class="brand-box free"><h4>Agentes Libres (<span id="count-draft-free">0</span>)</h4><div class="brand-list" id="list-free"></div></div>
         <button class="btn" style="margin-top:10px" onclick="finishDraft()">Finalizar Draft</button>
         <button class="btn-red" onclick="randomDraft()">Draft Aleatorio Completo</button>
       </div>
@@ -529,16 +246,13 @@
 <!-- APP -->
 <div id="app">
   <aside class="sidebar">
-    <div class="logo">
-      <h1>WWE 2K26</h1>
-      <span>MODO GM • UNIVERSO</span>
-    </div>
+    <div class="logo"><h1>WWE 2K26</h1><span>MODO GM • UNIVERSO</span></div>
     <button class="nav-btn active" onclick="showSection('dashboard')">🏠 Dashboard</button>
     <button class="nav-btn" onclick="showSection('roster')">👥 Roster</button>
     <button class="nav-btn" onclick="showSection('booker')">📝 Booking</button>
     <button class="nav-btn" onclick="showSection('titles')">🏆 Campeonatos</button>
     <button class="nav-btn" onclick="showSection('shows')">📅 Shows</button>
-    <button class="nav-btn" onclick="volverAlMenu()" style="margin-top:auto; color:#ff6b6b;">← Menú Principal</button>
+    <button class="nav-btn" onclick="volverAlMenu()" style="margin-top:auto;color:#ff6b6b;">← Menú Principal</button>
   </aside>
 
   <main class="main">
@@ -560,15 +274,11 @@
           <div id="next-show">Cargando...</div>
         </div>
       </div>
-
       <div class="card">
         <h3>📰 Noticias del Universo</h3>
-        <div class="news-carousel-wrapper">
-          <div class="news-track" id="news-track"></div>
-        </div>
+        <div class="news-carousel-wrapper"><div class="news-track" id="news-track"></div></div>
         <div class="news-dots" id="news-dots"></div>
       </div>
-
       <div class="card">
         <h3>Últimos Combates Bookeados</h3>
         <div id="recent-matches"></div>
@@ -595,7 +305,6 @@
           <button class="btn" onclick="addWrestler()">Añadir</button>
         </div>
       </div>
-
       <div class="card">
         <h3>Roster Actual</h3>
         <table>
@@ -682,170 +391,159 @@
   </main>
 </div>
 
-<!-- Input oculto para subir imágenes -->
 <input type="file" id="image-upload" class="hidden-file" accept="image/*">
 
 <script>
+  // ==================== INDEXEDDB (modelo del Universo Tracker) ====================
+  let db = null;
+  const DB_NAME = "WWE2K26_GM_Images";
+  const DB_VERSION = 1;
+
+  const request = indexedDB.open(DB_NAME, DB_VERSION);
+  request.onupgradeneeded = (e) => {
+    db = e.target.result;
+    if (!db.objectStoreNames.contains("images")) {
+      db.createObjectStore("images");
+    }
+  };
+  request.onsuccess = (e) => {
+    db = e.target.result;
+    // Si ya hay datos cargados, re-renderizar para mostrar imágenes
+    if (data) renderAll();
+  };
+  request.onerror = () => console.error("Error abriendo IndexedDB");
+
+  function saveImageToDB(key, base64Data) {
+    return new Promise((resolve) => {
+      if (!db) { resolve(); return; }
+      const tx = db.transaction("images", "readwrite");
+      tx.objectStore("images").put(base64Data, key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+    });
+  }
+
+  function getImageFromDB(key) {
+    return new Promise((resolve) => {
+      if (!db) { resolve(null); return; }
+      const tx = db.transaction("images", "readonly");
+      const req = tx.objectStore("images").get(key);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+  }
+
+  function deleteImageFromDB(key) {
+    if (!db) return;
+    const tx = db.transaction("images", "readwrite");
+    tx.objectStore("images").delete(key);
+  }
+
+  function clearIndexedDB() {
+    return new Promise((resolve) => {
+      if (!db) { resolve(); return; }
+      const tx = db.transaction("images", "readwrite");
+      tx.objectStore("images").clear();
+      tx.oncomplete = () => resolve();
+    });
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) { resolve(null); return; }
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (err) => reject(err);
+    });
+  }
+
+  // ==================== DATOS ====================
   const defaultWrestlers = [
-    { id: 1, name: "AJ Lee", brand: "Raw", alignment: "Face", ovr: 87, image: null },
-    { id: 2, name: "AJ Styles", brand: "Raw", alignment: "Face", ovr: 88, image: null },
-    { id: 3, name: "Akira Tozawa", brand: "Raw", alignment: "Face", ovr: 68, image: null },
-    { id: 4, name: "Alba Fyre", brand: "SmackDown", alignment: "Face", ovr: 77, image: null },
-    { id: 5, name: "Cody Rhodes", brand: "Raw", alignment: "Face", ovr: 95, image: null },
-    { id: 6, name: "Roman Reigns", brand: "SmackDown", alignment: "Heel", ovr: 95, image: null },
-    { id: 7, name: "Seth Rollins", brand: "Raw", alignment: "Face", ovr: 94, image: null },
-    { id: 8, name: "Gunther", brand: "Raw", alignment: "Heel", ovr: 93, image: null },
-    { id: 9, name: "CM Punk", brand: "Raw", alignment: "Face", ovr: 91, image: null },
-    { id: 10, name: "Rhea Ripley", brand: "Raw", alignment: "Heel", ovr: 93, image: null },
-    { id: 11, name: "LA Knight", brand: "SmackDown", alignment: "Face", ovr: 89, image: null },
-    { id: 12, name: "Iyo Sky", brand: "SmackDown", alignment: "Heel", ovr: 90, image: null },
-    { id: 13, name: "Trick Williams", brand: "NXT", alignment: "Face", ovr: 87, image: null },
-    { id: 14, name: "Oba Femi", brand: "NXT", alignment: "Heel", ovr: 88, image: null }
+    { id: 1, name: "AJ Lee", brand: "Raw", alignment: "Face", ovr: 87 },
+    { id: 2, name: "AJ Styles", brand: "Raw", alignment: "Face", ovr: 88 },
+    { id: 3, name: "Akira Tozawa", brand: "Raw", alignment: "Face", ovr: 68 },
+    { id: 4, name: "Alba Fyre", brand: "SmackDown", alignment: "Face", ovr: 77 },
+    { id: 5, name: "Cody Rhodes", brand: "Raw", alignment: "Face", ovr: 95 },
+    { id: 6, name: "Roman Reigns", brand: "SmackDown", alignment: "Heel", ovr: 95 },
+    { id: 7, name: "Seth Rollins", brand: "Raw", alignment: "Face", ovr: 94 },
+    { id: 8, name: "Gunther", brand: "Raw", alignment: "Heel", ovr: 93 },
+    { id: 9, name: "CM Punk", brand: "Raw", alignment: "Face", ovr: 91 },
+    { id: 10, name: "Rhea Ripley", brand: "Raw", alignment: "Heel", ovr: 93 },
+    { id: 11, name: "LA Knight", brand: "SmackDown", alignment: "Face", ovr: 89 },
+    { id: 12, name: "Iyo Sky", brand: "SmackDown", alignment: "Heel", ovr: 90 },
+    { id: 13, name: "Trick Williams", brand: "NXT", alignment: "Face", ovr: 87 },
+    { id: 14, name: "Oba Femi", brand: "NXT", alignment: "Heel", ovr: 88 }
   ];
 
   let data = null;
   let newsIndex = 0;
   let newsInterval = null;
   let currentUploadId = null;
+  let imageCache = {}; // cache en memoria para no pedir a IndexedDB cada vez
 
-  // ===== AVATARES =====
+  // ==================== AVATARES ====================
   function getAvatarColor(name) {
-    const colors = ['#c41e3a', '#1e90ff', '#d4af37', '#8e44ad', '#27ae60', '#e67e22', '#e74c3c', '#3498db'];
+    const colors = ['#c41e3a','#1e90ff','#d4af37','#8e44ad','#27ae60','#e67e22','#e74c3c','#3498db'];
     let hash = 0;
     for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
     return colors[Math.abs(hash) % colors.length];
   }
-
   function getInitials(name) {
     return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
   }
-
   function extractNames(text) {
     const names = [];
     if (!data) return names;
-    data.wrestlers.forEach(w => {
-      if (text.includes(w.name)) names.push(w.name);
-    });
-    const fixed = ["Cody Rhodes", "Gunther", "Rhea Ripley", "LA Knight", "Trick Williams", "Roman Reigns", "Seth Rollins", "CM Punk"];
+    data.wrestlers.forEach(w => { if (text.includes(w.name)) names.push(w.name); });
+    const fixed = ["Cody Rhodes","Gunther","Rhea Ripley","LA Knight","Trick Williams","Roman Reigns","Seth Rollins","CM Punk"];
     fixed.forEach(n => { if (text.includes(n) && !names.includes(n)) names.push(n); });
     return names.slice(0, 2);
   }
-
   function getWrestlerByName(name) {
     return data?.wrestlers.find(w => w.name === name) || null;
   }
 
-// ===== GESTIÓN DE IMÁGENES =====
-let currentUploadId = null;
-
-function uploadImage(id) {
-  currentUploadId = id;
-  document.getElementById('image-upload').click();
-}
-
-function setImageURL(id) {
-  const wrestler = data.wrestlers.find(w => w.id === id);
-  if (!wrestler) return;
-
-  const url = prompt("Pega la URL de la imagen (Imgur, GitHub, etc.):", wrestler.image && wrestler.image.startsWith('http') ? wrestler.image : '');
-  
-  if (url === null) return; // canceló
-
-  if (url.trim() === '') {
-    wrestler.image = null;
-  } else {
-    wrestler.image = url.trim();
+  // ==================== SUBIDA DE IMÁGENES (IndexedDB) ====================
+  function uploadImage(id) {
+    currentUploadId = id;
+    document.getElementById('image-upload').click();
   }
 
-  try {
-    save();
-    renderAll();
-    alert(url.trim() ? `✅ URL de ${wrestler.name} guardada` : `Foto eliminada`);
-  } catch (e) {
-    alert('❌ Error al guardar. El almacenamiento está lleno o hay un problema.');
-    console.error(e);
-  }
-}
+  document.getElementById('image-upload').addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file || !currentUploadId) return;
 
-function removeImage(id) {
-  const wrestler = data.wrestlers.find(w => w.id === id);
-  if (!wrestler) return;
-  if (!confirm(`¿Quitar la foto de ${wrestler.name}?`)) return;
+    if (!file.type.startsWith('image/')) {
+      alert('Selecciona un archivo de imagen válido.');
+      e.target.value = '';
+      return;
+    }
 
-  wrestler.image = null;
-  save();
-  renderAll();
-}
-
-// Subida de archivo con compresión fuerte
-document.getElementById('image-upload').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (!file || !currentUploadId) return;
-
-  if (!file.type.startsWith('image/')) {
-    alert('Solo se permiten archivos de imagen.');
-    e.target.value = '';
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = function(event) {
-    const img = new Image();
-    img.onload = function() {
-      // Compresión agresiva
-      const canvas = document.createElement('canvas');
-      const MAX = 350; // más pequeño = menos espacio
-      let w = img.width;
-      let h = img.height;
-
-      if (w > h) {
-        if (w > MAX) { h = h * (MAX / w); w = MAX; }
-      } else {
-        if (h > MAX) { w = w * (MAX / h); h = MAX; }
-      }
-
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, w, h);
-
-      // Calidad baja para ocupar poco
-      const compressed = canvas.toDataURL('image/jpeg', 0.6);
+    try {
+      const base64 = await fileToBase64(file);
+      const key = 'wrestler_' + currentUploadId;
+      await saveImageToDB(key, base64);
+      imageCache[key] = base64; // actualizar cache
 
       const wrestler = data.wrestlers.find(w => w.id === currentUploadId);
       if (wrestler) {
-        // Comprobar tamaño aproximado
-        const sizeKB = Math.round(compressed.length * 0.75 / 1024);
-        if (sizeKB > 400) {
-          if (!confirm(`La imagen comprimida pesa ~${sizeKB} KB.\n¿Seguro que quieres guardarla? (puede llenar el almacenamiento)`)) {
-            currentUploadId = null;
-            e.target.value = '';
-            return;
-          }
-        }
-
-        wrestler.image = compressed;
-
-        try {
-          save();
-          renderAll();
-          alert(`✅ Imagen de ${wrestler.name} guardada (${sizeKB} KB)`);
-        } catch (err) {
-          wrestler.image = null;
-          alert('❌ No se pudo guardar.\n\nEl almacenamiento del navegador está lleno.\nUsa mejor la opción "Pegar URL".');
-          console.error(err);
-        }
+        // Solo marcamos que tiene imagen (opcional)
+        wrestler.hasImage = true;
+        save();
+        renderAll();
+        alert(`✅ Imagen de ${wrestler.name} guardada correctamente (IndexedDB)`);
       }
+    } catch (err) {
+      console.error(err);
+      alert('❌ Error al guardar la imagen.');
+    }
 
-      currentUploadId = null;
-      e.target.value = '';
-    };
-    img.src = event.target.result;
-  };
-  reader.readAsDataURL(file);
-});
-  
-  // ===== INICIO =====
+    currentUploadId = null;
+    e.target.value = '';
+  });
+
+  // ==================== INICIO ====================
   function checkSavedGame() {
     const saved = localStorage.getItem('wwe2k26_gm');
     const btn = document.getElementById('btn-cargar');
@@ -862,7 +560,6 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     document.getElementById('panel-main').classList.remove('active');
     document.getElementById('panel-nueva').classList.add('active');
   }
-
   function volverPanelMain() {
     document.getElementById('panel-nueva').classList.remove('active');
     document.getElementById('panel-main').classList.add('active');
@@ -897,7 +594,7 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     addNews(`<strong>Trick Williams</strong> se mantiene como <strong>NXT Champion</strong>.`);
   }
 
-  function iniciarRosterDefault() {
+  async function iniciarRosterDefault() {
     data = crearDatosBase(false);
     generarNoticiasCampeones();
     addNews("El Universo comienza con el roster oficial de WWE 2K26 sin modificaciones.");
@@ -907,10 +604,10 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     renderAll();
   }
 
-  function iniciarRosterPersonalizado() {
+  async function iniciarRosterPersonalizado() {
     data = crearDatosBase(true);
     generarNoticiasCampeones();
-    addNews("Modo Roster Personalizado activado. Puedes modificar libremente el plantel antes de empezar.");
+    addNews("Modo Roster Personalizado activado.");
     save();
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('app').classList.add('visible');
@@ -931,8 +628,6 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     const saved = localStorage.getItem('wwe2k26_gm');
     if (!saved) return alert("No hay ninguna partida guardada.");
     data = JSON.parse(saved);
-    // Asegurar que todos tengan la propiedad image
-    data.wrestlers.forEach(w => { if (w.image === undefined) w.image = null; });
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('app').classList.add('visible');
     renderAll();
@@ -950,8 +645,8 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     }
   }
 
-  // ===== DRAFT =====
-  let draftOrder = ["Raw", "SmackDown", "NXT", "Raw", "SmackDown", "NXT"];
+  // ==================== DRAFT ====================
+  let draftOrder = ["Raw","SmackDown","NXT","Raw","SmackDown","NXT"];
   let currentPick = 0;
 
   function openDraft() {
@@ -965,7 +660,6 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     const brand = draftOrder[currentPick % draftOrder.length];
     document.getElementById('current-brand').textContent = brand;
     document.getElementById('pick-number').textContent = currentPick + 1;
-
     const pool = document.getElementById('draft-pool');
     pool.innerHTML = '';
     data.wrestlers.filter(w => w.brand === "Free Agent").sort((a,b) => b.ovr - a.ovr).forEach(w => {
@@ -975,11 +669,10 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
           <div class="ovr">OVR ${w.ovr} • ${w.alignment}</div>
         </div>`;
     });
-
-    updateBrandList("Raw", "list-raw", "count-draft-raw");
-    updateBrandList("SmackDown", "list-sd", "count-draft-sd");
-    updateBrandList("NXT", "list-nxt", "count-draft-nxt");
-    updateBrandList("Free Agent", "list-free", "count-draft-free");
+    updateBrandList("Raw","list-raw","count-draft-raw");
+    updateBrandList("SmackDown","list-sd","count-draft-sd");
+    updateBrandList("NXT","list-nxt","count-draft-nxt");
+    updateBrandList("Free Agent","list-free","count-draft-free");
   }
 
   function updateBrandList(brand, listId, countId) {
@@ -1000,46 +693,36 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
 
   function randomDraft() {
     if (!confirm("¿Asignar todas las superestrellas de forma aleatoria?")) return;
-    const brands = ["Raw", "SmackDown", "NXT"];
-    data.wrestlers.forEach(w => w.brand = brands[Math.floor(Math.random() * brands.length)]);
+    const brands = ["Raw","SmackDown","NXT"];
+    data.wrestlers.forEach(w => w.brand = brands[Math.floor(Math.random()*brands.length)]);
     finishDraft();
   }
 
   function finishDraft() {
     data.draftCompleted = true;
-    addNews("¡El Draft de WWE 2K26 ha finalizado! Las marcas ya tienen sus rostros definidos.");
-    addNews(`<strong>Cody Rhodes</strong> es el actual <strong>WWE Champion</strong> y liderará la división mundial.`);
-    addNews(`<strong>Gunther</strong> reina como <strong>World Heavyweight Champion</strong> en Raw.`);
-    addNews(`<strong>Rhea Ripley</strong> defiende el <strong>Women's World Championship</strong> con mano de hierro.`);
-    addNews(`<strong>LA Knight</strong> es el <strong>United States Champion</strong> en SmackDown. YEAH!`);
+    addNews("¡El Draft de WWE 2K26 ha finalizado!");
+    addNews(`<strong>Cody Rhodes</strong> es el actual <strong>WWE Champion</strong>.`);
+    addNews(`<strong>Gunther</strong> reina como <strong>World Heavyweight Champion</strong>.`);
+    addNews(`<strong>Rhea Ripley</strong> defiende el <strong>Women's World Championship</strong>.`);
+    addNews(`<strong>LA Knight</strong> es el <strong>United States Champion</strong>. YEAH!`);
     addNews(`<strong>Trick Williams</strong> se mantiene como <strong>NXT Champion</strong>.`);
-
-    const counts = { Raw: 0, SmackDown: 0, NXT: 0 };
+    const counts = { Raw:0, SmackDown:0, NXT:0 };
     data.wrestlers.forEach(w => { if (counts[w.brand] !== undefined) counts[w.brand]++; });
     addNews(`Resultado del Draft → Raw: ${counts.Raw} | SmackDown: ${counts.SmackDown} | NXT: ${counts.NXT}`);
-
     save();
     document.getElementById('draft-screen').classList.remove('active');
     document.getElementById('app').classList.add('visible');
     renderAll();
-    alert("¡Draft completado! El Universo está listo.");
+    alert("¡Draft completado!");
   }
 
-  // ===== UTILIDADES =====
+  // ==================== UTILIDADES ====================
   function save() {
-  try {
     localStorage.setItem('wwe2k26_gm', JSON.stringify(data));
-  } catch (e) {
-    console.error('Error al guardar:', e);
-    if (e.name === 'QuotaExceededError') {
-      throw new Error('Almacenamiento lleno');
-    }
-    throw e;
   }
-}
 
   function addNews(text) {
-    data.news.unshift({ week: data.week, text: text });
+    data.news.unshift({ week: data.week, text });
     if (data.news.length > 40) data.news = data.news.slice(0, 40);
     save();
   }
@@ -1049,24 +732,16 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     if (event && event.target) event.target.classList.add('active');
-
-    const titles = {
-      dashboard: 'Dashboard',
-      roster: 'Gestión de Roster',
-      booker: 'Booking de Combates',
-      titles: 'Campeonatos',
-      shows: 'Calendario de Shows'
-    };
+    const titles = { dashboard:'Dashboard', roster:'Gestión de Roster', booker:'Booking de Combates', titles:'Campeonatos', shows:'Calendario de Shows' };
     document.getElementById('section-title').textContent = titles[id];
     renderAll();
   }
 
-  // ===== RENDER NOTICIAS =====
-  function renderNewsCarousel() {
+  // ==================== RENDER NOTICIAS ====================
+  async function renderNewsCarousel() {
     const track = document.getElementById('news-track');
     const dotsContainer = document.getElementById('news-dots');
     if (!track || !data) return;
-
     clearInterval(newsInterval);
 
     if (data.news.length === 0) {
@@ -1076,45 +751,52 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     }
 
     const newsToShow = data.news.slice(0, 12);
+    let html = '';
 
-    track.innerHTML = newsToShow.map(n => {
+    for (const n of newsToShow) {
       const names = extractNames(n.text);
       let avatarsHTML = '';
 
       if (names.length === 0) {
         avatarsHTML = `<div class="avatar" style="background:#444">WWE</div>`;
       } else {
-        names.forEach((name) => {
+        for (const name of names) {
           const wrestler = getWrestlerByName(name);
           const sizeClass = names.length > 1 ? 'small' : '';
-          
-          if (wrestler && wrestler.image) {
-            avatarsHTML += `<div class="avatar ${sizeClass}"><img src="${wrestler.image}" alt="${name}"></div>`;
+          let imgSrc = null;
+          if (wrestler) {
+            const key = 'wrestler_' + wrestler.id;
+            if (imageCache[key]) imgSrc = imageCache[key];
+            else {
+              imgSrc = await getImageFromDB(key);
+              if (imgSrc) imageCache[key] = imgSrc;
+            }
+          }
+          if (imgSrc) {
+            avatarsHTML += `<div class="avatar ${sizeClass}"><img src="${imgSrc}" alt="${name}"></div>`;
           } else {
             avatarsHTML += `<div class="avatar ${sizeClass}" style="background:${getAvatarColor(name)}">${getInitials(name)}</div>`;
           }
-        });
+        }
       }
 
-      return `
+      html += `
         <div class="news-card">
-          <div class="news-image-area">
-            ${avatarsHTML}
-          </div>
+          <div class="news-image-area">${avatarsHTML}</div>
           <div class="news-content">
             <div class="news-week">SEMANA ${n.week}</div>
             <div class="news-text">${n.text}</div>
           </div>
         </div>`;
-    }).join('');
+    }
 
-    dotsContainer.innerHTML = newsToShow.map((_, i) => 
-      `<div class="news-dot ${i === 0 ? 'active' : ''}" onclick="goToNews(${i})"></div>`
+    track.innerHTML = html;
+    dotsContainer.innerHTML = newsToShow.map((_, i) =>
+      `<div class="news-dot ${i===0?'active':''}" onclick="goToNews(${i})"></div>`
     ).join('');
 
     newsIndex = 0;
     updateNewsPosition();
-
     newsInterval = setInterval(() => {
       newsIndex = (newsIndex + 1) % newsToShow.length;
       updateNewsPosition();
@@ -1125,9 +807,7 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     const track = document.getElementById('news-track');
     if (!track) return;
     track.style.transform = `translateX(-${newsIndex * 100}%)`;
-    document.querySelectorAll('.news-dot').forEach((dot, i) => {
-      dot.classList.toggle('active', i === newsIndex);
-    });
+    document.querySelectorAll('.news-dot').forEach((dot, i) => dot.classList.toggle('active', i === newsIndex));
   }
 
   function goToNews(index) {
@@ -1135,12 +815,12 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     updateNewsPosition();
     clearInterval(newsInterval);
     newsInterval = setInterval(() => {
-      newsIndex = (newsIndex + 1) % data.news.slice(0, 12).length;
+      newsIndex = (newsIndex + 1) % Math.min(data.news.length, 12);
       updateNewsPosition();
     }, 7000);
   }
 
-  // ===== RENDER GENERAL =====
+  // ==================== RENDER GENERAL ====================
   function renderAll() {
     if (!data) return;
     document.getElementById('week-num').textContent = data.week;
@@ -1152,15 +832,23 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     renderDashboard();
   }
 
-  function renderRoster() {
+  async function renderRoster() {
     const tbody = document.getElementById('roster-table');
     tbody.innerHTML = '';
-    data.wrestlers.sort((a,b) => b.ovr - a.ovr).forEach(w => {
+    const sorted = [...data.wrestlers].sort((a,b) => b.ovr - a.ovr);
+
+    for (const w of sorted) {
       const brandClass = w.brand === 'Raw' ? 'raw' : w.brand === 'SmackDown' ? 'smackdown' : w.brand === 'NXT' ? 'nxt' : 'free';
-      
+      const key = 'wrestler_' + w.id;
+      let imgSrc = imageCache[key] || null;
+      if (!imgSrc) {
+        imgSrc = await getImageFromDB(key);
+        if (imgSrc) imageCache[key] = imgSrc;
+      }
+
       let avatarHTML = '';
-      if (w.image) {
-        avatarHTML = `<img src="${w.image}" class="roster-avatar" alt="${w.name}">`;
+      if (imgSrc) {
+        avatarHTML = `<img src="${imgSrc}" class="roster-avatar" alt="${w.name}">`;
       } else {
         avatarHTML = `<div class="roster-avatar placeholder" style="background:${getAvatarColor(w.name)}">${getInitials(w.name)}</div>`;
       }
@@ -1173,14 +861,12 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
           <td>${w.alignment}</td>
           <td>${w.ovr}</td>
           <td class="actions">
-            <button onclick="uploadImage(${w.id})">Subir archivo</button>
-            <button onclick="setImageURL(${w.id})">Pegar URL</button>
+            <button onclick="uploadImage(${w.id})">Subir foto</button>
             <button onclick="editWrestler(${w.id})">Editar</button>
             <button class="btn-red" onclick="deleteWrestler(${w.id})">Eliminar</button>
-            ${w.image ? `<button class="btn-red" onclick="removeImage(${w.id})">Quitar foto</button>` : ''}
           </td>
         </tr>`;
-    });
+    }
   }
 
   function renderMatchSelects() {
@@ -1196,7 +882,6 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     document.getElementById('w3').style.display = (type.includes('Triple') || type.includes('Fatal') || type.includes('Tag')) ? 'block' : 'none';
     document.getElementById('w4').style.display = (type.includes('Fatal') || type.includes('Tag')) ? 'block' : 'none';
   }
-
   document.getElementById('match-type')?.addEventListener('change', renderMatchSelects);
 
   function renderMatches() {
@@ -1246,35 +931,26 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
   }
 
   function renderDashboard() {
-    const counts = { Raw: 0, SmackDown: 0, NXT: 0, 'Free Agent': 0 };
-    data.wrestlers.forEach(w => counts[w.brand] = (counts[w.brand] || 0) + 1);
-
+    const counts = { Raw:0, SmackDown:0, NXT:0, 'Free Agent':0 };
+    data.wrestlers.forEach(w => counts[w.brand] = (counts[w.brand]||0)+1);
     document.getElementById('total-wrestlers').textContent = data.wrestlers.length;
-    document.getElementById('count-raw').textContent = counts.Raw || 0;
-    document.getElementById('count-sd').textContent = counts.SmackDown || 0;
-    document.getElementById('count-nxt').textContent = counts.NXT || 0;
-    document.getElementById('count-free').textContent = counts['Free Agent'] || 0;
-
-    document.getElementById('next-show').innerHTML = `
-      <strong>Monday Night Raw</strong><br>
-      Semana ${data.week} • Marca: Raw
-    `;
-
+    document.getElementById('count-raw').textContent = counts.Raw||0;
+    document.getElementById('count-sd').textContent = counts.SmackDown||0;
+    document.getElementById('count-nxt').textContent = counts.NXT||0;
+    document.getElementById('count-free').textContent = counts['Free Agent']||0;
+    document.getElementById('next-show').innerHTML = `<strong>Monday Night Raw</strong><br>Semana ${data.week} • Marca: Raw`;
     renderNewsCarousel();
-
     const recent = document.getElementById('recent-matches');
     if (data.matches.length === 0) {
       recent.innerHTML = '<div class="empty">Aún no hay combates</div>';
     } else {
       recent.innerHTML = data.matches.slice(-5).reverse().map(m => `
-        <div class="match-card" style="margin-bottom:8px">
-          ${m.participants.join(' vs ')} <small>(${m.show})</small>
-        </div>
+        <div class="match-card" style="margin-bottom:8px">${m.participants.join(' vs ')} <small>(${m.show})</small></div>
       `).join('');
     }
   }
 
-  // ===== ACCIONES =====
+  // ==================== ACCIONES ====================
   function addWrestler() {
     const name = document.getElementById('w-name').value.trim();
     if (!name) return alert('Escribe un nombre');
@@ -1284,8 +960,7 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
       name,
       brand,
       alignment: document.getElementById('w-alignment').value,
-      ovr: parseInt(document.getElementById('w-ovr').value) || 80,
-      image: null
+      ovr: parseInt(document.getElementById('w-ovr').value) || 80
     });
     document.getElementById('w-name').value = '';
     addNews(`Nuevo fichaje: <strong>${name}</strong> se une a ${brand === 'Free Agent' ? 'los agentes libres' : brand}.`);
@@ -1297,6 +972,8 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     if (!confirm('¿Eliminar este luchador?')) return;
     const w = data.wrestlers.find(x => x.id === id);
     data.wrestlers = data.wrestlers.filter(w => w.id !== id);
+    deleteImageFromDB('wrestler_' + id);
+    delete imageCache['wrestler_' + id];
     if (w) addNews(`<strong>${w.name}</strong> ha sido liberado del roster.`);
     save();
     renderAll();
@@ -1320,39 +997,29 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
     const w1 = document.getElementById('w1').value;
     const w2 = document.getElementById('w2').value;
     if (!w1 || !w2) return alert('Selecciona al menos dos luchadores');
-
     const participants = [w1, w2];
     const w3 = document.getElementById('w3').value;
     const w4 = document.getElementById('w4').value;
     if (w3) participants.push(w3);
     if (w4) participants.push(w4);
-
     const show = document.getElementById('match-show').value;
     const type = document.getElementById('match-type').value;
     const winner = document.getElementById('match-winner').value || null;
     const stip = document.getElementById('match-stip').value || null;
-
     data.matches.push({ show, type, participants, winner, stip, week: data.week });
-
     let newsText = `Combate anunciado para ${show}: <strong>${participants.join(' vs ')}</strong> (${type})`;
     if (winner) newsText += `. Ganador previsto: ${winner}`;
     if (stip) newsText += `. Estipulación: ${stip}`;
     addNews(newsText);
-
     save();
     renderAll();
-    alert('¡Combate bookeado con éxito!');
+    alert('¡Combate bookeado!');
   }
 
   function addTitle() {
     const name = document.getElementById('new-title').value.trim();
     if (!name) return;
-    data.titles.push({
-      id: Date.now(),
-      name,
-      brand: document.getElementById('title-brand').value,
-      champion: null
-    });
+    data.titles.push({ id: Date.now(), name, brand: document.getElementById('title-brand').value, champion: null });
     document.getElementById('new-title').value = '';
     addNews(`Nuevo campeonato creado: <strong>${name}</strong>.`);
     save();
@@ -1372,13 +1039,12 @@ document.getElementById('image-upload').addEventListener('change', function(e) {
 
   function advanceWeek() {
     data.week++;
-    addNews(`Comienza la Semana ${data.week} del Universo WWE 2K26. ¡Nuevas historias se avecinan!`);
+    addNews(`Comienza la Semana ${data.week} del Universo WWE 2K26.`);
     save();
     renderAll();
     alert(`¡Avanzaste a la Semana ${data.week}!`);
   }
 
-  // Cambio de clave de localStorage a 2K26
   checkSavedGame();
 </script>
 </body>
