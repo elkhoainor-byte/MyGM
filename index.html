@@ -920,19 +920,34 @@
   }
 
   // ==================== RENDER NOTICIAS ====================
+    let newsIndex = 0;
+  let newsInterval = null;
+  let visibleNewsCount = 0; // cuántas se muestran a la vez (aprox)
+
+  function getNewsCardWidth() {
+    // ancho de tarjeta + gap
+    const isMobile = window.innerWidth <= 700;
+    return isMobile ? 220 + 18 : 260 + 18;
+  }
+
   async function renderNewsCarousel() {
     const track = document.getElementById('news-track');
     const dotsContainer = document.getElementById('news-dots');
     if (!track || !data) return;
+
     clearInterval(newsInterval);
 
-    if (data.news.length === 0) {
-      track.innerHTML = `<div class="news-card"><div class="news-content"><div class="empty">No hay noticias todavía</div></div></div>`;
+    if (!data.news || data.news.length === 0) {
+      track.innerHTML = `
+        <div class="news-card" style="display:flex;align-items:center;justify-content:center;">
+          <div class="empty" style="padding:20px;">No hay noticias todavía</div>
+        </div>`;
       dotsContainer.innerHTML = '';
+      updateNewsArrows();
       return;
     }
 
-    const newsToShow = data.news.slice(0, 12);
+    const newsToShow = data.news.slice(0, 20);
     let html = '';
 
     for (const n of newsToShow) {
@@ -946,14 +961,17 @@
           const wrestler = getWrestlerByName(name);
           const sizeClass = names.length > 1 ? 'small' : '';
           let imgSrc = null;
+
           if (wrestler) {
             const key = 'wrestler_' + wrestler.id;
-            if (imageCache[key]) imgSrc = imageCache[key];
-            else {
+            if (imageCache[key]) {
+              imgSrc = imageCache[key];
+            } else {
               imgSrc = await getImageFromDB(key);
               if (imgSrc) imageCache[key] = imgSrc;
             }
           }
+
           if (imgSrc) {
             avatarsHTML += `<div class="avatar ${sizeClass}"><img src="${imgSrc}" alt="${name}"></div>`;
           } else {
@@ -973,34 +991,86 @@
     }
 
     track.innerHTML = html;
+
+    // dots
     dotsContainer.innerHTML = newsToShow.map((_, i) =>
-      `<div class="news-dot ${i===0?'active':''}" onclick="goToNews(${i})"></div>`
+      `<div class="news-dot ${i === 0 ? 'active' : ''}" onclick="goToNews(${i})"></div>`
     ).join('');
 
     newsIndex = 0;
     updateNewsPosition();
+    startNewsAutoplay();
+  }
+
+  function startNewsAutoplay() {
+    clearInterval(newsInterval);
+    if (!data || !data.news || data.news.length <= 1) return;
+
     newsInterval = setInterval(() => {
-      newsIndex = (newsIndex + 1) % newsToShow.length;
-      updateNewsPosition();
-    }, 7000);
+      nextNews(true);
+    }, 6000); // 6 segundos para leer
   }
 
   function updateNewsPosition() {
     const track = document.getElementById('news-track');
-    if (!track) return;
-    track.style.transform = `translateX(-${newsIndex * 100}%)`;
-    document.querySelectorAll('.news-dot').forEach((dot, i) => dot.classList.toggle('active', i === newsIndex));
+    if (!track || !data) return;
+
+    const cardW = getNewsCardWidth();
+    track.style.transform = `translateX(-${newsIndex * cardW}px)`;
+
+    // dots
+    document.querySelectorAll('.news-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === newsIndex);
+    });
+
+    updateNewsArrows();
+  }
+
+  function updateNewsArrows() {
+    const prev = document.getElementById('news-prev');
+    const next = document.getElementById('news-next');
+    if (!prev || !next || !data) return;
+
+    const total = Math.min(data.news.length, 20);
+    prev.disabled = newsIndex <= 0;
+    next.disabled = newsIndex >= total - 1;
   }
 
   function goToNews(index) {
-    newsIndex = index;
+    if (!data || !data.news) return;
+    const total = Math.min(data.news.length, 20);
+    newsIndex = Math.max(0, Math.min(index, total - 1));
     updateNewsPosition();
-    clearInterval(newsInterval);
-    newsInterval = setInterval(() => {
-      newsIndex = (newsIndex + 1) % Math.min(data.news.length, 12);
-      updateNewsPosition();
-    }, 7000);
+    startNewsAutoplay(); // reinicia el temporizador
   }
+
+  function nextNews(fromAuto = false) {
+    if (!data || !data.news || data.news.length === 0) return;
+    const total = Math.min(data.news.length, 20);
+
+    if (newsIndex >= total - 1) {
+      // vuelve al principio (solo en autoplay o si quieres loop)
+      newsIndex = fromAuto ? 0 : total - 1;
+    } else {
+      newsIndex++;
+    }
+
+    updateNewsPosition();
+    if (!fromAuto) startNewsAutoplay();
+  }
+
+  function prevNews() {
+    if (!data || !data.news || data.news.length === 0) return;
+    if (newsIndex <= 0) return;
+    newsIndex--;
+    updateNewsPosition();
+    startNewsAutoplay();
+  }
+
+  // recalcular posición al cambiar tamaño de ventana
+  window.addEventListener('resize', () => {
+    if (document.getElementById('news-track')) updateNewsPosition();
+  });
 
   // ==================== RENDER GENERAL ====================
   function renderAll() {
