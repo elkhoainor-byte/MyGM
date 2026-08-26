@@ -703,6 +703,8 @@
   let currentUploadId = null;
   let currentBrandUpload = null; // { brand: 'Raw', type: 'bg' | 'logo' }
   let imageCache = {}; // cache en memoria para no pedir a IndexedDB cada vez
+  // Fondo fijo de noticias genéricas (no se puede cambiar en el juego)
+  const DEFAULT_NEWS_BG = 'images/news-default-bg.jpg';
 
   // ==================== AVATARES ====================
   function getAvatarColor(name) {
@@ -1084,7 +1086,7 @@
         }
       }
 
-      // Fondo de la marca del primer luchador de la noticia
+      // Fondo: marca del luchador, o fondo fijo si la noticia es genérica
       let bgStyle = '';
       if (names.length > 0) {
         const w = getWrestlerByName(names[0]);
@@ -1094,6 +1096,10 @@
             bgStyle = `background-image:linear-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.45)),url('${brandBg}');background-size:cover;background-position:center top;`;
           }
         }
+      }
+      // Noticia genérica (o sin fondo de marca) → imagen por defecto inalterable
+      if (!bgStyle) {
+        bgStyle = `background-image:linear-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.45)),url('${DEFAULT_NEWS_BG}');background-size:cover;background-position:center top;`;
       }
 
       html += `
