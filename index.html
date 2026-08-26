@@ -809,29 +809,6 @@
     e.target.value = '';
   });
 
-    try {
-      const base64 = await fileToBase64(file);
-      const key = 'wrestler_' + currentUploadId;
-      await saveImageToDB(key, base64);
-      imageCache[key] = base64; // actualizar cache
-
-      const wrestler = data.wrestlers.find(w => w.id === currentUploadId);
-      if (wrestler) {
-        // Solo marcamos que tiene imagen (opcional)
-        wrestler.hasImage = true;
-        save();
-        renderAll();
-        alert(`✅ Imagen de ${wrestler.name} guardada correctamente (IndexedDB)`);
-      }
-    } catch (err) {
-      console.error(err);
-      alert('❌ Error al guardar la imagen.');
-    }
-
-    currentUploadId = null;
-    e.target.value = '';
-  });
-
   // ==================== INICIO ====================
   function checkSavedGame() {
     const saved = localStorage.getItem('wwe2k26_gm');
