@@ -23,6 +23,93 @@
     display: flex;
   }
 
+  /* ========== PANTALLA DE INICIO ========== */
+  #start-screen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a0a0a 50%, #0d0d0d 100%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  #start-screen.hidden { display: none; }
+
+  .start-logo {
+    margin-bottom: 50px;
+  }
+
+  .start-logo h1 {
+    font-size: 48px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  }
+
+  .start-logo span {
+    display: block;
+    font-size: 18px;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 4px;
+  }
+
+  .start-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .start-btn {
+    padding: 18px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.25s;
+    letter-spacing: 1px;
+  }
+
+  .start-btn.new {
+    background: var(--gold);
+    color: #111;
+  }
+
+  .start-btn.new:hover {
+    background: #e0c040;
+    transform: scale(1.03);
+  }
+
+  .start-btn.load {
+    background: #222;
+    color: white;
+    border: 2px solid #444;
+  }
+
+  .start-btn.load:hover:not(:disabled) {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .start-btn.load:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .start-footer {
+    margin-top: 60px;
+    font-size: 13px;
+    color: #555;
+  }
+
+  /* ========== RESTO DE ESTILOS ========== */
   .sidebar {
     width: 260px;
     background: #111;
@@ -144,13 +231,6 @@
 
   .btn-red:hover { background: #e03050; }
 
-  .btn-blue {
-    background: #1e90ff;
-    color: white;
-  }
-
-  .btn-blue:hover { background: #3aa0ff; }
-
   .form-row {
     display: flex;
     gap: 12px;
@@ -244,11 +324,12 @@
     padding: 40px;
   }
 
+  /* DRAFT */
   #draft-screen {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.92);
+    background: rgba(0,0,0,0.95);
     z-index: 1000;
     overflow-y: auto;
     padding: 40px 20px;
@@ -278,9 +359,7 @@
     text-align: center;
   }
 
-  .draft-pick-info strong {
-    color: var(--gold);
-  }
+  .draft-pick-info strong { color: var(--gold); }
 
   .draft-grid {
     display: grid;
@@ -316,15 +395,8 @@
     transform: translateY(-2px);
   }
 
-  .wrestler-card .name {
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .wrestler-card .ovr {
-    color: var(--gold);
-    font-size: 13px;
-  }
+  .wrestler-card .name { font-weight: 600; margin-bottom: 4px; }
+  .wrestler-card .ovr { color: var(--gold); font-size: 13px; }
 
   .brand-columns {
     display: flex;
@@ -339,11 +411,7 @@
     border: 1px solid #333;
   }
 
-  .brand-box h4 {
-    margin-bottom: 8px;
-    font-size: 15px;
-  }
-
+  .brand-box h4 { margin-bottom: 8px; font-size: 15px; }
   .brand-box.raw h4 { color: #c41e3a; }
   .brand-box.smackdown h4 { color: #1e90ff; }
   .brand-box.nxt h4 { color: #ffd700; }
@@ -359,10 +427,37 @@
     padding: 3px 0;
     border-bottom: 1px solid #333;
   }
+
+  #app {
+    display: none;
+    width: 100%;
+  }
+
+  #app.visible {
+    display: flex;
+  }
 </style>
 </head>
 <body>
 
+<!-- ==================== PANTALLA DE INICIO ==================== -->
+<div id="start-screen">
+  <div class="start-logo">
+    <h1>WWE 2K26</h1>
+    <span>MODO GM • UNIVERSO</span>
+  </div>
+
+  <div class="start-buttons">
+    <button class="start-btn new" onclick="nuevaPartida()">Nueva Partida</button>
+    <button class="start-btn load" id="btn-cargar" onclick="cargarPartida()" disabled>Cargar Partida</button>
+  </div>
+
+  <div class="start-footer">
+    Los datos se guardan automáticamente en tu navegador
+  </div>
+</div>
+
+<!-- ==================== DRAFT ==================== -->
 <div id="draft-screen">
   <div class="draft-container">
     <div class="draft-header">
@@ -406,159 +501,163 @@
   </div>
 </div>
 
-<aside class="sidebar">
-  <div class="logo">
-    <h1>WWE 2K26</h1>
-    <span>MODO GM • UNIVERSO</span>
-  </div>
-  <button class="nav-btn active" onclick="showSection('dashboard')">🏠 Dashboard</button>
-  <button class="nav-btn" onclick="showSection('roster')">👥 Roster</button>
-  <button class="nav-btn" onclick="showSection('booker')">📝 Booking</button>
-  <button class="nav-btn" onclick="showSection('titles')">🏆 Campeonatos</button>
-  <button class="nav-btn" onclick="showSection('shows')">📅 Shows</button>
-  <button class="nav-btn" onclick="startDraft()" style="margin-top:auto; color:#ff6b6b;">🔄 Reiniciar + Draft</button>
-</aside>
+<!-- ==================== APLICACIÓN PRINCIPAL ==================== -->
+<div id="app">
+  <aside class="sidebar">
+    <div class="logo">
+      <h1>WWE 2K26</h1>
+      <span>MODO GM • UNIVERSO</span>
+    </div>
+    <button class="nav-btn active" onclick="showSection('dashboard')">🏠 Dashboard</button>
+    <button class="nav-btn" onclick="showSection('roster')">👥 Roster</button>
+    <button class="nav-btn" onclick="showSection('booker')">📝 Booking</button>
+    <button class="nav-btn" onclick="showSection('titles')">🏆 Campeonatos</button>
+    <button class="nav-btn" onclick="showSection('shows')">📅 Shows</button>
+    <button class="nav-btn" onclick="volverAlMenu()" style="margin-top:auto; color:#ff6b6b;">← Menú Principal</button>
+  </aside>
 
-<main class="main">
-  <div class="header">
-    <h2 id="section-title">Dashboard</h2>
-    <div class="week-info">Semana <span id="week-num">1</span> • 2027</div>
-  </div>
+  <main class="main">
+    <div class="header">
+      <h2 id="section-title">Dashboard</h2>
+      <div class="week-info">Semana <span id="week-num">1</span> • 2027</div>
+    </div>
 
-  <section id="dashboard" class="section active">
-    <div class="grid-2">
+    <section id="dashboard" class="section active">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Resumen del Roster</h3>
+          <p>Total luchadores: <strong id="total-wrestlers">0</strong></p>
+          <p>Raw: <strong id="count-raw">0</strong> | SmackDown: <strong id="count-sd">0</strong> | NXT: <strong id="count-nxt">0</strong></p>
+          <p>Agentes libres: <strong id="count-free">0</strong></p>
+        </div>
+        <div class="card">
+          <h3>Próximo Show</h3>
+          <div id="next-show">Cargando...</div>
+        </div>
+      </div>
+
       <div class="card">
-        <h3>Resumen del Roster</h3>
-        <p>Total luchadores: <strong id="total-wrestlers">0</strong></p>
-        <p>Raw: <strong id="count-raw">0</strong> | SmackDown: <strong id="count-sd">0</strong> | NXT: <strong id="count-nxt">0</strong></p>
-        <p>Agentes libres: <strong id="count-free">0</strong></p>
+        <h3>📰 Noticias del Universo</h3>
+        <div id="news-list"></div>
       </div>
+
       <div class="card">
-        <h3>Próximo Show</h3>
-        <div id="next-show">Cargando...</div>
+        <h3>Últimos Combates Bookeados</h3>
+        <div id="recent-matches"></div>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
-      <h3>📰 Noticias del Universo</h3>
-      <div id="news-list"></div>
-    </div>
-
-    <div class="card">
-      <h3>Últimos Combates Bookeados</h3>
-      <div id="recent-matches"></div>
-    </div>
-  </section>
-
-  <section id="roster" class="section">
-    <div class="card">
-      <h3>Añadir Luchador</h3>
-      <div class="form-row">
-        <input type="text" id="w-name" placeholder="Nombre del luchador">
-        <select id="w-brand">
-          <option value="Free Agent">Agente Libre</option>
-          <option value="Raw">Raw</option>
-          <option value="SmackDown">SmackDown</option>
-          <option value="NXT">NXT</option>
-        </select>
-        <select id="w-alignment">
-          <option value="Face">Face</option>
-          <option value="Heel">Heel</option>
-          <option value="Tween">Tween</option>
-        </select>
-        <input type="number" id="w-ovr" placeholder="OVR" min="50" max="99" value="80">
-        <button class="btn" onclick="addWrestler()">Añadir</button>
+    <section id="roster" class="section">
+      <div class="card">
+        <h3>Añadir Luchador</h3>
+        <div class="form-row">
+          <input type="text" id="w-name" placeholder="Nombre del luchador">
+          <select id="w-brand">
+            <option value="Free Agent">Agente Libre</option>
+            <option value="Raw">Raw</option>
+            <option value="SmackDown">SmackDown</option>
+            <option value="NXT">NXT</option>
+          </select>
+          <select id="w-alignment">
+            <option value="Face">Face</option>
+            <option value="Heel">Heel</option>
+            <option value="Tween">Tween</option>
+          </select>
+          <input type="number" id="w-ovr" placeholder="OVR" min="50" max="99" value="80">
+          <button class="btn" onclick="addWrestler()">Añadir</button>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <h3>Roster Actual</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Marca</th>
-            <th>Alineación</th>
-            <th>OVR</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="roster-table"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section id="booker" class="section">
-    <div class="card">
-      <h3>Bookear Combate</h3>
-      <div class="form-row">
-        <select id="match-show">
-          <option value="Raw">Raw</option>
-          <option value="SmackDown">SmackDown</option>
-          <option value="NXT">NXT</option>
-          <option value="PPV">PPV / Premium Live Event</option>
-        </select>
-        <select id="match-type">
-          <option value="Singles">Singles</option>
-          <option value="Tag Team">Tag Team</option>
-          <option value="Triple Threat">Triple Threat</option>
-          <option value="Fatal 4-Way">Fatal 4-Way</option>
-          <option value="Hell in a Cell">Hell in a Cell</option>
-          <option value="Cage">Steel Cage</option>
-          <option value="Ladder">Ladder</option>
-          <option value="TLC">TLC</option>
-        </select>
+      <div class="card">
+        <h3>Roster Actual</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Marca</th>
+              <th>Alineación</th>
+              <th>OVR</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="roster-table"></tbody>
+        </table>
       </div>
-      <div class="form-row">
-        <select id="w1"></select>
-        <select id="w2"></select>
-        <select id="w3" style="display:none"></select>
-        <select id="w4" style="display:none"></select>
-      </div>
-      <div class="form-row">
-        <select id="match-winner">
-          <option value="">Ganador (opcional)</option>
-        </select>
-        <input type="text" id="match-stip" placeholder="Estipulación extra (opcional)">
-        <button class="btn" onclick="bookMatch()">Bookear Combate</button>
-      </div>
-    </div>
+    </section>
 
-    <div class="card">
-      <h3>Cartelera Actual</h3>
-      <div id="match-list"></div>
-    </div>
-  </section>
-
-  <section id="titles" class="section">
-    <div class="card">
-      <h3>Campeonatos</h3>
-      <div id="titles-list"></div>
-      <br>
-      <div class="form-row">
-        <input type="text" id="new-title" placeholder="Nombre del título">
-        <select id="title-brand">
-          <option value="Raw">Raw</option>
-          <option value="SmackDown">SmackDown</option>
-          <option value="NXT">NXT</option>
-          <option value="World">Mundial</option>
-        </select>
-        <button class="btn" onclick="addTitle()">Crear Título</button>
+    <section id="booker" class="section">
+      <div class="card">
+        <h3>Bookear Combate</h3>
+        <div class="form-row">
+          <select id="match-show">
+            <option value="Raw">Raw</option>
+            <option value="SmackDown">SmackDown</option>
+            <option value="NXT">NXT</option>
+            <option value="PPV">PPV / Premium Live Event</option>
+          </select>
+          <select id="match-type">
+            <option value="Singles">Singles</option>
+            <option value="Tag Team">Tag Team</option>
+            <option value="Triple Threat">Triple Threat</option>
+            <option value="Fatal 4-Way">Fatal 4-Way</option>
+            <option value="Hell in a Cell">Hell in a Cell</option>
+            <option value="Cage">Steel Cage</option>
+            <option value="Ladder">Ladder</option>
+            <option value="TLC">TLC</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <select id="w1"></select>
+          <select id="w2"></select>
+          <select id="w3" style="display:none"></select>
+          <select id="w4" style="display:none"></select>
+        </div>
+        <div class="form-row">
+          <select id="match-winner">
+            <option value="">Ganador (opcional)</option>
+          </select>
+          <input type="text" id="match-stip" placeholder="Estipulación extra (opcional)">
+          <button class="btn" onclick="bookMatch()">Bookear Combate</button>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <section id="shows" class="section">
-    <div class="card">
-      <h3>Calendario Semanal</h3>
-      <div id="shows-list"></div>
-      <br>
-      <button class="btn" onclick="advanceWeek()">Avanzar a la siguiente semana →</button>
-    </div>
-  </section>
-</main>
+      <div class="card">
+        <h3>Cartelera Actual</h3>
+        <div id="match-list"></div>
+      </div>
+    </section>
+
+    <section id="titles" class="section">
+      <div class="card">
+        <h3>Campeonatos</h3>
+        <div id="titles-list"></div>
+        <br>
+        <div class="form-row">
+          <input type="text" id="new-title" placeholder="Nombre del título">
+          <select id="title-brand">
+            <option value="Raw">Raw</option>
+            <option value="SmackDown">SmackDown</option>
+            <option value="NXT">NXT</option>
+            <option value="World">Mundial</option>
+          </select>
+          <button class="btn" onclick="addTitle()">Crear Título</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="shows" class="section">
+      <div class="card">
+        <h3>Calendario Semanal</h3>
+        <div id="shows-list"></div>
+        <br>
+        <button class="btn" onclick="advanceWeek()">Avanzar a la siguiente semana →</button>
+      </div>
+    </section>
+  </main>
+</div>
 
 <script>
+  // ===== DATOS BASE =====
   const defaultWrestlers = [
     { id: 1, name: "AJ Lee", brand: "Free Agent", alignment: "Face", ovr: 87 },
     { id: 2, name: "AJ Styles", brand: "Free Agent", alignment: "Face", ovr: 88 },
@@ -576,46 +675,22 @@
     { id: 14, name: "Oba Femi", brand: "Free Agent", alignment: "Heel", ovr: 88 }
   ];
 
-  let data = JSON.parse(localStorage.getItem('wwe2k27_gm')) || null;
+  let data = null;
 
-  if (!data || !data.draftCompleted) {
-    data = {
-      week: 1,
-      wrestlers: JSON.parse(JSON.stringify(defaultWrestlers)),
-      matches: [],
-      titles: [
-        { id: 1, name: "WWE Championship", brand: "World", champion: "Cody Rhodes" },
-        { id: 2, name: "World Heavyweight Championship", brand: "Raw", champion: "Gunther" },
-        { id: 3, name: "Women's World Championship", brand: "Raw", champion: "Rhea Ripley" },
-        { id: 4, name: "United States Championship", brand: "SmackDown", champion: "LA Knight" },
-        { id: 5, name: "NXT Championship", brand: "NXT", champion: "Trick Williams" }
-      ],
-      news: [],
-      nextId: 15,
-      draftCompleted: false
-    };
+  // ===== PANTALLA DE INICIO =====
+  function checkSavedGame() {
+    const saved = localStorage.getItem('wwe2k26_gm');
+    const btn = document.getElementById('btn-cargar');
+    if (saved) {
+      btn.disabled = false;
+      btn.textContent = "Cargar Partida";
+    } else {
+      btn.disabled = true;
+      btn.textContent = "Cargar Partida (sin datos)";
+    }
   }
 
-  let draftOrder = ["Raw", "SmackDown", "NXT", "Raw", "SmackDown", "NXT"]; // se repite
-  let currentPick = 0;
-  let draftPool = [];
-
-  function save() {
-    localStorage.setItem('wwe2k27_gm', JSON.stringify(data));
-  }
-
-  function addNews(text) {
-    data.news.unshift({
-      week: data.week,
-      text: text
-    });
-    if (data.news.length > 40) data.news = data.news.slice(0, 40);
-    save();
-  }
-
-  function startDraft() {
-    if (!confirm("¿Quieres reiniciar el Universo y realizar un nuevo Draft de marcas?")) return;
-
+  function nuevaPartida() {
     data = {
       week: 1,
       wrestlers: JSON.parse(JSON.stringify(defaultWrestlers)),
@@ -632,11 +707,37 @@
       draftCompleted: false
     };
     save();
+    document.getElementById('start-screen').classList.add('hidden');
     openDraft();
   }
 
+  function cargarPartida() {
+    const saved = localStorage.getItem('wwe2k26_gm');
+    if (!saved) {
+      alert("No hay ninguna partida guardada.");
+      return;
+    }
+    data = JSON.parse(saved);
+    document.getElementById('start-screen').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    renderAll();
+  }
+
+  function volverAlMenu() {
+    if (confirm("¿Volver al menú principal? Se guardará el progreso actual.")) {
+      save();
+      document.getElementById('app').classList.remove('visible');
+      document.getElementById('draft-screen').classList.remove('active');
+      document.getElementById('start-screen').classList.remove('hidden');
+      checkSavedGame();
+    }
+  }
+
+  // ===== DRAFT =====
+  let draftOrder = ["Raw", "SmackDown", "NXT", "Raw", "SmackDown", "NXT"];
+  let currentPick = 0;
+
   function openDraft() {
-    draftPool = data.wrestlers.filter(w => w.brand === "Free Agent" || !data.draftCompleted);
     data.wrestlers.forEach(w => w.brand = "Free Agent");
     currentPick = 0;
     document.getElementById('draft-screen').classList.add('active');
@@ -697,7 +798,7 @@
   function finishDraft() {
     data.draftCompleted = true;
 
-    addNews("¡El Draft de WWE ha finalizado! Las marcas ya tienen sus rostros definidos.");
+    addNews("¡El Draft de WWE 2K26 ha finalizado! Las marcas ya tienen sus rostros definidos.");
     addNews(`<strong>Cody Rhodes</strong> es el actual <strong>WWE Champion</strong> y liderará la división mundial.`);
     addNews(`<strong>Gunther</strong> reina como <strong>World Heavyweight Champion</strong> en Raw.`);
     addNews(`<strong>Rhea Ripley</strong> defiende el <strong>Women's World Championship</strong> con mano de hierro.`);
@@ -710,12 +811,20 @@
 
     save();
     document.getElementById('draft-screen').classList.remove('active');
+    document.getElementById('app').classList.add('visible');
     renderAll();
     alert("¡Draft completado! El Universo está listo.");
   }
 
-  if (!data.draftCompleted) {
-    setTimeout(() => openDraft(), 300);
+  // ===== UTILIDADES =====
+  function save() {
+    localStorage.setItem('wwe2k26_gm', JSON.stringify(data));
+  }
+
+  function addNews(text) {
+    data.news.unshift({ week: data.week, text: text });
+    if (data.news.length > 40) data.news = data.news.slice(0, 40);
+    save();
   }
 
   function showSection(id) {
@@ -735,7 +844,9 @@
     renderAll();
   }
 
+  // ===== RENDER =====
   function renderAll() {
+    if (!data) return;
     document.getElementById('week-num').textContent = data.week;
     renderRoster();
     renderMatchSelects();
@@ -782,7 +893,7 @@
     document.getElementById('w4').style.display = (type.includes('Fatal') || type.includes('Tag')) ? 'block' : 'none';
   }
 
-  document.getElementById('match-type').addEventListener('change', renderMatchSelects);
+  document.getElementById('match-type')?.addEventListener('change', renderMatchSelects);
 
   function renderMatches() {
     const list = document.getElementById('match-list');
@@ -869,6 +980,7 @@
     }
   }
 
+  // ===== ACCIONES =====
   function addWrestler() {
     const name = document.getElementById('w-name').value.trim();
     if (!name) return alert('Escribe un nombre');
@@ -881,7 +993,6 @@
       ovr: parseInt(document.getElementById('w-ovr').value) || 80
     });
     document.getElementById('w-name').value = '';
-    
     addNews(`Nuevo fichaje: <strong>${name}</strong> se une a ${brand === 'Free Agent' ? 'los agentes libres' : brand}.`);
     save();
     renderAll();
@@ -926,9 +1037,7 @@
     const winner = document.getElementById('match-winner').value || null;
     const stip = document.getElementById('match-stip').value || null;
 
-    data.matches.push({
-      show, type, participants, winner, stip, week: data.week
-    });
+    data.matches.push({ show, type, participants, winner, stip, week: data.week });
 
     let newsText = `Combate anunciado para ${show}: <strong>${participants.join(' vs ')}</strong> (${type})`;
     if (winner) newsText += `. Ganador previsto: ${winner}`;
@@ -970,13 +1079,14 @@
 
   function advanceWeek() {
     data.week++;
-    addNews(`Comienza la Semana ${data.week} del Universo WWE 2K27. ¡Nuevas historias se avecinan!`);
+    addNews(`Comienza la Semana ${data.week} del Universo WWE 2K26. ¡Nuevas historias se avecinan!`);
     save();
     renderAll();
     alert(`¡Avanzaste a la Semana ${data.week}!`);
   }
 
-  renderAll();
+  // ===== INICIO =====
+  checkSavedGame();
 </script>
 </body>
 </html>
