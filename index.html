@@ -696,6 +696,7 @@
   let newsIndex = 0;
   let newsInterval = null;
   let currentUploadId = null;
+  let currentBrandUpload = null; // { brand: 'Raw', type: 'bg' | 'logo' }
   let imageCache = {}; // cache en memoria para no pedir a IndexedDB cada vez
 
   // ==================== AVATARES ====================
@@ -726,15 +727,87 @@
     document.getElementById('image-upload').click();
   }
 
-  document.getElementById('image-upload').addEventListener('change', async function(e) {
+  function uploadBrandMedia(brand, type) {
+    // type = 'bg' o 'logo'
+    currentBrandUpload = { brand, type };
+    currentUploadId = null; // que no se confunda con foto de luchador
+    document.getElementById('image-upload').click();
+  }
+
+  async function getBrandMedia(brand, type) {
+    const key = type === 'bg' ? 'brand_bg_' + brand : 'brand_logo_' + brand;
+    if (imageCache[key]) return imageCache[key];
+    const src = await getImageFromDB(key);
+    if (src) imageCache[key] = src;
+    return src;
+  }
+  
+    document.getElementById('image-upload').addEventListener('change', async function(e) {
     const file = e.target.files[0];
-    if (!file || !currentUploadId) return;
+    if (!file) return;
 
     if (!file.type.startsWith('image/')) {
       alert('Selecciona un archivo de imagen válido.');
       e.target.value = '';
+      currentUploadId = null;
+      currentBrandUpload = null;
       return;
     }
+
+    try {
+      const base64 = await fileToBase64(file);
+
+      // —— Subida de fondo o logo de show ——
+      if (currentBrandUpload) {
+        const { brand, type } = currentBrandUpload;
+        const key = type === 'bg' ? 'brand_bg_' + brand : 'brand_logo_' + brand;
+        await saveImageToDB(key, base64);
+        imageCache[key] = base64;
+
+        if (!data.brandMedia) {
+          data.brandMedia = {
+            Raw: { hasBg: false, hasLogo: false },
+            SmackDown: { hasBg: false, hasLogo: false },
+            NXT: { hasBg: false, hasLogo: false }
+          };
+        }
+        if (!data.brandMedia[brand]) {
+          data.brandMedia[brand] = { hasBg: false, hasLogo: false };
+        }
+        if (type === 'bg') data.brandMedia[brand].hasBg = true;
+        else data.brandMedia[brand].hasLogo = true;
+
+        save();
+        renderAll();
+        alert((type === 'bg' ? 'Fondo' : 'Logo') + ' de ' + brand + ' guardado.');
+        currentBrandUpload = null;
+        e.target.value = '';
+        return;
+      }
+
+      // —— Subida de foto de luchador (como antes) ——
+      if (!currentUploadId) return;
+
+      const key = 'wrestler_' + currentUploadId;
+      await saveImageToDB(key, base64);
+      imageCache[key] = base64;
+
+      const wrestler = data.wrestlers.find(w => w.id === currentUploadId);
+      if (wrestler) {
+        wrestler.hasImage = true;
+        save();
+        renderAll();
+        alert('Imagen de ' + wrestler.name + ' guardada correctamente (IndexedDB)');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error al guardar la imagen.');
+    }
+
+    currentUploadId = null;
+    currentBrandUpload = null;
+    e.target.value = '';
+  });
 
     try {
       const base64 = await fileToBase64(file);
@@ -797,7 +870,12 @@
       ],
       news: [],
       nextId: 15,
-      draftCompleted: true
+      draftCompleted: true,
+      brandMedia: {
+        Raw: { hasBg: false, hasLogo: false },
+        SmackDown: { hasBg: false, hasLogo: false },
+        NXT: { hasBg: false, hasLogo: false }
+      }
     };
   }
 
@@ -844,6 +922,13 @@
     const saved = localStorage.getItem('wwe2k26_gm');
     if (!saved) return alert("No hay ninguna partida guardada.");
     data = JSON.parse(saved);
+    if (!data.brandMedia) {
+      data.brandMedia = {
+        Raw: { hasBg: false, hasLogo: false },
+        SmackDown: { hasBg: false, hasLogo: false },
+        NXT: { hasBg: false, hasLogo: false }
+      };
+    }
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('app').classList.add('visible');
     renderAll();
@@ -1014,9 +1099,21 @@
         }
       }
 
+      // Fondo de la marca del primer luchador de la noticia
+      let bgStyle = '';
+      if (names.length > 0) {
+        const w = getWrestlerByName(names[0]);
+        if (w && w.brand && w.brand !== 'Free Agent') {
+          const brandBg = await getBrandMedia(w.brand, 'bg');
+          if (brandBg) {
+            bgStyle = `background-image:linear-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.45)),url('${brandBg}');background-size:cover;background-position:center top;`;
+          }
+        }
+      }
+
       html += `
         <div class="news-card">
-          <div class="news-image-area">${avatarsHTML}</div>
+          <div class="news-image-area" style="${bgStyle}">${avatarsHTML}</div>
           <div class="news-content">
             <div class="news-week">SEMANA ${n.week}</div>
             <div class="news-text">${n.text}</div>
@@ -1202,18 +1299,35 @@
     `).join('');
   }
 
-  function renderShows() {
+  async function renderShows() {
     const shows = [
       { day: 'Lunes', name: 'Monday Night Raw', brand: 'Raw' },
       { day: 'Martes', name: 'NXT', brand: 'NXT' },
       { day: 'Viernes', name: 'Friday Night SmackDown', brand: 'SmackDown' }
     ];
-    document.getElementById('shows-list').innerHTML = shows.map(s => `
-      <div class="match-card">
-        <strong>${s.day}</strong> — ${s.name}<br>
-        <span class="badge ${s.brand === 'Raw' ? 'raw' : s.brand === 'SmackDown' ? 'smackdown' : 'nxt'}">${s.brand}</span>
-      </div>
-    `).join('');
+
+    let html = '';
+    for (const s of shows) {
+      const bg = await getBrandMedia(s.brand, 'bg');
+      const logo = await getBrandMedia(s.brand, 'logo');
+      const badgeClass = s.brand === 'Raw' ? 'raw' : s.brand === 'SmackDown' ? 'smackdown' : 'nxt';
+
+      html += `
+        <div class="match-card" style="overflow:hidden;${bg ? `background-image:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.75)),url('${bg}');background-size:cover;background-position:center;` : ''}">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+            ${logo ? `<img src="${logo}" alt="${s.brand}" style="height:40px;max-width:100px;object-fit:contain;">` : ''}
+            <div>
+              <strong>${s.day}</strong> — ${s.name}<br>
+              <span class="badge ${badgeClass}">${s.brand}</span>
+            </div>
+          </div>
+          <div class="form-row" style="margin-bottom:0;">
+            <button class="btn" onclick="uploadBrandMedia('${s.brand}','bg')">Subir fondo</button>
+            <button class="btn" onclick="uploadBrandMedia('${s.brand}','logo')">Subir logo</button>
+          </div>
+        </div>`;
+    }
+    document.getElementById('shows-list').innerHTML = html;
   }
 
   function renderDashboard() {
