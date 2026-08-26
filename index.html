@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WWE 2K27 - Modo GM | Universo</title>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --card: #1a1a1a;
+    --gold: #d4af37;
+    --red: #c41e3a;
+    --text: #f0f0f0;
+    --muted: #888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    background: #111;
+    border-right: 1px solid #333;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo {
+    text-align: center;
+    padding: 10px 20px 25px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 20px;
+  }
+
+  .logo h1 {
+    font-size: 22px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  .logo span {
+    font-size: 12px;
+    color: var(--muted);
+    display: block;
+    margin-top: 4px;
+  }
+
+  .nav-btn {
+    padding: 14px 25px;
+    background: none;
+    border: none;
+    color: var(--text);
+    text-align: left;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .nav-btn:hover, .nav-btn.active {
+    background: #222;
+    color: var(--gold);
+    border-left: 4px solid var(--gold);
+  }
+
+  /* Main */
+  .main {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .header h2 {
+    font-size: 28px;
+    color: var(--gold);
+  }
+
+  .week-info {
+    background: var(--card);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    border: 1px solid #333;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #2a2a2a;
+  }
+
+  .card h3 {
+    margin-bottom: 15px;
+    color: var(--gold);
+    font-size: 18px;
+  }
+
+  /* Forms */
+  input, select, textarea, button {
+    background: #222;
+    border: 1px solid #444;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+
+  .btn {
+    background: var(--gold);
+    color: #111;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn:hover { background: #e0c040; }
+
+  .btn-red {
+    background: var(--red);
+    color: white;
+  }
+
+  .btn-red:hover { background: #e03050; }
+
+  .form-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .form-row > * { flex: 1; min-width: 140px; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  th, td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+  }
+
+  th { color: var(--gold); font-weight: 600; }
+
+  tr:hover { background: #222; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .raw { background: #c41e3a; }
+  .smackdown { background: #1e90ff; }
+  .nxt { background: #ffd700; color: #111; }
+  .free { background: #555; }
+
+  .actions button {
+    padding: 5px 10px;
+    font-size: 12px;
+    margin-right: 5px;
+  }
+
+  /* Grid */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) {
+    body { flex-direction: column; }
+    .sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
+    .nav-btn { white-space: nowrap; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .match-card {
+    background: #222;
+    border-left: 4px solid var(--gold);
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 40px;
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <h1>WWE 2K27</h1>
+    <span>MODO GM • UNIVERSO</span>
+  </div>
+  <button class="nav-btn active" onclick="showSection('dashboard')">🏠 Dashboard</button>
+  <button class="nav-btn" onclick="showSection('roster')">👥 Roster</button>
+  <button class="nav-btn" onclick="showSection('booker')">📝 Booking</button>
+  <button class="nav-btn" onclick="showSection('titles')">🏆 Campeonatos</button>
+  <button class="nav-btn" onclick="showSection('shows')">📅 Shows</button>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="header">
+    <h2 id="section-title">Dashboard</h2>
+    <div class="week-info">Semana <span id="week-num">1</span> • 2027</div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="section active">
+    <div class="grid-2">
+      <div class="card">
+        <h3>Resumen del Roster</h3>
+        <p>Total luchadores: <strong id="total-wrestlers">0</strong></p>
+        <p>Raw: <strong id="count-raw">0</strong> | SmackDown: <strong id="count-sd">0</strong> | NXT: <strong id="count-nxt">0</strong></p>
+        <p>Agentes libres: <strong id="count-free">0</strong></p>
+      </div>
+      <div class="card">
+        <h3>Próximo Show</h3>
+        <div id="next-show">Cargando...</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Últimos Combates Bookeados</h3>
+      <div id="recent-matches"></div>
+    </div>
+  </section>
+
+  <!-- ROSTER -->
+  <section id="roster" class="section">
+    <div class="card">
+      <h3>Añadir Luchador</h3>
+      <div class="form-row">
+        <input type="text" id="w-name" placeholder="Nombre del luchador">
+        <select id="w-brand">
+          <option value="Free Agent">Agente Libre</option>
+          <option value="Raw">Raw</option>
+          <option value="SmackDown">SmackDown</option>
+          <option value="NXT">NXT</option>
+        </select>
+        <select id="w-alignment">
+          <option value="Face">Face</option>
+          <option value="Heel">Heel</option>
+          <option value="Tween">Tween</option>
+        </select>
+        <input type="number" id="w-ovr" placeholder="OVR" min="50" max="99" value="80">
+        <button class="btn" onclick="addWrestler()">Añadir</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Roster Actual</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Marca</th>
+            <th>Alineación</th>
+            <th>OVR</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="roster-table"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- BOOKER -->
+  <section id="booker" class="section">
+    <div class="card">
+      <h3>Bookear Combate</h3>
+      <div class="form-row">
+        <select id="match-show">
+          <option value="Raw">Raw</option>
+          <option value="SmackDown">SmackDown</option>
+          <option value="NXT">NXT</option>
+          <option value="PPV">PPV / Premium Live Event</option>
+        </select>
+        <select id="match-type">
+          <option value="Singles">Singles</option>
+          <option value="Tag Team">Tag Team</option>
+          <option value="Triple Threat">Triple Threat</option>
+          <option value="Fatal 4-Way">Fatal 4-Way</option>
+          <option value="Hell in a Cell">Hell in a Cell</option>
+          <option value="Cage">Steel Cage</option>
+          <option value="Ladder">Ladder</option>
+          <option value="TLC">TLC</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <select id="w1"></select>
+        <select id="w2"></select>
+        <select id="w3" style="display:none"></select>
+        <select id="w4" style="display:none"></select>
+      </div>
+      <div class="form-row">
+        <select id="match-winner">
+          <option value="">Ganador (opcional)</option>
+        </select>
+        <input type="text" id="match-stip" placeholder="Estipulación extra (opcional)">
+        <button class="btn" onclick="bookMatch()">Bookear Combate</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Cartelera Actual</h3>
+      <div id="match-list"></div>
+    </div>
+  </section>
+
+  <!-- TITLES -->
+  <section id="titles" class="section">
+    <div class="card">
+      <h3>Campeonatos</h3>
+      <div id="titles-list"></div>
+      <br>
+      <div class="form-row">
+        <input type="text" id="new-title" placeholder="Nombre del título">
+        <select id="title-brand">
+          <option value="Raw">Raw</option>
+          <option value="SmackDown">SmackDown</option>
+          <option value="NXT">NXT</option>
+          <option value="World">Mundial</option>
+        </select>
+        <button class="btn" onclick="addTitle()">Crear Título</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWS -->
+  <section id="shows" class="section">
+    <div class="card">
+      <h3>Calendario Semanal</h3>
+      <div id="shows-list"></div>
+      <br>
+      <button class="btn" onclick="advanceWeek()">Avanzar a la siguiente semana →</button>
+    </div>
+  </section>
+</main>
+
+<script>
+  // ===== DATA =====
+  let data = JSON.parse(localStorage.getItem('wwe2k27_gm')) || {
+    week: 1,
+    wrestlers: [
+      { id: 1, name: "Cody Rhodes", brand: "Raw", alignment: "Face", ovr: 94 },
+      { id: 2, name: "Roman Reigns", brand: "SmackDown", alignment: "Heel", ovr: 96 },
+      { id: 3, name: "Seth Rollins", brand: "Raw", alignment: "Face", ovr: 92 },
+      { id: 4, name: "Gunther", brand: "Raw", alignment: "Heel", ovr: 93 },
+      { id: 5, name: "CM Punk", brand: "Raw", alignment: "Face", ovr: 91 },
+      { id: 6, name: "Rhea Ripley", brand: "Raw", alignment: "Heel", ovr: 93 },
+      { id: 7, name: "LA Knight", brand: "SmackDown", alignment: "Face", ovr: 89 },
+      { id: 8, name: "IYO SKY", brand: "SmackDown", alignment: "Heel", ovr: 90 },
+      { id: 9, name: "Trick Williams", brand: "NXT", alignment: "Face", ovr: 87 },
+      { id: 10, name: "Oba Femi", brand: "NXT", alignment: "Heel", ovr: 88 }
+    ],
+    matches: [],
+    titles: [
+      { id: 1, name: "WWE Championship", brand: "World", champion: "Cody Rhodes" },
+      { id: 2, name: "World Heavyweight Championship", brand: "Raw", champion: "Gunther" },
+      { id: 3, name: "Women's World Championship", brand: "Raw", champion: "Rhea Ripley" },
+      { id: 4, name: "United States Championship", brand: "SmackDown", champion: "LA Knight" },
+      { id: 5, name: "NXT Championship", brand: "NXT", champion: "Trick Williams" }
+    ],
+    nextId: 11
+  };
+
+  function save() {
+    localStorage.setItem('wwe2k27_gm', JSON.stringify(data));
+  }
+
+  // ===== NAVIGATION =====
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+
+    const titles = {
+      dashboard: 'Dashboard',
+      roster: 'Gestión de Roster',
+      booker: 'Booking de Combates',
+      titles: 'Campeonatos',
+      shows: 'Calendario de Shows'
+    };
+    document.getElementById('section-title').textContent = titles[id];
+    renderAll();
+  }
+
+  // ===== RENDER =====
+  function renderAll() {
+    document.getElementById('week-num').textContent = data.week;
+    renderRoster();
+    renderMatchSelects();
+    renderMatches();
+    renderTitles();
+    renderShows();
+    renderDashboard();
+  }
+
+  function renderRoster() {
+    const tbody = document.getElementById('roster-table');
+    tbody.innerHTML = '';
+    data.wrestlers.sort((a,b) => b.ovr - a.ovr).forEach(w => {
+      const brandClass = w.brand === 'Raw' ? 'raw' : w.brand === 'SmackDown' ? 'smackdown' : w.brand === 'NXT' ? 'nxt' : 'free';
+      tbody.innerHTML += `
+        <tr>
+          <td><strong>${w.name}</strong></td>
+          <td><span class="badge ${brandClass}">${w.brand}</span></td>
+          <td>${w.alignment}</td>
+          <td>${w.ovr}</td>
+          <td class="actions">
+            <button onclick="editWrestler(${w.id})">Editar</button>
+            <button class="btn-red" onclick="deleteWrestler(${w.id})">Eliminar</button>
+          </td>
+        </tr>`;
+    });
+  }
+
+  function renderMatchSelects() {
+    const selects = ['w1','w2','w3','w4','match-winner'];
+    selects.forEach(id => {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      const current = sel.value;
+      sel.innerHTML = id === 'match-winner' ? '<option value="">Ganador (opcional)</option>' : '<option value="">Seleccionar...</option>';
+      data.wrestlers.forEach(w => {
+        sel.innerHTML += `<option value="${w.name}">${w.name} (${w.ovr})</option>`;
+      });
+      if (current) sel.value = current;
+    });
+
+    // Show/hide extra selects
+    const type = document.getElementById('match-type').value;
+    document.getElementById('w3').style.display = (type.includes('Triple') || type.includes('Fatal') || type.includes('Tag')) ? 'block' : 'none';
+    document.getElementById('w4').style.display = (type.includes('Fatal') || type.includes('Tag')) ? 'block' : 'none';
+  }
+
+  document.getElementById('match-type').addEventListener('change', renderMatchSelects);
+
+  function renderMatches() {
+    const list = document.getElementById('match-list');
+    if (data.matches.length === 0) {
+      list.innerHTML = '<div class="empty">No hay combates bookeados aún</div>';
+      return;
+    }
+    list.innerHTML = data.matches.slice().reverse().map(m => `
+      <div class="match-card">
+        <strong>${m.show}</strong> • ${m.type}<br>
+        ${m.participants.join(' vs ')}
+        ${m.winner ? `<br><span style="color:var(--gold)">Ganador: ${m.winner}</span>` : ''}
+        ${m.stip ? `<br><em>${m.stip}</em>` : ''}
+        <br><small style="color:#666">Semana ${m.week}</small>
+      </div>
+    `).join('');
+  }
+
+  function renderTitles() {
+    const list = document.getElementById('titles-list');
+    list.innerHTML = data.titles.map(t => `
+      <div class="match-card">
+        <strong>${t.name}</strong> (${t.brand})<br>
+        Campeón actual: <span style="color:var(--gold)">${t.champion || 'Vacante'}</span>
+        <br>
+        <select onchange="changeChampion(${t.id}, this.value)" style="margin-top:8px">
+          <option value="">Cambiar campeón...</option>
+          ${data.wrestlers.map(w => `<option value="${w.name}">${w.name}</option>`).join('')}
+        </select>
+      </div>
+    `).join('');
+  }
+
+  function renderShows() {
+    const shows = [
+      { day: 'Lunes', name: 'Monday Night Raw', brand: 'Raw' },
+      { day: 'Martes', name: 'NXT', brand: 'NXT' },
+      { day: 'Viernes', name: 'Friday Night SmackDown', brand: 'SmackDown' }
+    ];
+    document.getElementById('shows-list').innerHTML = shows.map(s => `
+      <div class="match-card">
+        <strong>${s.day}</strong> — ${s.name}<br>
+        <span class="badge ${s.brand === 'Raw' ? 'raw' : s.brand === 'SmackDown' ? 'smackdown' : 'nxt'}">${s.brand}</span>
+      </div>
+    `).join('');
+  }
+
+  function renderDashboard() {
+    const counts = { Raw: 0, SmackDown: 0, NXT: 0, 'Free Agent': 0 };
+    data.wrestlers.forEach(w => counts[w.brand] = (counts[w.brand] || 0) + 1);
+
+    document.getElementById('total-wrestlers').textContent = data.wrestlers.length;
+    document.getElementById('count-raw').textContent = counts.Raw || 0;
+    document.getElementById('count-sd').textContent = counts.SmackDown || 0;
+    document.getElementById('count-nxt').textContent = counts.NXT || 0;
+    document.getElementById('count-free').textContent = counts['Free Agent'] || 0;
+
+    document.getElementById('next-show').innerHTML = `
+      <strong>Monday Night Raw</strong><br>
+      Semana ${data.week} • Marca: Raw
+    `;
+
+    const recent = document.getElementById('recent-matches');
+    if (data.matches.length === 0) {
+      recent.innerHTML = '<div class="empty">Aún no hay combates</div>';
+    } else {
+      recent.innerHTML = data.matches.slice(-5).reverse().map(m => `
+        <div class="match-card" style="margin-bottom:8px">
+          ${m.participants.join(' vs ')} <small>(${m.show})</small>
+        </div>
+      `).join('');
+    }
+  }
+
+  // ===== ACTIONS =====
+  function addWrestler() {
+    const name = document.getElementById('w-name').value.trim();
+    if (!name) return alert('Escribe un nombre');
+    data.wrestlers.push({
+      id: data.nextId++,
+      name,
+      brand: document.getElementById('w-brand').value,
+      alignment: document.getElementById('w-alignment').value,
+      ovr: parseInt(document.getElementById('w-ovr').value) || 80
+    });
+    document.getElementById('w-name').value = '';
+    save();
+    renderAll();
+  }
+
+  function deleteWrestler(id) {
+    if (!confirm('¿Eliminar este luchador?')) return;
+    data.wrestlers = data.wrestlers.filter(w => w.id !== id);
+    save();
+    renderAll();
+  }
+
+  function editWrestler(id) {
+    const w = data.wrestlers.find(x => x.id === id);
+    const newBrand = prompt('Nueva marca (Raw / SmackDown / NXT / Free Agent):', w.brand);
+    if (newBrand) w.brand = newBrand;
+    const newOvr = prompt('Nuevo OVR:', w.ovr);
+    if (newOvr) w.ovr = parseInt(newOvr);
+    save();
+    renderAll();
+  }
+
+  function bookMatch() {
+    const w1 = document.getElementById('w1').value;
+    const w2 = document.getElementById('w2').value;
+    if (!w1 || !w2) return alert('Selecciona al menos dos luchadores');
+
+    const participants = [w1, w2];
+    const w3 = document.getElementById('w3').value;
+    const w4 = document.getElementById('w4').value;
+    if (w3) participants.push(w3);
+    if (w4) participants.push(w4);
+
+    data.matches.push({
+      show: document.getElementById('match-show').value,
+      type: document.getElementById('match-type').value,
+      participants,
+      winner: document.getElementById('match-winner').value || null,
+      stip: document.getElementById('match-stip').value || null,
+      week: data.week
+    });
+    save();
+    renderAll();
+    alert('¡Combate bookeado con éxito!');
+  }
+
+  function addTitle() {
+    const name = document.getElementById('new-title').value.trim();
+    if (!name) return;
+    data.titles.push({
+      id: Date.now(),
+      name,
+      brand: document.getElementById('title-brand').value,
+      champion: null
+    });
+    document.getElementById('new-title').value = '';
+    save();
+    renderAll();
+  }
+
+  function changeChampion(id, name) {
+    const t = data.titles.find(x => x.id === id);
+    if (t) t.champion = name || null;
+    save();
+    renderAll();
+  }
+
+  function advanceWeek() {
+    data.week++;
+    save();
+    renderAll();
+    alert(`¡Avanzaste a la Semana ${data.week}!`);
+  }
+
+  // Init
+  renderAll();
+</script>
+</body>
+</html>
