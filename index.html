@@ -1061,8 +1061,11 @@
       let avatarsHTML = '';
 
       if (names.length === 0) {
-        avatarsHTML = `<div class="avatar" style="background:#444">WWE</div>`;
-      } else {
+        // Sin capa gris encima: se ve el fondo por defecto
+        avatarsHTML = '';
+      }
+      
+      else {
         for (const name of names) {
           const wrestler = getWrestlerByName(name);
           const sizeClass = names.length > 1 ? 'small' : '';
