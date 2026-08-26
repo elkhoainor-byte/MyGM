@@ -23,7 +23,6 @@
     display: flex;
   }
 
-  /* Sidebar */
   .sidebar {
     width: 260px;
     background: #111;
@@ -73,7 +72,6 @@
     border-left: 4px solid var(--gold);
   }
 
-  /* Main */
   .main {
     flex: 1;
     padding: 30px;
@@ -100,7 +98,6 @@
     border: 1px solid #333;
   }
 
-  /* Cards */
   .card {
     background: var(--card);
     border-radius: 12px;
@@ -115,7 +112,6 @@
     font-size: 18px;
   }
 
-  /* Forms */
   input, select, textarea, button {
     background: #222;
     border: 1px solid #444;
@@ -157,7 +153,6 @@
 
   .form-row > * { flex: 1; min-width: 140px; }
 
-  /* Tables */
   table {
     width: 100%;
     border-collapse: collapse;
@@ -193,7 +188,6 @@
     margin-right: 5px;
   }
 
-  /* Grid */
   .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -218,6 +212,25 @@
     border-radius: 0 8px 8px 0;
   }
 
+  .news-item {
+    background: #222;
+    border-left: 4px solid var(--red);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .news-item .week {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .news-item .headline {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
   .empty {
     text-align: center;
     color: var(--muted);
@@ -227,7 +240,6 @@
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="logo">
     <h1>WWE 2K27</h1>
@@ -240,14 +252,12 @@
   <button class="nav-btn" onclick="showSection('shows')">📅 Shows</button>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
   <div class="header">
     <h2 id="section-title">Dashboard</h2>
     <div class="week-info">Semana <span id="week-num">1</span> • 2027</div>
   </div>
 
-  <!-- DASHBOARD -->
   <section id="dashboard" class="section active">
     <div class="grid-2">
       <div class="card">
@@ -261,13 +271,18 @@
         <div id="next-show">Cargando...</div>
       </div>
     </div>
+
+    <div class="card">
+      <h3>📰 Noticias del Universo</h3>
+      <div id="news-list"></div>
+    </div>
+
     <div class="card">
       <h3>Últimos Combates Bookeados</h3>
       <div id="recent-matches"></div>
     </div>
   </section>
 
-  <!-- ROSTER -->
   <section id="roster" class="section">
     <div class="card">
       <h3>Añadir Luchador</h3>
@@ -306,7 +321,6 @@
     </div>
   </section>
 
-  <!-- BOOKER -->
   <section id="booker" class="section">
     <div class="card">
       <h3>Bookear Combate</h3>
@@ -349,7 +363,6 @@
     </div>
   </section>
 
-  <!-- TITLES -->
   <section id="titles" class="section">
     <div class="card">
       <h3>Campeonatos</h3>
@@ -368,7 +381,6 @@
     </div>
   </section>
 
-  <!-- SHOWS -->
   <section id="shows" class="section">
     <div class="card">
       <h3>Calendario Semanal</h3>
@@ -380,7 +392,6 @@
 </main>
 
 <script>
-  // ===== DATA =====
   let data = JSON.parse(localStorage.getItem('wwe2k27_gm')) || {
     week: 1,
     wrestlers: [
@@ -403,6 +414,11 @@
       { id: 4, name: "United States Championship", brand: "SmackDown", champion: "LA Knight" },
       { id: 5, name: "NXT Championship", brand: "NXT", champion: "Trick Williams" }
     ],
+    news: [
+      { week: 1, text: "¡Bienvenido al Modo Universo de WWE 2K27! El nuevo GM toma el control." },
+      { week: 1, text: "Cody Rhodes defiende el WWE Championship mientras Gunther reina en Raw." },
+      { week: 1, text: "Se esperan grandes movimientos de roster en las próximas semanas." }
+    ],
     nextId: 11
   };
 
@@ -410,7 +426,15 @@
     localStorage.setItem('wwe2k27_gm', JSON.stringify(data));
   }
 
-  // ===== NAVIGATION =====
+  function addNews(text) {
+    data.news.unshift({
+      week: data.week,
+      text: text
+    });
+    if (data.news.length > 30) data.news = data.news.slice(0, 30);
+    save();
+  }
+
   function showSection(id) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -428,7 +452,6 @@
     renderAll();
   }
 
-  // ===== RENDER =====
   function renderAll() {
     document.getElementById('week-num').textContent = data.week;
     renderRoster();
@@ -471,7 +494,6 @@
       if (current) sel.value = current;
     });
 
-    // Show/hide extra selects
     const type = document.getElementById('match-type').value;
     document.getElementById('w3').style.display = (type.includes('Triple') || type.includes('Fatal') || type.includes('Tag')) ? 'block' : 'none';
     document.getElementById('w4').style.display = (type.includes('Fatal') || type.includes('Tag')) ? 'block' : 'none';
@@ -540,6 +562,18 @@
       Semana ${data.week} • Marca: Raw
     `;
 
+    const newsList = document.getElementById('news-list');
+    if (data.news.length === 0) {
+      newsList.innerHTML = '<div class="empty">No hay noticias todavía</div>';
+    } else {
+      newsList.innerHTML = data.news.slice(0, 12).map(n => `
+        <div class="news-item">
+          <div class="week">Semana ${n.week}</div>
+          <div class="headline">${n.text}</div>
+        </div>
+      `).join('');
+    }
+
     const recent = document.getElementById('recent-matches');
     if (data.matches.length === 0) {
       recent.innerHTML = '<div class="empty">Aún no hay combates</div>';
@@ -552,33 +586,41 @@
     }
   }
 
-  // ===== ACTIONS =====
   function addWrestler() {
     const name = document.getElementById('w-name').value.trim();
     if (!name) return alert('Escribe un nombre');
+    const brand = document.getElementById('w-brand').value;
     data.wrestlers.push({
       id: data.nextId++,
       name,
-      brand: document.getElementById('w-brand').value,
+      brand,
       alignment: document.getElementById('w-alignment').value,
       ovr: parseInt(document.getElementById('w-ovr').value) || 80
     });
     document.getElementById('w-name').value = '';
+    
+    addNews(`Nuevo fichaje: <strong>${name}</strong> se une a ${brand === 'Free Agent' ? 'los agentes libres' : brand}.`);
     save();
     renderAll();
   }
 
   function deleteWrestler(id) {
     if (!confirm('¿Eliminar este luchador?')) return;
+    const w = data.wrestlers.find(x => x.id === id);
     data.wrestlers = data.wrestlers.filter(w => w.id !== id);
+    if (w) addNews(`<strong>${w.name}</strong> ha sido liberado del roster.`);
     save();
     renderAll();
   }
 
   function editWrestler(id) {
     const w = data.wrestlers.find(x => x.id === id);
+    const oldBrand = w.brand;
     const newBrand = prompt('Nueva marca (Raw / SmackDown / NXT / Free Agent):', w.brand);
-    if (newBrand) w.brand = newBrand;
+    if (newBrand && newBrand !== oldBrand) {
+      w.brand = newBrand;
+      addNews(`<strong>${w.name}</strong> ha sido transferido de ${oldBrand} a ${newBrand}.`);
+    }
     const newOvr = prompt('Nuevo OVR:', w.ovr);
     if (newOvr) w.ovr = parseInt(newOvr);
     save();
@@ -596,14 +638,20 @@
     if (w3) participants.push(w3);
     if (w4) participants.push(w4);
 
+    const show = document.getElementById('match-show').value;
+    const type = document.getElementById('match-type').value;
+    const winner = document.getElementById('match-winner').value || null;
+    const stip = document.getElementById('match-stip').value || null;
+
     data.matches.push({
-      show: document.getElementById('match-show').value,
-      type: document.getElementById('match-type').value,
-      participants,
-      winner: document.getElementById('match-winner').value || null,
-      stip: document.getElementById('match-stip').value || null,
-      week: data.week
+      show, type, participants, winner, stip, week: data.week
     });
+
+    let newsText = `Combate anunciado para ${show}: <strong>${participants.join(' vs ')}</strong> (${type})`;
+    if (winner) newsText += `. Ganador previsto: ${winner}`;
+    if (stip) newsText += `. Estipulación: ${stip}`;
+    addNews(newsText);
+
     save();
     renderAll();
     alert('¡Combate bookeado con éxito!');
@@ -619,25 +667,32 @@
       champion: null
     });
     document.getElementById('new-title').value = '';
+    addNews(`Nuevo campeonato creado: <strong>${name}</strong>.`);
     save();
     renderAll();
   }
 
   function changeChampion(id, name) {
     const t = data.titles.find(x => x.id === id);
-    if (t) t.champion = name || null;
+    if (t && name) {
+      const oldChamp = t.champion || 'Vacante';
+      t.champion = name;
+      addNews(`¡Cambio de campeón! <strong>${name}</strong> derrota a ${oldChamp} y se convierte en el nuevo ${t.name}.`);
+    } else if (t) {
+      t.champion = null;
+    }
     save();
     renderAll();
   }
 
   function advanceWeek() {
     data.week++;
+    addNews(`Comienza la Semana ${data.week} del Universo WWE 2K27. ¡Nuevas historias se avecinan!`);
     save();
     renderAll();
     alert(`¡Avanzaste a la Semana ${data.week}!`);
   }
 
-  // Init
   renderAll();
 </script>
 </body>
