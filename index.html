@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WWE 2K27 - Modo GM | Universo</title>
+<title>WWE 2K26 - Modo GM | Universo</title>
 <style>
   :root {
     --bg: #0d0d0d;
@@ -195,6 +195,7 @@
   .btn:hover { background: #e0c040; }
   .btn-red { background: var(--red); color: white; }
   .btn-red:hover { background: #e03050; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
 
   .form-row {
     display: flex;
@@ -249,7 +250,7 @@
 
   .empty { text-align: center; color: var(--muted); padding: 40px; }
 
-  /* ========== NUEVO ESTILO DE NOTICIAS (CARRUSEL) ========== */
+  /* ========== NOTICIAS CARRUSEL ========== */
   .news-carousel-wrapper {
     position: relative;
     overflow: hidden;
@@ -272,12 +273,12 @@
   }
 
   .news-image-area {
-    height: 160px;
+    height: 180px;
     background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 20px;
     position: relative;
     overflow: hidden;
   }
@@ -290,25 +291,35 @@
   }
 
   .avatar {
-    width: 90px;
-    height: 90px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     color: white;
     border: 3px solid var(--gold);
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     position: relative;
     z-index: 2;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
   }
 
   .avatar.small {
-    width: 70px;
-    height: 70px;
-    font-size: 22px;
+    width: 85px;
+    height: 85px;
+    font-size: 24px;
+  }
+
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
   }
 
   .news-content {
@@ -347,6 +358,27 @@
   .news-dot.active {
     background: var(--gold);
     transform: scale(1.2);
+  }
+
+  /* Mini avatar en tabla de roster */
+  .roster-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #444;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .roster-avatar.placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #333;
+    color: #aaa;
+    font-size: 13px;
+    font-weight: 600;
   }
 
   /* DRAFT */
@@ -409,6 +441,9 @@
 
   #app { display: none; width: 100%; }
   #app.visible { display: flex; }
+
+  /* Input file oculto */
+  .hidden-file { display: none; }
 </style>
 </head>
 <body>
@@ -416,7 +451,7 @@
 <!-- PANTALLA DE INICIO -->
 <div id="start-screen">
   <div class="start-logo">
-    <h1>WWE 2K27</h1>
+    <h1>WWE 2K26</h1>
     <span>MODO GM • UNIVERSO</span>
   </div>
 
@@ -456,7 +491,7 @@
 <div id="draft-screen">
   <div class="draft-container">
     <div class="draft-header">
-      <h2>WWE 2K27 - Draft de Marcas</h2>
+      <h2>WWE 2K26 - Draft de Marcas</h2>
       <p>Asigna a cada superestrella su marca. ¡El futuro del Universo empieza aquí!</p>
     </div>
     <div class="draft-pick-info">
@@ -495,7 +530,7 @@
 <div id="app">
   <aside class="sidebar">
     <div class="logo">
-      <h1>WWE 2K27</h1>
+      <h1>WWE 2K26</h1>
       <span>MODO GM • UNIVERSO</span>
     </div>
     <button class="nav-btn active" onclick="showSection('dashboard')">🏠 Dashboard</button>
@@ -509,7 +544,7 @@
   <main class="main">
     <div class="header">
       <h2 id="section-title">Dashboard</h2>
-      <div class="week-info">Semana <span id="week-num">1</span> • 2027</div>
+      <div class="week-info">Semana <span id="week-num">1</span> • 2026</div>
     </div>
 
     <section id="dashboard" class="section active">
@@ -526,7 +561,6 @@
         </div>
       </div>
 
-      <!-- NUEVA SECCIÓN DE NOTICIAS CON CARRUSEL -->
       <div class="card">
         <h3>📰 Noticias del Universo</h3>
         <div class="news-carousel-wrapper">
@@ -561,11 +595,13 @@
           <button class="btn" onclick="addWrestler()">Añadir</button>
         </div>
       </div>
+
       <div class="card">
         <h3>Roster Actual</h3>
         <table>
           <thead>
             <tr>
+              <th>Foto</th>
               <th>Nombre</th>
               <th>Marca</th>
               <th>Alineación</th>
@@ -646,29 +682,33 @@
   </main>
 </div>
 
+<!-- Input oculto para subir imágenes -->
+<input type="file" id="image-upload" class="hidden-file" accept="image/*">
+
 <script>
   const defaultWrestlers = [
-    { id: 1, name: "AJ Lee", brand: "Raw", alignment: "Face", ovr: 87 },
-    { id: 2, name: "AJ Styles", brand: "Raw", alignment: "Face", ovr: 88 },
-    { id: 3, name: "Akira Tozawa", brand: "Raw", alignment: "Face", ovr: 68 },
-    { id: 4, name: "Alba Fyre", brand: "SmackDown", alignment: "Face", ovr: 77 },
-    { id: 5, name: "Cody Rhodes", brand: "Raw", alignment: "Face", ovr: 95 },
-    { id: 6, name: "Roman Reigns", brand: "SmackDown", alignment: "Heel", ovr: 95 },
-    { id: 7, name: "Seth Rollins", brand: "Raw", alignment: "Face", ovr: 94 },
-    { id: 8, name: "Gunther", brand: "Raw", alignment: "Heel", ovr: 93 },
-    { id: 9, name: "CM Punk", brand: "Raw", alignment: "Face", ovr: 91 },
-    { id: 10, name: "Rhea Ripley", brand: "Raw", alignment: "Heel", ovr: 93 },
-    { id: 11, name: "LA Knight", brand: "SmackDown", alignment: "Face", ovr: 89 },
-    { id: 12, name: "Iyo Sky", brand: "SmackDown", alignment: "Heel", ovr: 90 },
-    { id: 13, name: "Trick Williams", brand: "NXT", alignment: "Face", ovr: 87 },
-    { id: 14, name: "Oba Femi", brand: "NXT", alignment: "Heel", ovr: 88 }
+    { id: 1, name: "AJ Lee", brand: "Raw", alignment: "Face", ovr: 87, image: null },
+    { id: 2, name: "AJ Styles", brand: "Raw", alignment: "Face", ovr: 88, image: null },
+    { id: 3, name: "Akira Tozawa", brand: "Raw", alignment: "Face", ovr: 68, image: null },
+    { id: 4, name: "Alba Fyre", brand: "SmackDown", alignment: "Face", ovr: 77, image: null },
+    { id: 5, name: "Cody Rhodes", brand: "Raw", alignment: "Face", ovr: 95, image: null },
+    { id: 6, name: "Roman Reigns", brand: "SmackDown", alignment: "Heel", ovr: 95, image: null },
+    { id: 7, name: "Seth Rollins", brand: "Raw", alignment: "Face", ovr: 94, image: null },
+    { id: 8, name: "Gunther", brand: "Raw", alignment: "Heel", ovr: 93, image: null },
+    { id: 9, name: "CM Punk", brand: "Raw", alignment: "Face", ovr: 91, image: null },
+    { id: 10, name: "Rhea Ripley", brand: "Raw", alignment: "Heel", ovr: 93, image: null },
+    { id: 11, name: "LA Knight", brand: "SmackDown", alignment: "Face", ovr: 89, image: null },
+    { id: 12, name: "Iyo Sky", brand: "SmackDown", alignment: "Heel", ovr: 90, image: null },
+    { id: 13, name: "Trick Williams", brand: "NXT", alignment: "Face", ovr: 87, image: null },
+    { id: 14, name: "Oba Femi", brand: "NXT", alignment: "Heel", ovr: 88, image: null }
   ];
 
   let data = null;
   let newsIndex = 0;
   let newsInterval = null;
+  let currentUploadId = null;
 
-  // ===== COLORES PARA AVATARES =====
+  // ===== AVATARES =====
   function getAvatarColor(name) {
     const colors = ['#c41e3a', '#1e90ff', '#d4af37', '#8e44ad', '#27ae60', '#e67e22', '#e74c3c', '#3498db'];
     let hash = 0;
@@ -681,21 +721,48 @@
   }
 
   function extractNames(text) {
-    // Intenta extraer nombres conocidos del roster
     const names = [];
     if (!data) return names;
     data.wrestlers.forEach(w => {
       if (text.includes(w.name)) names.push(w.name);
     });
-    // También busca los campeones fijos
     const fixed = ["Cody Rhodes", "Gunther", "Rhea Ripley", "LA Knight", "Trick Williams", "Roman Reigns", "Seth Rollins", "CM Punk"];
     fixed.forEach(n => { if (text.includes(n) && !names.includes(n)) names.push(n); });
-    return names.slice(0, 2); // máximo 2 avatares
+    return names.slice(0, 2);
   }
+
+  function getWrestlerByName(name) {
+    return data?.wrestlers.find(w => w.name === name) || null;
+  }
+
+  // ===== SUBIR IMAGEN =====
+  function uploadImage(id) {
+    currentUploadId = id;
+    document.getElementById('image-upload').click();
+  }
+
+  document.getElementById('image-upload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file || !currentUploadId) return;
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const wrestler = data.wrestlers.find(w => w.id === currentUploadId);
+      if (wrestler) {
+        wrestler.image = event.target.result; // base64
+        save();
+        renderAll();
+        alert(`Imagen de ${wrestler.name} actualizada correctamente`);
+      }
+      currentUploadId = null;
+      e.target.value = '';
+    };
+    reader.readAsDataURL(file);
+  });
 
   // ===== INICIO =====
   function checkSavedGame() {
-    const saved = localStorage.getItem('wwe2k27_gm');
+    const saved = localStorage.getItem('wwe2k26_gm');
     const btn = document.getElementById('btn-cargar');
     if (saved) {
       btn.disabled = false;
@@ -737,7 +804,7 @@
   }
 
   function generarNoticiasCampeones() {
-    addNews("¡Bienvenido al Modo Universo de WWE 2K27! El nuevo GM toma el control.");
+    addNews("¡Bienvenido al Modo Universo de WWE 2K26! El nuevo GM toma el control.");
     addNews(`<strong>Cody Rhodes</strong> es el actual <strong>WWE Champion</strong> y liderará la división mundial.`);
     addNews(`<strong>Gunther</strong> reina como <strong>World Heavyweight Champion</strong> en Raw.`);
     addNews(`<strong>Rhea Ripley</strong> defiende el <strong>Women's World Championship</strong> con mano de hierro.`);
@@ -748,7 +815,7 @@
   function iniciarRosterDefault() {
     data = crearDatosBase(false);
     generarNoticiasCampeones();
-    addNews("El Universo comienza con el roster oficial de WWE 2K27 sin modificaciones.");
+    addNews("El Universo comienza con el roster oficial de WWE 2K26 sin modificaciones.");
     save();
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('app').classList.add('visible');
@@ -776,9 +843,11 @@
   }
 
   function cargarPartida() {
-    const saved = localStorage.getItem('wwe2k27_gm');
+    const saved = localStorage.getItem('wwe2k26_gm');
     if (!saved) return alert("No hay ninguna partida guardada.");
     data = JSON.parse(saved);
+    // Asegurar que todos tengan la propiedad image
+    data.wrestlers.forEach(w => { if (w.image === undefined) w.image = null; });
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('app').classList.add('visible');
     renderAll();
@@ -853,7 +922,7 @@
 
   function finishDraft() {
     data.draftCompleted = true;
-    addNews("¡El Draft de WWE 2K27 ha finalizado! Las marcas ya tienen sus rostros definidos.");
+    addNews("¡El Draft de WWE 2K26 ha finalizado! Las marcas ya tienen sus rostros definidos.");
     addNews(`<strong>Cody Rhodes</strong> es el actual <strong>WWE Champion</strong> y liderará la división mundial.`);
     addNews(`<strong>Gunther</strong> reina como <strong>World Heavyweight Champion</strong> en Raw.`);
     addNews(`<strong>Rhea Ripley</strong> defiende el <strong>Women's World Championship</strong> con mano de hierro.`);
@@ -873,7 +942,7 @@
 
   // ===== UTILIDADES =====
   function save() {
-    localStorage.setItem('wwe2k27_gm', JSON.stringify(data));
+    localStorage.setItem('wwe2k26_gm', JSON.stringify(data));
   }
 
   function addNews(text) {
@@ -899,7 +968,7 @@
     renderAll();
   }
 
-  // ===== RENDER NOTICIAS (CARRUSEL) =====
+  // ===== RENDER NOTICIAS =====
   function renderNewsCarousel() {
     const track = document.getElementById('news-track');
     const dotsContainer = document.getElementById('news-dots');
@@ -922,9 +991,15 @@
       if (names.length === 0) {
         avatarsHTML = `<div class="avatar" style="background:#444">WWE</div>`;
       } else {
-        names.forEach((name, i) => {
+        names.forEach((name) => {
+          const wrestler = getWrestlerByName(name);
           const sizeClass = names.length > 1 ? 'small' : '';
-          avatarsHTML += `<div class="avatar ${sizeClass}" style="background:${getAvatarColor(name)}">${getInitials(name)}</div>`;
+          
+          if (wrestler && wrestler.image) {
+            avatarsHTML += `<div class="avatar ${sizeClass}"><img src="${wrestler.image}" alt="${name}"></div>`;
+          } else {
+            avatarsHTML += `<div class="avatar ${sizeClass}" style="background:${getAvatarColor(name)}">${getInitials(name)}</div>`;
+          }
         });
       }
 
@@ -940,7 +1015,6 @@
         </div>`;
     }).join('');
 
-    // Dots
     dotsContainer.innerHTML = newsToShow.map((_, i) => 
       `<div class="news-dot ${i === 0 ? 'active' : ''}" onclick="goToNews(${i})"></div>`
     ).join('');
@@ -948,7 +1022,6 @@
     newsIndex = 0;
     updateNewsPosition();
 
-    // Auto slide cada 7 segundos
     newsInterval = setInterval(() => {
       newsIndex = (newsIndex + 1) % newsToShow.length;
       updateNewsPosition();
@@ -959,7 +1032,6 @@
     const track = document.getElementById('news-track');
     if (!track) return;
     track.style.transform = `translateX(-${newsIndex * 100}%)`;
-
     document.querySelectorAll('.news-dot').forEach((dot, i) => {
       dot.classList.toggle('active', i === newsIndex);
     });
@@ -968,7 +1040,6 @@
   function goToNews(index) {
     newsIndex = index;
     updateNewsPosition();
-    // Reiniciar el temporizador
     clearInterval(newsInterval);
     newsInterval = setInterval(() => {
       newsIndex = (newsIndex + 1) % data.news.slice(0, 12).length;
@@ -993,13 +1064,23 @@
     tbody.innerHTML = '';
     data.wrestlers.sort((a,b) => b.ovr - a.ovr).forEach(w => {
       const brandClass = w.brand === 'Raw' ? 'raw' : w.brand === 'SmackDown' ? 'smackdown' : w.brand === 'NXT' ? 'nxt' : 'free';
+      
+      let avatarHTML = '';
+      if (w.image) {
+        avatarHTML = `<img src="${w.image}" class="roster-avatar" alt="${w.name}">`;
+      } else {
+        avatarHTML = `<div class="roster-avatar placeholder" style="background:${getAvatarColor(w.name)}">${getInitials(w.name)}</div>`;
+      }
+
       tbody.innerHTML += `
         <tr>
+          <td>${avatarHTML}</td>
           <td><strong>${w.name}</strong></td>
           <td><span class="badge ${brandClass}">${w.brand}</span></td>
           <td>${w.alignment}</td>
           <td>${w.ovr}</td>
           <td class="actions">
+            <button onclick="uploadImage(${w.id})">Subir foto</button>
             <button onclick="editWrestler(${w.id})">Editar</button>
             <button class="btn-red" onclick="deleteWrestler(${w.id})">Eliminar</button>
           </td>
@@ -1108,7 +1189,8 @@
       name,
       brand,
       alignment: document.getElementById('w-alignment').value,
-      ovr: parseInt(document.getElementById('w-ovr').value) || 80
+      ovr: parseInt(document.getElementById('w-ovr').value) || 80,
+      image: null
     });
     document.getElementById('w-name').value = '';
     addNews(`Nuevo fichaje: <strong>${name}</strong> se une a ${brand === 'Free Agent' ? 'los agentes libres' : brand}.`);
@@ -1195,12 +1277,13 @@
 
   function advanceWeek() {
     data.week++;
-    addNews(`Comienza la Semana ${data.week} del Universo WWE 2K27. ¡Nuevas historias se avecinan!`);
+    addNews(`Comienza la Semana ${data.week} del Universo WWE 2K26. ¡Nuevas historias se avecinan!`);
     save();
     renderAll();
     alert(`¡Avanzaste a la Semana ${data.week}!`);
   }
 
+  // Cambio de clave de localStorage a 2K26
   checkSavedGame();
 </script>
 </body>
