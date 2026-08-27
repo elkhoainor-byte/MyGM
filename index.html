@@ -723,6 +723,7 @@
             <option value="Tween">Tween</option>
           </select>
           <input type="number" id="w-ovr" placeholder="OVR" min="50" max="99" value="80">
+          <input type="number" id="w-pop" placeholder="Popularidad" min="1" max="100" value="70">
           <button class="btn" onclick="addWrestler()">Añadir</button>
         </div>
       </div>
@@ -736,6 +737,7 @@
               <th>Marca</th>
               <th>Alineación</th>
               <th>OVR</th>
+              <th>Pop</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -899,26 +901,27 @@
 
   // ==================== DATOS ====================
   const defaultWrestlers = [
-    { id: 1, name: "AJ Lee", brand: "Raw", alignment: "Face", ovr: 87 },
-    { id: 2, name: "AJ Styles", brand: "Raw", alignment: "Face", ovr: 88 },
-    { id: 3, name: "Akira Tozawa", brand: "Raw", alignment: "Face", ovr: 68 },
-    { id: 4, name: "Alba Fyre", brand: "SmackDown", alignment: "Face", ovr: 77 },
-    { id: 5, name: "Aleister Black", brand: "SmackDown", alignment: "Face", ovr: 84 },
-    { id: 6, name: "Alex Shelley", brand: "SmackDown", alignment: "Face", ovr: 80 },
-    { id: 7, name: "Alexa Bliss", brand: "SmackDown", alignment: "Face", ovr: 87 },
-    { id: 8, name: "Andre Chase", brand: "NXT", alignment: "Face", ovr: 73 },
-    { id: 9, name: "Angel", brand: "SmackDown", alignment: "Heel", ovr: 72 },
-    { id: 10, name: "Angelo Dawkins", brand: "Raw", alignment: "Face", ovr: 78 },
-    { id: 11, name: "Cody Rhodes", brand: "Raw", alignment: "Face", ovr: 95 },
-    { id: 12, name: "Roman Reigns", brand: "SmackDown", alignment: "Heel", ovr: 95 },
-    { id: 13, name: "Seth Rollins", brand: "Raw", alignment: "Face", ovr: 94 },
-    { id: 14, name: "Gunther", brand: "Raw", alignment: "Heel", ovr: 93 },
-    { id: 15, name: "CM Punk", brand: "Raw", alignment: "Face", ovr: 91 },
-    { id: 16, name: "Rhea Ripley", brand: "Raw", alignment: "Heel", ovr: 93 },
-    { id: 17, name: "LA Knight", brand: "SmackDown", alignment: "Face", ovr: 89 },
-    { id: 18, name: "Iyo Sky", brand: "SmackDown", alignment: "Heel", ovr: 90 },
-    { id: 19, name: "Trick Williams", brand: "NXT", alignment: "Face", ovr: 87 },
-    { id: 20, name: "Oba Femi", brand: "NXT", alignment: "Heel", ovr: 88 }
+    [
+  { id: 1, name: "AJ Lee", brand: "Raw", alignment: "Face", ovr: 87, pop: 84 },
+  { id: 2, name: "AJ Styles", brand: "Raw", alignment: "Face", ovr: 88, pop: 86 },
+  { id: 3, name: "Akira Tozawa", brand: "Raw", alignment: "Face", ovr: 68, pop: 70 },
+  { id: 4, name: "Alba Fyre", brand: "SmackDown", alignment: "Face", ovr: 77, pop: 72 },
+  { id: 5, name: "Aleister Black", brand: "SmackDown", alignment: "Face", ovr: 84, pop: 81 },
+  { id: 6, name: "Alex Shelley", brand: "SmackDown", alignment: "Face", ovr: 80, pop: 74 },
+  { id: 7, name: "Alexa Bliss", brand: "SmackDown", alignment: "Face", ovr: 87, pop: 85 },
+  { id: 8, name: "Andre Chase", brand: "NXT", alignment: "Face", ovr: 73, pop: 68 },
+  { id: 9, name: "Angel", brand: "SmackDown", alignment: "Heel", ovr: 72, pop: 69 },
+  { id: 10, name: "Angelo Dawkins", brand: "Raw", alignment: "Face", ovr: 78, pop: 76 },
+  { id: 11, name: "Cody Rhodes", brand: "Raw", alignment: "Face", ovr: 95, pop: 96 },
+  { id: 12, name: "Roman Reigns", brand: "SmackDown", alignment: "Heel", ovr: 95, pop: 97 },
+  { id: 13, name: "Seth Rollins", brand: "Raw", alignment: "Face", ovr: 94, pop: 92 },
+  { id: 14, name: "Gunther", brand: "Raw", alignment: "Heel", ovr: 93, pop: 91 },
+  { id: 15, name: "CM Punk", brand: "Raw", alignment: "Face", ovr: 91, pop: 94 },
+  { id: 16, name: "Rhea Ripley", brand: "Raw", alignment: "Heel", ovr: 93, pop: 95 },
+  { id: 17, name: "LA Knight", brand: "SmackDown", alignment: "Face", ovr: 89, pop: 91 },
+  { id: 18, name: "Iyo Sky", brand: "SmackDown", alignment: "Heel", ovr: 90, pop: 87 },
+  { id: 19, name: "Trick Williams", brand: "NXT", alignment: "Face", ovr: 87, pop: 83 },
+  { id: 20, name: "Oba Femi", brand: "NXT", alignment: "Heel", ovr: 88, pop: 80 }
   ];
 
   let data = null;
@@ -1171,6 +1174,11 @@
         NXT:       { day: 'Martes',  name: 'NXT' },
         SmackDown: { day: 'Viernes', name: 'Friday Night SmackDown' }
       };
+    }
+        if (data.wrestlers) {
+      data.wrestlers.forEach(w => {
+        if (w.pop == null) w.pop = Math.min(99, Math.max(40, Math.round((w.ovr || 70) * 0.9)));
+      });
     }
     document.getElementById('app').classList.add('visible');
     renderAll();
@@ -1500,6 +1508,7 @@
           <td><span class="badge ${brandClass}">${w.brand}</span></td>
           <td>${w.alignment}</td>
           <td>${w.ovr}</td>
+          <td>${w.pop != null ? w.pop : '—'}</td>
           <td class="actions">
             <button onclick="uploadImage(${w.id})">Subir foto</button>
             <button onclick="editWrestler(${w.id})">Editar</button>
@@ -1799,6 +1808,13 @@
     return w ? w.ovr : 70;
   }
 
+    function getWrestlerPop(name) {
+    const w = data.wrestlers.find(x => x.name === name);
+    if (!w) return 60;
+    if (w.pop != null) return w.pop;
+    return Math.min(99, Math.max(40, Math.round((w.ovr || 70) * 0.9)));
+  }
+
   function timesFacedRecently(a, b, weeksBack = 6) {
     const minWeek = data.week - weeksBack;
     return data.matches.filter(m =>
@@ -1808,9 +1824,12 @@
     ).length;
   }
 
-  function scoreMatch(m) {
+    function scoreMatch(m) {
     const ovrs = m.participants.map(getWrestlerPower);
+    const pops = m.participants.map(getWrestlerPop);
     const avgOvr = ovrs.reduce((a, b) => a + b, 0) / ovrs.length;
+    const avgPop = pops.reduce((a, b) => a + b, 0) / pops.length;
+    const maxPop = Math.max(...pops);
     const typeBoost = MATCH_TYPE_BOOST[m.type] || 0;
 
     let chem = 0;
@@ -1832,11 +1851,17 @@
     if (m.stip) hype += 6;
     if (m.winner) hype += 3;
     if (m.show === 'PPV') hype += 8;
+    // Estrella muy popular en el card
+    if (maxPop >= 90) hype += 8;
+    else if (maxPop >= 80) hype += 4;
 
-    let quality = Math.min(100, (avgOvr - 50) * 1.6 + typeBoost + chem);
+    // Calidad: OVR + un poco de popularidad + tipo + química
+    let quality = Math.min(100, (avgOvr - 50) * 1.35 + (avgPop - 50) * 0.35 + typeBoost + chem);
     quality = quality * rivalryMult;
 
-    const starPower = avgOvr;
+    // Estrellato: más peso a popularidad que a OVR
+    const starPower = avgPop * 0.65 + avgOvr * 0.35;
+
     const storyHype = Math.min(100, 40 + hype + (rivalryMult - 1) * 50);
 
     return {
@@ -2181,14 +2206,17 @@
     const name = document.getElementById('w-name').value.trim();
     if (!name) return alert('Escribe un nombre');
     const brand = document.getElementById('w-brand').value;
+     let pop = parseInt(document.getElementById('w-pop').value);
+    if (isNaN(pop)) pop = 70;
+    pop = Math.min(100, Math.max(1, pop));
     data.wrestlers.push({
       id: data.nextId++,
       name,
       brand,
       alignment: document.getElementById('w-alignment').value,
-      ovr: parseInt(document.getElementById('w-ovr').value) || 80
+      ovr: parseInt(document.getElementById('w-ovr').value) || 80,
+      pop
     });
-    document.getElementById('w-name').value = '';
     addNews(`Nuevo fichaje: <strong>${name}</strong> se une a ${brand === 'Free Agent' ? 'los agentes libres' : brand}.`);
     save();
     renderAll();
@@ -2215,6 +2243,13 @@
     }
     const newOvr = prompt('Nuevo OVR:', w.ovr);
     if (newOvr) w.ovr = parseInt(newOvr);
+
+    const newPop = prompt('Nueva popularidad (1-100):', w.pop != null ? w.pop : 70);
+    if (newPop !== null && newPop !== '') {
+      let p = parseInt(newPop);
+      if (!isNaN(p)) w.pop = Math.min(100, Math.max(1, p));
+    }
+
     save();
     renderAll();
   }
