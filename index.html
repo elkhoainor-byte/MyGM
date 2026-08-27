@@ -91,6 +91,18 @@
   .free { background: #555; }
 
   .actions button { padding: 5px 10px; font-size: 12px; margin-right: 5px; }
+  .aud-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:10px; }
+  .aud-bar-bg { flex:1; height:10px; background:#333; border-radius:6px; overflow:hidden; }
+  .aud-bar { height:100%; border-radius:6px; }
+  .tweet {
+    background:#151515; border:1px solid #333; border-radius:10px;
+    padding:10px 12px; margin-bottom:8px; font-size:13px;
+  }
+  .tweet .user { color:var(--gold); font-weight:600; font-size:12px; margin-bottom:4px; }
+  .seg-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #333; font-size:13px; }
+  .seg-up { color:#2ecc71; }
+  .seg-down { color:#e74c3c; }
+  .rating-big { font-size:28px; color:var(--gold); font-weight:700; }
     /* Fotos del roster (tabla) */
     .roster-avatar {
     width: 48px;
@@ -513,6 +525,23 @@
           <div id="next-show">Cargando...</div>
         </div>
       </div>
+      
+      <div class="grid-2">
+        <div class="card">
+          <h3>Guerra de Audiencias</h3>
+          <div id="audience-war"></div>
+          <canvas id="audience-chart" height="140" style="width:100%;margin-top:12px;background:#111;border-radius:8px;"></canvas>
+        </div>
+        <div class="card">
+          <h3>Último Show — Breakdown</h3>
+          <div id="show-breakdown"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Reacciones de la Fanbase</h3>
+        <div id="fan-tweets"></div>
+      </div>
+      
       <div class="card">
         <div class="news-section-header">
           <h3>📰 Noticias del Universo</h3>
@@ -890,7 +919,14 @@
         Raw: { hasBg: false, hasLogo: false },
         SmackDown: { hasBg: false, hasLogo: false },
         NXT: { hasBg: false, hasLogo: false }
-      }
+      },
+      audience: {
+        Raw:       { base: 1.85, current: 1.85, history: [1.85] },
+        SmackDown: { base: 1.70, current: 1.70, history: [1.70] },
+        NXT:       { base: 0.85, current: 0.85, history: [0.85] }
+      },
+      lastShowReports: [],
+      mainEventHistory: { Raw: [], SmackDown: [], NXT: [] }
     };
   }
 
@@ -948,6 +984,15 @@
       };
     }
     document.getElementById('start-screen').classList.add('hidden');
+    if (!data.audience) {
+      data.audience = {
+        Raw:       { base: 1.85, current: 1.85, history: [1.85] },
+        SmackDown: { base: 1.70, current: 1.70, history: [1.70] },
+        NXT:       { base: 0.85, current: 0.85, history: [0.85] }
+      };
+    }
+    if (!data.lastShowReports) data.lastShowReports = [];
+    if (!data.mainEventHistory) data.mainEventHistory = { Raw: [], SmackDown: [], NXT: [] };
     document.getElementById('app').classList.add('visible');
     renderAll();
   }
@@ -1373,8 +1418,324 @@
         <div class="match-card" style="margin-bottom:8px">${m.participants.join(' vs ')} <small>(${m.show})</small></div>
       `).join('');
     }
+    renderAudienceDashboard();
   }
 
+    // ==================== AUDIENCIA & SHOW RATING ====================
+  const MATCH_TYPE_BOOST = {
+    'Singles': 0,
+    'Tag Team': 2,
+    'Triple Threat': 4,
+    'Fatal 4-Way': 5,
+    'Hell in a Cell': 10,
+    'Cage': 7,
+    'Ladder': 8,
+    'TLC': 11
+  };
+
+  function getWrestlerPower(name) {
+    const w = data.wrestlers.find(x => x.name === name);
+    return w ? w.ovr : 70;
+  }
+
+  function timesFacedRecently(a, b, weeksBack = 6) {
+    const minWeek = data.week - weeksBack;
+    return data.matches.filter(m =>
+      m.week >= minWeek &&
+      m.participants.includes(a) &&
+      m.participants.includes(b)
+    ).length;
+  }
+
+  function scoreMatch(m) {
+    const ovrs = m.participants.map(getWrestlerPower);
+    const avgOvr = ovrs.reduce((a, b) => a + b, 0) / ovrs.length;
+    const typeBoost = MATCH_TYPE_BOOST[m.type] || 0;
+
+    let chem = 0;
+    if (m.participants.length >= 2) {
+      const meets = timesFacedRecently(m.participants[0], m.participants[1], 6);
+      if (meets >= 2 && meets <= 4) chem = 8;
+      else if (meets >= 5) chem = -6;
+    }
+
+    let rivalryMult = 1;
+    if (m.participants.length >= 2) {
+      const meets = timesFacedRecently(m.participants[0], m.participants[1], 10);
+      if (meets >= 4) rivalryMult = 1.5;
+      else if (meets === 3) rivalryMult = 1.3;
+      else if (meets === 2) rivalryMult = 1.15;
+    }
+
+    let hype = 0;
+    if (m.stip) hype += 6;
+    if (m.winner) hype += 3;
+    if (m.show === 'PPV') hype += 8;
+
+    let quality = Math.min(100, (avgOvr - 50) * 1.6 + typeBoost + chem);
+    quality = quality * rivalryMult;
+
+    const starPower = avgOvr;
+    const storyHype = Math.min(100, 40 + hype + (rivalryMult - 1) * 50);
+
+    return {
+      quality: Math.max(0, Math.min(100, quality)),
+      story: Math.max(0, Math.min(100, storyHype)),
+      stars: Math.max(0, Math.min(100, starPower)),
+      participants: m.participants,
+      type: m.type,
+      show: m.show
+    };
+  }
+
+  function computeShowRating(brand, weekMatches) {
+    if (!weekMatches.length) {
+      return { total: 35, quality: 30, story: 30, stars: 50, segments: [], fans: [] };
+    }
+
+    const scored = weekMatches.map(scoreMatch);
+    const avgQ = scored.reduce((s, x) => s + x.quality, 0) / scored.length;
+    const avgStory = scored.reduce((s, x) => s + x.story, 0) / scored.length;
+    const avgStars = scored.reduce((s, x) => s + x.stars, 0) / scored.length;
+
+    let total = avgQ * 0.50 + avgStory * 0.35 + avgStars * 0.15;
+
+    const main = [...weekMatches].sort((a, b) => {
+      const pa = a.participants.reduce((s, n) => s + getWrestlerPower(n), 0) / a.participants.length;
+      const pb = b.participants.reduce((s, n) => s + getWrestlerPower(n), 0) / b.participants.length;
+      return pb - pa;
+    })[0];
+
+    const mainKey = main.participants.slice().sort().join('|');
+    const hist = data.mainEventHistory[brand] || [];
+    let streak = 0;
+    for (let i = hist.length - 1; i >= 0; i--) {
+      if (hist[i] === mainKey) streak++;
+      else break;
+    }
+    if (streak >= 1) total *= (1 - Math.min(0.45, 0.15 * streak));
+
+    const champNames = data.titles.map(t => t.champion).filter(Boolean);
+    const titleMatch = weekMatches.some(m => m.participants.some(p => champNames.includes(p)));
+    if (titleMatch && total >= 70) total *= 1.12;
+    else if (titleMatch) total *= 1.05;
+
+    total = Math.max(0, Math.min(100, total));
+
+    const segments = scored.map((s) => {
+      const delta = (s.quality - 55) * 0.4;
+      return {
+        label: s.participants.join(' vs ') + ' (' + s.type + ')',
+        delta: Math.round(delta * 10) / 10,
+        quality: Math.round(s.quality)
+      };
+    });
+
+    const fans = generateFanTweets(brand, total, segments, titleMatch, streak);
+
+    return {
+      total: Math.round(total * 10) / 10,
+      quality: Math.round(avgQ),
+      story: Math.round(avgStory),
+      stars: Math.round(avgStars),
+      segments,
+      fans,
+      mainKey,
+      titleMatch,
+      fatigueStreak: streak
+    };
+  }
+
+  function generateFanTweets(brand, rating, segments, titleMatch, fatigue) {
+    const tweets = [];
+    const stars5 = (rating / 20).toFixed(1);
+
+    if (rating >= 85) {
+      tweets.push({ user: '@UniverseInsider', text: '¡' + brand + ' esta semana ha sido INFERNAL! ' + stars5 + '/5. Booking de élite.' });
+    } else if (rating >= 70) {
+      tweets.push({ user: '@SmackTalker', text: 'Sólido ' + brand + '. Main event a la altura. ' + stars5 + '/5.' });
+    } else if (rating >= 55) {
+      tweets.push({ user: '@CasualFan92', text: brand + ' correcto pero sin magia. Faltó hype. ' + stars5 + '/5.' });
+    } else {
+      tweets.push({ user: '@HardcoreMark', text: 'Otro ' + brand + ' flojo... demasiadas repeticiones. ' + stars5 + '/5.' });
+    }
+
+    const best = [...segments].sort((a, b) => b.delta - a.delta)[0];
+    const worst = [...segments].sort((a, b) => a.delta - b.delta)[0];
+    if (best && best.delta > 0) {
+      tweets.push({ user: '@MatchGraph', text: 'Peak del show: ' + best.label + '. La audiencia subió con fuerza.' });
+    }
+    if (worst && worst.delta < 0) {
+      tweets.push({ user: '@ZapRemote', text: 'Drop claro en: ' + worst.label + '. Varios canales cambiados.' });
+    }
+    if (titleMatch) {
+      tweets.push({ user: '@BeltWatcher', text: 'Defensa titular en show semanal. La gente se quedó hasta el final.' });
+    }
+    if (fatigue >= 2) {
+      tweets.push({ user: '@BoredViewer', text: '¿Otra vez el mismo main event? Estoy pasando de ' + brand + ' esta semana.' });
+    }
+    if (segments.length >= 4) {
+      tweets.push({ user: '@PromoPolice', text: 'Cartelera cargada. Si no hay avance de historia la semana que viene, me desconecto.' });
+    } else if (segments.length <= 1) {
+      tweets.push({ user: '@MoreMatches', text: 'Poca acción en ' + brand + '. Queremos más combates, menos relleno.' });
+    }
+    return tweets.slice(0, 5);
+  }
+
+  function applyAudienceFromRating(brand, report) {
+    if (!data.audience[brand]) return;
+    const aud = data.audience[brand];
+    let factor = 1 + ((report.total - 50) * 0.012);
+
+    if (report.fatigueStreak >= 2) factor *= (1 - 0.15 * Math.min(report.fatigueStreak, 3));
+    if (report.titleMatch && report.total >= 70) factor *= 1.08;
+
+    let next = aud.current * factor;
+    next = next * 0.85 + aud.base * 0.15;
+    next = Math.max(aud.base * 0.45, Math.min(aud.base * 2.2, next));
+    next = Math.round(next * 1000) / 1000;
+
+    aud.current = next;
+    aud.history.push(next);
+    if (aud.history.length > 16) aud.history = aud.history.slice(-16);
+  }
+
+  function evaluateWeekShows() {
+    const brands = ['Raw', 'SmackDown', 'NXT'];
+    const reports = [];
+
+    brands.forEach(brand => {
+      const brandMatches = data.matches.filter(m => m.week === data.week && m.show === brand);
+      const report = computeShowRating(brand, brandMatches);
+      report.brand = brand;
+      report.week = data.week;
+
+      if (brandMatches.length) {
+        data.mainEventHistory[brand] = data.mainEventHistory[brand] || [];
+        data.mainEventHistory[brand].push(report.mainKey);
+        if (data.mainEventHistory[brand].length > 8) {
+          data.mainEventHistory[brand] = data.mainEventHistory[brand].slice(-8);
+        }
+        applyAudienceFromRating(brand, report);
+      } else {
+        const aud = data.audience[brand];
+        aud.current = Math.round(aud.current * 0.97 * 1000) / 1000;
+        aud.history.push(aud.current);
+        if (aud.history.length > 16) aud.history = aud.history.slice(-16);
+        report.fans = [{ user: '@EmptyArena', text: 'No hubo combates en ' + brand + ' esta semana. La audiencia se enfría.' }];
+      }
+      reports.push(report);
+    });
+
+    const ppvMatches = data.matches.filter(m => m.week === data.week && m.show === 'PPV');
+    if (ppvMatches.length) {
+      const ppvReport = computeShowRating('PPV', ppvMatches);
+      if (ppvReport.total >= 75) {
+        ['Raw', 'SmackDown', 'NXT'].forEach(b => {
+          data.audience[b].base = Math.round(data.audience[b].base * 1.04 * 1000) / 1000;
+          data.audience[b].current = Math.round(data.audience[b].current * 1.1 * 1000) / 1000;
+        });
+        addNews('El PLE/PPV de la semana ' + data.week + ' fue un éxito (' + ppvReport.total + '/100). Sube la base de fans de todas las marcas.');
+      }
+      ppvReport.brand = 'PPV';
+      ppvReport.week = data.week;
+      reports.push(ppvReport);
+    }
+
+    data.lastShowReports = reports;
+    const best = reports.filter(r => r.brand !== 'PPV').sort((a, b) => b.total - a.total)[0];
+    if (best) {
+      addNews('Ratings semana ' + data.week + ': <strong>' + best.brand + '</strong> lidera con <strong>' + best.total + '/100</strong>.');
+    }
+  }
+
+  function renderAudienceDashboard() {
+    const war = document.getElementById('audience-war');
+    const breakdown = document.getElementById('show-breakdown');
+    const tweetsBox = document.getElementById('fan-tweets');
+    if (!war || !data || !data.audience) return;
+
+    const brands = ['Raw', 'SmackDown', 'NXT'];
+    const colors = { Raw: '#c41e3a', SmackDown: '#1e90ff', NXT: '#ffd700' };
+    const totalViewers = brands.reduce((s, b) => s + data.audience[b].current, 0);
+
+    war.innerHTML = brands.map(b => {
+      const a = data.audience[b];
+      const share = totalViewers > 0 ? Math.round((a.current / totalViewers) * 1000) / 10 : 0;
+      const pct = Math.min(100, (a.current / 3) * 100);
+      return (
+        '<div class="aud-row">' +
+          '<span style="min-width:90px"><strong style="color:' + colors[b] + '">' + b + '</strong></span>' +
+          '<div class="aud-bar-bg"><div class="aud-bar" style="width:' + pct + '%;background:' + colors[b] + '"></div></div>' +
+          '<span style="min-width:110px;text-align:right">' + a.current.toFixed(2) + 'M · ' + share + '%</span>' +
+        '</div>'
+      );
+    }).join('') + '<p style="margin-top:8px;color:#888;font-size:13px">Audiencia total marcas: <strong>' + totalViewers.toFixed(2) + 'M</strong></p>';
+
+    drawAudienceChart();
+
+    const reports = data.lastShowReports || [];
+    if (!reports.length) {
+      breakdown.innerHTML = '<div class="empty" style="padding:20px">Avanza una semana con combates bookeados para ver el breakdown.</div>';
+    } else {
+      const top = [...reports].filter(r => r.brand !== 'PPV').sort((a, b) => b.total - a.total)[0] || reports[0];
+      breakdown.innerHTML =
+        '<div><span class="rating-big">' + top.total + '</span> <span style="color:#888">/ 100 · ' + top.brand + ' · Semana ' + top.week + '</span></div>' +
+        '<p style="margin:8px 0;font-size:13px;color:#aaa">' +
+          'Combates: <strong>' + top.quality + '</strong> (50%) · ' +
+          'Historia/Hype: <strong>' + top.story + '</strong> (35%) · ' +
+          'Estrellato: <strong>' + top.stars + '</strong> (15%)' +
+        '</p>' +
+        (top.segments || []).map(s =>
+          '<div class="seg-row"><span>' + s.label + '</span><span class="' + (s.delta >= 0 ? 'seg-up' : 'seg-down') + '">' +
+          (s.delta >= 0 ? '+' : '') + s.delta + '% · Q' + s.quality + '</span></div>'
+        ).join('') || '<p style="color:#888">Sin segmentos</p>';
+    }
+
+    const allTweets = (data.lastShowReports || []).flatMap(r => (r.fans || []).map(t => Object.assign({}, t, { brand: r.brand })));
+    if (!allTweets.length) {
+      tweetsBox.innerHTML = '<div class="empty" style="padding:16px">Aún no hay reacciones. Bookea y avanza semana.</div>';
+    } else {
+      tweetsBox.innerHTML = allTweets.slice(0, 8).map(t =>
+        '<div class="tweet"><div class="user">' + t.user + ' · ' + (t.brand || '') + '</div><div>' + t.text + '</div></div>'
+      ).join('');
+    }
+  }
+
+  function drawAudienceChart() {
+    const canvas = document.getElementById('audience-chart');
+    if (!canvas || !data.audience) return;
+    const ctx = canvas.getContext('2d');
+    const ratio = window.devicePixelRatio || 1;
+    const w = canvas.width = canvas.offsetWidth * ratio;
+    const h = canvas.height = 140 * ratio;
+    ctx.clearRect(0, 0, w, h);
+
+    const brands = ['Raw', 'SmackDown', 'NXT'];
+    const colors = { Raw: '#c41e3a', SmackDown: '#1e90ff', NXT: '#ffd700' };
+    const histories = brands.map(b => data.audience[b].history.slice(-12));
+    const maxLen = Math.max(...histories.map(x => x.length), 1);
+    const allVals = histories.flat();
+    const maxV = Math.max(...allVals, 0.1);
+    const minV = Math.min(...allVals, 0);
+    const pad = 20 * ratio;
+
+    brands.forEach(b => {
+      const hist = data.audience[b].history.slice(-12);
+      if (hist.length < 2) return;
+      ctx.beginPath();
+      ctx.strokeStyle = colors[b];
+      ctx.lineWidth = 2 * ratio;
+      hist.forEach((v, i) => {
+        const x = pad + (i / (maxLen - 1 || 1)) * (w - pad * 2);
+        const y = h - pad - ((v - minV) / (maxV - minV || 1)) * (h - pad * 2);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    });
+  }
+  
   // ==================== ACCIONES ====================
   function addWrestler() {
     const name = document.getElementById('w-name').value.trim();
@@ -1462,12 +1823,13 @@
     renderAll();
   }
 
-  function advanceWeek() {
+    function advanceWeek() {
+    evaluateWeekShows();
     data.week++;
-    addNews(`Comienza la Semana ${data.week} del Universo WWE 2K26.`);
+    addNews('Comienza la Semana ' + data.week + ' del Universo WWE 2K26.');
     save();
     renderAll();
-    alert(`¡Avanzaste a la Semana ${data.week}!`);
+    alert('¡Avanzaste a la Semana ' + data.week + '!\nSe han calculado los ratings del show.');
   }
 
   checkSavedGame();
