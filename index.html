@@ -194,11 +194,110 @@
     color: white;
   }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    /* ===== MÓVIL / TABLET ===== */
   @media (max-width: 900px) {
     body { flex-direction: column; }
-    .sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
-    .nav-btn { white-space: nowrap; }
-    .grid-2 { grid-template-columns: 1fr; }
+    #app.visible { flex-direction: column; min-height: 100vh; }
+
+    .sidebar {
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 8px 6px;
+      border-right: none;
+      border-bottom: 1px solid #333;
+      -webkit-overflow-scrolling: touch;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #111;
+    }
+    .sidebar .logo {
+      display: none;
+    }
+    .nav-btn {
+      white-space: nowrap;
+      padding: 10px 14px;
+      font-size: 13px;
+      border-left: none !important;
+      border-bottom: 3px solid transparent;
+      flex-shrink: 0;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      border-left: none !important;
+      border-bottom-color: var(--gold);
+      background: #1a1a1a;
+    }
+    .nav-btn[style*="margin-top:auto"] {
+      margin-top: 0 !important;
+      margin-left: auto;
+    }
+
+    .main {
+      padding: 16px 12px 80px;
+      width: 100%;
+      overflow-x: hidden;
+    }
+    .header {
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .header h2 { font-size: 22px; }
+    .week-info { font-size: 12px; }
+
+    .grid-2 { grid-template-columns: 1fr; gap: 12px; }
+    .card { padding: 14px; margin-bottom: 14px; }
+    .card h3 { font-size: 16px; }
+
+    .form-row > * { min-width: 100%; }
+
+    /* Tabla roster: scroll horizontal */
+    #roster .card:last-child {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table { min-width: 640px; }
+    th, td { padding: 8px 6px; font-size: 13px; }
+    .roster-avatar, .roster-avatar.placeholder {
+      width: 40px; height: 40px;
+    }
+    .actions button {
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    /* Calendario */
+    .cal-real { font-size: 10px; display: block; overflow-x: auto; }
+    .cal-real thead, .cal-real tbody, .cal-real tr { width: 100%; }
+    .cal-real th { padding: 8px 2px; font-size: 10px; }
+    .cal-real td { height: 72px; padding: 4px 2px; min-width: 72px; }
+    .cal-event { font-size: 9px; padding: 3px 4px; }
+    .cal-event-sub { font-size: 8px; }
+    .cal-day-num { font-size: 10px; margin-bottom: 4px; }
+
+    /* Draft */
+    .draft-grid { grid-template-columns: 1fr; }
+    .wrestler-pool {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      max-height: 40vh;
+    }
+    .draft-header h2 { font-size: 22px; }
+
+    /* Start screen */
+    .start-logo h1 { font-size: 32px; }
+    .start-btn { padding: 14px 16px; }
+  }
+
+  @media (max-width: 500px) {
+    .header h2 { font-size: 18px; }
+    .rating-big { font-size: 22px; }
+    .tweet-card { flex: 0 0 220px; min-height: 140px; }
+    .news-carousel-outer { padding: 0 32px; }
+    .cal-real td { min-width: 56px; height: 64px; }
+    .cal-event-sub { display: none; } /* más limpio en pantallas muy pequeñas */
   }
 
   .section { display: none; }
@@ -901,7 +1000,6 @@
 
   // ==================== DATOS ====================
   const defaultWrestlers = [
-    [
   { id: 1, name: "AJ Lee", brand: "Raw", alignment: "Face", ovr: 87, pop: 84 },
   { id: 2, name: "AJ Styles", brand: "Raw", alignment: "Face", ovr: 88, pop: 86 },
   { id: 3, name: "Akira Tozawa", brand: "Raw", alignment: "Face", ovr: 68, pop: 70 },
@@ -923,7 +1021,6 @@
   { id: 19, name: "Trick Williams", brand: "NXT", alignment: "Face", ovr: 87, pop: 83 },
   { id: 20, name: "Oba Femi", brand: "NXT", alignment: "Heel", ovr: 88, pop: 80 }
       ]
-  ]
 
   let data = null;
   let newsIndex = 0;
@@ -1067,12 +1164,16 @@
     document.getElementById('panel-main').classList.add('active');
   }
 
-  function crearDatosBase(todosFreeAgent = false) {
-    const wrestlers = JSON.parse(JSON.stringify(defaultWrestlers));
-    if (todosFreeAgent) wrestlers.forEach(w => w.brand = "Free Agent");
+  const wrestlers = JSON.parse(JSON.stringify(defaultWrestlers));
+    // Si por error hubiera un array anidado:
+    const list = Array.isArray(wrestlers[0]) ? wrestlers[0] : wrestlers;
+    list.forEach(w => {
+      if (w.pop == null) w.pop = Math.min(99, Math.max(40, Math.round((w.ovr || 70) * 0.9)));
+    });
+    if (todosFreeAgent) list.forEach(w => w.brand = "Free Agent");
     return {
       week: 1,
-      wrestlers,
+      wrestlers: list,
       matches: [],
       titles: [
         { id: 1, name: "WWE Championship", brand: "World", champion: "Cody Rhodes" },
@@ -1082,7 +1183,7 @@
         { id: 5, name: "NXT Championship", brand: "NXT", champion: "Trick Williams" }
       ],
       news: [],
-      nextId: 15,
+      nextId: 21,
       draftCompleted: true,
       brandMedia: {
         Raw: { hasBg: false, hasLogo: false },
@@ -1994,7 +2095,7 @@
     const brands = ['Raw', 'SmackDown', 'NXT'];
     const reports = [];
 
-    brands.forEach(brand => {
+        brands.forEach(brand => {
       const brandMatches = data.matches.filter(m => m.week === data.week && m.show === brand);
       const report = computeShowRating(brand, brandMatches);
       report.brand = brand;
@@ -2005,26 +2106,30 @@
         data.mainEventHistory[brand].push(report.mainKey);
         if (data.mainEventHistory[brand].length > 8) {
           data.mainEventHistory[brand] = data.mainEventHistory[brand].slice(-8);
-          if (brandMatches.length && report.total >= 75) {
-        brandMatches.forEach(m => {
-          m.participants.forEach(name => {
-            const w = data.wrestlers.find(x => x.name === name);
-            if (!w) return;
-            if (w.pop == null) w.pop = 70;
-            w.pop = Math.min(100, w.pop + (report.total >= 85 ? 2 : 1));
-          });
-        });
-      } else if (brandMatches.length && report.total < 45) {
-        brandMatches.forEach(m => {
-          m.participants.forEach(name => {
-            const w = data.wrestlers.find(x => x.name === name);
-            if (!w) return;
-            if (w.pop == null) w.pop = 70;
-            w.pop = Math.max(1, w.pop - 1);
-          });
-        });
-      }
         }
+
+        // --- Popularidad: sube o baja según el rating del show ---
+        brandMatches.forEach(m => {
+          m.participants.forEach(name => {
+            const w = data.wrestlers.find(x => x.name === name);
+            if (!w) return;
+            if (w.pop == null) w.pop = 70;
+
+            let delta = 0;
+            if (report.total >= 85) delta = 3;
+            else if (report.total >= 75) delta = 2;
+            else if (report.total >= 60) delta = 1;
+            else if (report.total < 45) delta = -2;
+            else if (report.total < 55) delta = -1;
+
+            // Ganador del combate: +1 extra
+            if (m.winner && m.winner === name && delta >= 0) delta += 1;
+            if (m.winner && m.winner === name && delta < 0) delta += 1; // pierden menos
+
+            w.pop = Math.min(100, Math.max(1, w.pop + delta));
+          });
+        });
+
         applyAudienceFromRating(brand, report);
       } else {
         const aud = data.audience[brand];
@@ -2325,13 +2430,13 @@
     renderAll();
   }
 
-    function advanceWeek() {
+      function advanceWeek() {
     evaluateWeekShows();
     data.week++;
     addNews('Comienza la Semana ' + data.week + ' del Universo WWE 2K26.');
     save();
     renderAll();
-    alert('¡Avanzaste a la Semana ' + data.week + '!\nSe han calculado los ratings del show.');
+    alert('¡Avanzaste a la Semana ' + data.week + '!\nRatings calculados y popularidad de luchadores actualizada.');
   }
 
   checkSavedGame();
