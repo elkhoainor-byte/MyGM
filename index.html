@@ -114,13 +114,32 @@
     scroll-snap-type: x mandatory;
   }
   .tweet-card {
-    flex: 0 0 260px;
-    scroll-snap-align: start;
-    background: #151515;
-    border: 1px solid #333;
-    border-radius: 12px;
-    padding: 12px;
-    font-size: 13px;
+  flex: 0 0 260px;
+  scroll-snap-align: start;
+  background: #151515;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 12px 12px 16px;
+  font-size: 13px;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+.tweet-body {
+  color: #ddd;
+  line-height: 1.35;
+  flex: 1;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.tweet-brand {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 11px;
+  color: #888;
+  flex-shrink: 0;
+}
   }
   .tweet-head {
     display: flex;
@@ -140,18 +159,12 @@
     color: #111;
     flex-shrink: 0;
   }
+  
   .tweet-meta { min-width: 0; }
   .tweet-user { color: var(--gold); font-weight: 600; font-size: 12px; }
   .tweet-stars { color: #e0c040; font-size: 12px; letter-spacing: 1px; }
-  .tweet-body { color: #ddd; line-height: 1.35; }
-  .tweet-brand {
-    display: inline-block;
-    margin-top: 8px;
-    font-size: 11px;
-    color: #888;
-  }
   
-    .roster-avatar {
+  .roster-avatar {
     width: 48px;
     height: 48px;
     border-radius: 8px;      /* esquinas un poco redondeadas; pon 0 si las quieres cuadradas */
@@ -614,8 +627,8 @@
         <div class="news-dots" id="news-dots"></div>
       </div>
       <div class="card">
-        <h3>Últimos Combates Bookeados</h3>
-        <div id="recent-matches"></div>
+        <h3>Rivalidades activas</h3>
+        <div id="active-rivalries"></div>
       </div>
     </section>
 
@@ -1403,6 +1416,15 @@
     document.getElementById('w4').style.display = (type.includes('Fatal') || type.includes('Tag')) ? 'block' : 'none';
   }
   document.getElementById('match-type')?.addEventListener('change', renderMatchSelects);
+  ['w1', 'w2', 'w3', 'w4'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', () => {
+      const vals = ['w1', 'w2', 'w3', 'w4']
+        .map(i => document.getElementById(i)?.value)
+        .filter(v => v);
+      const dup = vals.some((v, i) => vals.indexOf(v) !== i);
+      if (dup) alert('Ese luchador ya está seleccionado en otra posición.');
+    });
+  });
 
   function renderMatches() {
     const list = document.getElementById('match-list');
@@ -1468,31 +1490,23 @@
   }
 
   function renderDashboard() {
-    const counts = { Raw:0, SmackDown:0, NXT:0, 'Free Agent':0 };
-    data.wrestlers.forEach(w => counts[w.brand] = (counts[w.brand]||0)+1);
-    document.getElementById('total-wrestlers').textContent = data.wrestlers.length;
-    document.getElementById('count-raw').textContent = counts.Raw||0;
-    document.getElementById('count-sd').textContent = counts.SmackDown||0;
-    document.getElementById('count-nxt').textContent = counts.NXT||0;
-    document.getElementById('count-free').textContent = counts['Free Agent']||0;
-    document.getElementById('next-show').innerHTML = `<strong>Monday Night Raw</strong><br>Semana ${data.week} • Marca: Raw`;
-    const budgetEl = document.getElementById('budget-value');
-    if (budgetEl) {
-      const b = data.budget != null ? data.budget : 5000000;
-      budgetEl.textContent = '$' + b.toLocaleString('es-ES');
-    }
-    renderNewsCarousel();
-    const recent = document.getElementById('recent-matches');
-    if (data.matches.length === 0) {
-      recent.innerHTML = '<div class="empty">Aún no hay combates</div>';
-    } else {
-      recent.innerHTML = data.matches.slice(-5).reverse().map(m => `
-        <div class="match-card" style="margin-bottom:8px">${m.participants.join(' vs ')} <small>(${m.show})</small></div>
-      `).join('');
-    }
-    renderAudienceDashboard();
+  const counts = { Raw:0, SmackDown:0, NXT:0, 'Free Agent':0 };
+  data.wrestlers.forEach(w => counts[w.brand] = (counts[w.brand]||0)+1);
+  document.getElementById('total-wrestlers').textContent = data.wrestlers.length;
+  document.getElementById('count-raw').textContent = counts.Raw||0;
+  document.getElementById('count-sd').textContent = counts.SmackDown||0;
+  document.getElementById('count-nxt').textContent = counts.NXT||0;
+  document.getElementById('count-free').textContent = counts['Free Agent']||0;
+  document.getElementById('next-show').innerHTML = `<strong>Monday Night Raw</strong><br>Semana ${data.week} • Marca: Raw`;
+  const budgetEl = document.getElementById('budget-value');
+  if (budgetEl) {
+    const b = data.budget != null ? data.budget : 5000000;
+    budgetEl.textContent = '$' + b.toLocaleString('es-ES');
   }
-
+  renderNewsCarousel();
+  renderActiveRivalries();
+  renderAudienceDashboard();
+}
     // ==================== AUDIENCIA & SHOW RATING ====================
   const MATCH_TYPE_BOOST = {
     'Singles': 0,
@@ -1505,6 +1519,44 @@
     'TLC': 11
   };
 
+  function renderActiveRivalries() {
+  const box = document.getElementById('active-rivalries');
+  if (!box || !data) return;
+
+  const pairCount = {};
+  const minWeek = data.week - 8;
+
+  data.matches
+    .filter(m => m.week >= minWeek)
+    .forEach(m => {
+      if (m.participants.length < 2) return;
+      const a = m.participants[0];
+      const b = m.participants[1];
+      const key = [a, b].sort().join(' vs ');
+      if (!pairCount[key]) pairCount[key] = { a, b, count: 0, lastWeek: 0, shows: [] };
+      pairCount[key].count++;
+      pairCount[key].lastWeek = Math.max(pairCount[key].lastWeek, m.week);
+      if (!pairCount[key].shows.includes(m.show)) pairCount[key].shows.push(m.show);
+    });
+
+  const rivalries = Object.values(pairCount)
+    .filter(r => r.count >= 2)
+    .sort((x, y) => y.count - x.count || y.lastWeek - x.lastWeek)
+    .slice(0, 6);
+
+  if (!rivalries.length) {
+    box.innerHTML = '<div class="empty" style="padding:20px">Aún no hay rivalidades. Repite enfrentamientos en varias semanas.</div>';
+    return;
+  }
+
+  box.innerHTML = rivalries.map(r => `
+    <div class="match-card" style="margin-bottom:8px">
+      <strong>${r.a} vs ${r.b}</strong>
+      <br><span style="color:#aaa;font-size:13px">${r.count} encuentros · última vez semana ${r.lastWeek} · ${r.shows.join(', ')}</span>
+    </div>
+  `).join('');
+}
+  
   function getWrestlerPower(name) {
     const w = data.wrestlers.find(x => x.name === name);
     return w ? w.ovr : 70;
@@ -1939,7 +1991,14 @@
     const w4 = document.getElementById('w4').value;
     if (w3) participants.push(w3);
     if (w4) participants.push(w4);
-    const show = document.getElementById('match-show').value;
+
+  // No puede haber el mismo luchador dos veces
+  const unique = new Set(participants);
+  if (unique.size !== participants.length) {
+    return alert('No puedes seleccionar al mismo luchador más de una vez en el combate.');
+  }
+
+  const show = document.getElementById('match-show').value;
     const type = document.getElementById('match-type').value;
     const winner = document.getElementById('match-winner').value || null;
     const stip = document.getElementById('match-stip').value || null;
