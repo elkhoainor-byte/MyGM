@@ -1159,9 +1159,53 @@
     document.getElementById('panel-main').classList.remove('active');
     document.getElementById('panel-nueva').classList.add('active');
   }
-  function volverPanelMain() {
+    function volverPanelMain() {
     document.getElementById('panel-nueva').classList.remove('active');
     document.getElementById('panel-main').classList.add('active');
+  }
+
+  function crearDatosBase(todosFreeAgent = false) {
+    const wrestlers = JSON.parse(JSON.stringify(defaultWrestlers));
+    // Si por error hubiera un array anidado:
+    const list = Array.isArray(wrestlers[0]) ? wrestlers[0] : wrestlers;
+    list.forEach(w => {
+      if (w.pop == null) w.pop = Math.min(99, Math.max(40, Math.round((w.ovr || 70) * 0.9)));
+    });
+    if (todosFreeAgent) list.forEach(w => { w.brand = "Free Agent"; });
+
+    return {
+      week: 1,
+      wrestlers: list,
+      matches: [],
+      titles: [
+        { id: 1, name: "WWE Championship", brand: "World", champion: "Cody Rhodes" },
+        { id: 2, name: "World Heavyweight Championship", brand: "Raw", champion: "Gunther" },
+        { id: 3, name: "Women's World Championship", brand: "Raw", champion: "Rhea Ripley" },
+        { id: 4, name: "United States Championship", brand: "SmackDown", champion: "LA Knight" },
+        { id: 5, name: "NXT Championship", brand: "NXT", champion: "Trick Williams" }
+      ],
+      news: [],
+      nextId: 21,
+      draftCompleted: true,
+      brandMedia: {
+        Raw: { hasBg: false, hasLogo: false },
+        SmackDown: { hasBg: false, hasLogo: false },
+        NXT: { hasBg: false, hasLogo: false }
+      },
+      audience: {
+        Raw:       { base: 1.85, current: 1.85, history: [1.85] },
+        SmackDown: { base: 1.70, current: 1.70, history: [1.70] },
+        NXT:       { base: 0.85, current: 0.85, history: [0.85] }
+      },
+      budget: 5000000,
+      lastShowReports: [],
+      mainEventHistory: { Raw: [], SmackDown: [], NXT: [] },
+      showSchedule: {
+        Raw:       { day: 'Lunes',   name: 'Monday Night Raw' },
+        NXT:       { day: 'Martes',  name: 'NXT' },
+        SmackDown: { day: 'Viernes', name: 'Friday Night SmackDown' }
+      }
+    };
   }
 
   const wrestlers = JSON.parse(JSON.stringify(defaultWrestlers));
