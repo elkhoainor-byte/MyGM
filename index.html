@@ -615,6 +615,7 @@
     <button class="nav-btn" onclick="showSection('booker')">📝 Booking</button>
     <button class="nav-btn" onclick="showSection('titles')">🏆 Campeonatos</button>
     <button class="nav-btn" onclick="showSection('shows')">📅 Shows</button>
+    <button class="nav-btn" onclick="showSection('calendar')">🗓️ Calendario</button>
     <button class="nav-btn" onclick="volverAlMenu()" style="margin-top:auto;color:#ff6b6b;">← Menú Principal</button>
   </aside>
 
@@ -780,21 +781,26 @@
     </section>
 
         <section id="shows" class="section">
-      <div class="card">
-        <h3>Programación de shows</h3>
-        <p style="font-size:13px;color:#888;margin-bottom:12px">
-          Elige qué día se disputa cada show. Por defecto: Raw (Lunes), NXT (Martes), SmackDown (Viernes).
-        </p>
-        <div id="shows-list"></div>
-      </div>
-      <div class="card">
-        <h3>Calendario del mes (4 semanas)</h3>
-        <p id="cal-month-label" style="font-size:13px;color:#888;margin-bottom:8px"></p>
-        <div class="cal-month" id="month-calendar"></div>
-        <br>
-        <button class="btn" onclick="advanceWeek()">Avanzar a la siguiente semana →</button>
-      </div>
-    </section>
+          <div class="card">
+            <h3>Programación de shows</h3>
+            <p style="font-size:13px;color:#888;margin-bottom:12px">
+              Elige qué día se disputa cada show. Por defecto: Raw (Lunes), NXT (Martes), SmackDown (Viernes).
+            </p>
+            <div id="shows-list"></div>
+            <br>
+            <button class="btn" onclick="advanceWeek()">Avanzar a la siguiente semana →</button>
+          </div>
+        </section>
+
+        <section id="calendar" class="section">
+          <div class="card">
+            <h3>Calendario del mes (4 semanas)</h3>
+            <p id="cal-month-label" style="font-size:13px;color:#888;margin-bottom:8px"></p>
+            <div class="cal-month" id="month-calendar"></div>
+            <br>
+            <button class="btn" onclick="advanceWeek()">Avanzar a la siguiente semana →</button>
+          </div>
+        </section>
   </main>
 </div>
 
@@ -1248,7 +1254,14 @@
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     if (event && event.target) event.target.classList.add('active');
-    const titles = { dashboard:'Dashboard', roster:'Gestión de Roster', booker:'Booking de Combates', titles:'Campeonatos', shows:'Calendario de Shows' };
+    const titles = {
+      dashboard: 'Dashboard',
+      roster: 'Gestión de Roster',
+      booker: 'Booking de Combates',
+      titles: 'Campeonatos',
+      shows: 'Programación de Shows',
+      calendar: 'Calendario'
+    };
     document.getElementById('section-title').textContent = titles[id];
     renderAll();
   }
@@ -1434,6 +1447,7 @@
     renderMatches();
     renderTitles();
     renderShows();
+    renderMonthCalendar();
     renderDashboard();
   }
 
@@ -1643,8 +1657,7 @@
     }
 
     list.innerHTML = html;
-    renderMonthCalendar();
-  }
+    }
 
   function renderDashboard() {
   const counts = { Raw:0, SmackDown:0, NXT:0, 'Free Agent':0 };
