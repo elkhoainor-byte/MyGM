@@ -91,6 +91,26 @@
   .free { background: #555; }
 
   .actions button { padding: 5px 10px; font-size: 12px; margin-right: 5px; }
+    /* Fotos del roster (tabla) */
+  .roster-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    border: 2px solid var(--gold);
+    background: #333;
+  }
+
+  .roster-avatar.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+  }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 900px) {
     body { flex-direction: column; }
