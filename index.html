@@ -2004,6 +2004,25 @@
         data.mainEventHistory[brand].push(report.mainKey);
         if (data.mainEventHistory[brand].length > 8) {
           data.mainEventHistory[brand] = data.mainEventHistory[brand].slice(-8);
+          if (brandMatches.length && report.total >= 75) {
+        brandMatches.forEach(m => {
+          m.participants.forEach(name => {
+            const w = data.wrestlers.find(x => x.name === name);
+            if (!w) return;
+            if (w.pop == null) w.pop = 70;
+            w.pop = Math.min(100, w.pop + (report.total >= 85 ? 2 : 1));
+          });
+        });
+      } else if (brandMatches.length && report.total < 45) {
+        brandMatches.forEach(m => {
+          m.participants.forEach(name => {
+            const w = data.wrestlers.find(x => x.name === name);
+            if (!w) return;
+            if (w.pop == null) w.pop = 70;
+            w.pop = Math.max(1, w.pop - 1);
+          });
+        });
+      }
         }
         applyAudienceFromRating(brand, report);
       } else {
