@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Selector de Posiciones - Campo de Fútbol</title>
+  <title>Selector de Posiciones</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,118 +13,107 @@
 
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #1a1a2e;
+      background: #0d0d0d;
       color: #eee;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       padding: 20px;
+      gap: 30px;
+    }
+
+    /* ========== LADO IZQUIERDO: CAMPO ========== */
+    .left-side {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
     h1 {
-      margin-bottom: 10px;
-      font-size: 1.6rem;
-      text-align: center;
-    }
-
-    .selected-info {
-      background: #16213e;
-      padding: 12px 24px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      font-size: 1.2rem;
-      min-width: 280px;
-      text-align: center;
-      border: 2px solid #0f3460;
-    }
-
-    .selected-info span {
-      color: #e94560;
-      font-weight: bold;
+      margin-bottom: 16px;
+      font-size: 1.5rem;
+      color: #fff;
     }
 
     .pitch-container {
       position: relative;
-      width: 100%;
-      max-width: 420px;
+      width: 340px;
       aspect-ratio: 68 / 105;
-      background: linear-gradient(to bottom, #2e7d32, #1b5e20);
-      border: 4px solid #fff;
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      overflow: hidden;
+      background: transparent;
+      border: 3px solid #ffffff;
+      border-radius: 4px;
     }
 
-    /* Líneas del campo */
+    /* Solo líneas blancas del campo */
     .pitch-container::before {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        /* Línea central */
-        linear-gradient(#fff, #fff) center / 100% 3px no-repeat,
-        /* Círculo central */
-        radial-gradient(circle, transparent 48px, #fff 48px, #fff 51px, transparent 51px) center / 110px 110px no-repeat,
-        /* Área grande inferior (portería) */
-        linear-gradient(#fff, #fff) bottom 0 left 50% / 55% 18% no-repeat,
-        linear-gradient(#fff, #fff) bottom 0 left 50% / 3px 18% no-repeat,
-        linear-gradient(#fff, #fff) bottom 18% left 50% / 55% 3px no-repeat,
-        /* Área pequeña inferior */
-        linear-gradient(#fff, #fff) bottom 0 left 50% / 28% 8% no-repeat,
-        linear-gradient(#fff, #fff) bottom 0 left 50% / 3px 8% no-repeat,
-        linear-gradient(#fff, #fff) bottom 8% left 50% / 28% 3px no-repeat,
-        /* Área grande superior */
-        linear-gradient(#fff, #fff) top 0 left 50% / 55% 18% no-repeat,
-        linear-gradient(#fff, #fff) top 0 left 50% / 3px 18% no-repeat,
-        linear-gradient(#fff, #fff) top 18% left 50% / 55% 3px no-repeat,
-        /* Área pequeña superior */
-        linear-gradient(#fff, #fff) top 0 left 50% / 28% 8% no-repeat,
-        linear-gradient(#fff, #fff) top 0 left 50% / 3px 8% no-repeat,
-        linear-gradient(#fff, #fff) top 8% left 50% / 28% 3px no-repeat;
-      opacity: 0.9;
       pointer-events: none;
+      background:
+        /* Línea de mediocampo */
+        linear-gradient(#fff, #fff) center / 100% 2px no-repeat,
+        /* Círculo central */
+        radial-gradient(circle, transparent 42px, #fff 42px, #fff 44px, transparent 44px) center / 90px 90px no-repeat,
+        /* Área grande inferior */
+        linear-gradient(#fff, #fff) bottom 0 left 50% / 52% 16% no-repeat,
+        linear-gradient(#fff, #fff) bottom 0 left calc(50% - 26%) / 2px 16% no-repeat,
+        linear-gradient(#fff, #fff) bottom 0 left calc(50% + 26%) / 2px 16% no-repeat,
+        linear-gradient(#fff, #fff) bottom 16% left 50% / 52% 2px no-repeat,
+        /* Área pequeña inferior */
+        linear-gradient(#fff, #fff) bottom 0 left 50% / 26% 7% no-repeat,
+        linear-gradient(#fff, #fff) bottom 0 left calc(50% - 13%) / 2px 7% no-repeat,
+        linear-gradient(#fff, #fff) bottom 0 left calc(50% + 13%) / 2px 7% no-repeat,
+        linear-gradient(#fff, #fff) bottom 7% left 50% / 26% 2px no-repeat,
+        /* Área grande superior */
+        linear-gradient(#fff, #fff) top 0 left 50% / 52% 16% no-repeat,
+        linear-gradient(#fff, #fff) top 0 left calc(50% - 26%) / 2px 16% no-repeat,
+        linear-gradient(#fff, #fff) top 0 left calc(50% + 26%) / 2px 16% no-repeat,
+        linear-gradient(#fff, #fff) top 16% left 50% / 52% 2px no-repeat,
+        /* Área pequeña superior */
+        linear-gradient(#fff, #fff) top 0 left 50% / 26% 7% no-repeat,
+        linear-gradient(#fff, #fff) top 0 left calc(50% - 13%) / 2px 7% no-repeat,
+        linear-gradient(#fff, #fff) top 0 left calc(50% + 13%) / 2px 7% no-repeat,
+        linear-gradient(#fff, #fff) top 7% left 50% / 26% 2px no-repeat;
     }
 
-    /* Puntos de posición */
+    /* Puntos (círculos blancos) */
     .position {
       position: absolute;
-      width: 28px;
-      height: 28px;
-      background: #fff;
-      border: 3px solid #333;
+      width: 22px;
+      height: 22px;
+      background: #ffffff;
+      border: 2px solid #ffffff;
       border-radius: 50%;
       cursor: pointer;
       transform: translate(-50%, -50%);
       transition: all 0.2s ease;
       z-index: 10;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
     .position:hover {
-      transform: translate(-50%, -50%) scale(1.25);
-      background: #ffeb3b;
-      border-color: #f57f17;
+      transform: translate(-50%, -50%) scale(1.3);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
     }
 
     .position.selected {
       background: #e94560;
-      border-color: #fff;
-      transform: translate(-50%, -50%) scale(1.3);
-      box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.4);
+      border-color: #e94560;
+      transform: translate(-50%, -50%) scale(1.35);
+      box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.45);
     }
 
+    /* Tooltip */
     .position::after {
       content: attr(data-label);
       position: absolute;
-      bottom: 120%;
+      bottom: 130%;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.85);
-      color: white;
+      background: rgba(0, 0, 0, 0.9);
+      color: #fff;
       padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.7rem;
+      border-radius: 5px;
+      font-size: 0.68rem;
       white-space: nowrap;
       opacity: 0;
       pointer-events: none;
@@ -136,85 +125,171 @@
       opacity: 1;
     }
 
-    /* ========== POSICIONES RECTAS (BANDAS ALINEADAS) ========== */
-
-    /* Portero */
-    #pos-portero { top: 92%; left: 50%; }
-
-    /* Defensas */
-    #pos-lateral-derecho { top: 78%; left: 86%; }
-    #pos-defensa-central { top: 80%; left: 50%; }
-    #pos-lateral-izquierdo { top: 78%; left: 14%; }
-
-    /* Carrileros y Mediocentro */
-    #pos-carrilero-derecho { top: 60%; left: 86%; }
-    #pos-mediocentro { top: 62%; left: 50%; }
-    #pos-carrilero-izquierdo { top: 60%; left: 14%; }
-
-    /* Centrocampistas */
+    /* Posiciones rectas */
+    #pos-portero              { top: 92%; left: 50%; }
+    #pos-lateral-derecho      { top: 78%; left: 86%; }
+    #pos-defensa-central      { top: 80%; left: 50%; }
+    #pos-lateral-izquierdo    { top: 78%; left: 14%; }
+    #pos-carrilero-derecho    { top: 60%; left: 86%; }
+    #pos-mediocentro          { top: 62%; left: 50%; }
+    #pos-carrilero-izquierdo  { top: 60%; left: 14%; }
     #pos-centrocampista-derecho { top: 45%; left: 86%; }
-    #pos-centrocampista { top: 48%; left: 50%; }
+    #pos-centrocampista       { top: 48%; left: 50%; }
     #pos-centrocampista-izquierdo { top: 45%; left: 14%; }
-
-    /* Mediapuntas */
-    #pos-mediapunta-derecho { top: 30%; left: 86%; }
-    #pos-mediapunta { top: 28%; left: 50%; }
+    #pos-mediapunta-derecho   { top: 30%; left: 86%; }
+    #pos-mediapunta           { top: 28%; left: 50%; }
     #pos-mediapunta-izquierdo { top: 30%; left: 14%; }
+    #pos-delantero            { top: 12%; left: 50%; }
 
-    /* Delantero */
-    #pos-delantero { top: 12%; left: 50%; }
+    /* ========== LADO DERECHO: PANEL ========== */
+    .right-side {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end; /* abajo */
+      align-items: flex-end;     /* derecha */
+      padding-bottom: 20px;
+    }
+
+    .dropdown-panel {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 20px 24px;
+      min-width: 280px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      display: none; /* se muestra al seleccionar */
+    }
+
+    .dropdown-panel.visible {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .dropdown-panel label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+      color: #aaa;
+    }
+
+    .dropdown-panel select {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 1rem;
+      background: #0d0d0d;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 8px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .dropdown-panel select:focus {
+      border-color: #e94560;
+    }
+
+    .selected-text {
+      margin-top: 14px;
+      font-size: 1.05rem;
+      color: #e94560;
+      font-weight: 600;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <h1>⚽ Selector de Posición</h1>
-  
-  <div class="selected-info">
-    Posición seleccionada: <span id="selected-name">Ninguna</span>
+
+  <!-- LADO IZQUIERDO -->
+  <div class="left-side">
+    <h1>⚽ Selector de Posición</h1>
+
+    <div class="pitch-container">
+      <div class="position" id="pos-portero" data-name="Portero" data-label="Portero"></div>
+      <div class="position" id="pos-lateral-derecho" data-name="Lateral derecho" data-label="Lateral Dcho"></div>
+      <div class="position" id="pos-defensa-central" data-name="Defensa central" data-label="Def. Central"></div>
+      <div class="position" id="pos-lateral-izquierdo" data-name="Lateral izquierdo" data-label="Lateral Izq"></div>
+      <div class="position" id="pos-carrilero-derecho" data-name="Carrilero derecho" data-label="Carrilero Dcho"></div>
+      <div class="position" id="pos-mediocentro" data-name="Mediocentro" data-label="Mediocentro"></div>
+      <div class="position" id="pos-carrilero-izquierdo" data-name="Carrilero izquierdo" data-label="Carrilero Izq"></div>
+      <div class="position" id="pos-centrocampista-derecho" data-name="Centrocampista derecho" data-label="Centro Dcho"></div>
+      <div class="position" id="pos-centrocampista" data-name="Centrocampista" data-label="Centrocampista"></div>
+      <div class="position" id="pos-centrocampista-izquierdo" data-name="Centrocampista izquierdo" data-label="Centro Izq"></div>
+      <div class="position" id="pos-mediapunta-derecho" data-name="Mediapunta derecho" data-label="Mediapunta Dcho"></div>
+      <div class="position" id="pos-mediapunta" data-name="Mediapunta" data-label="Mediapunta"></div>
+      <div class="position" id="pos-mediapunta-izquierdo" data-name="Mediapunta izquierdo" data-label="Mediapunta Izq"></div>
+      <div class="position" id="pos-delantero" data-name="Delantero" data-label="Delantero"></div>
+    </div>
   </div>
 
-  <div class="pitch-container" id="pitch">
-    <!-- Portero -->
-    <div class="position" id="pos-portero" data-name="Portero" data-label="Portero"></div>
-
-    <!-- Defensas -->
-    <div class="position" id="pos-lateral-derecho" data-name="Lateral derecho" data-label="Lateral Dcho"></div>
-    <div class="position" id="pos-defensa-central" data-name="Defensa central" data-label="Def. Central"></div>
-    <div class="position" id="pos-lateral-izquierdo" data-name="Lateral izquierdo" data-label="Lateral Izq"></div>
-
-    <!-- Carrileros y Mediocentro -->
-    <div class="position" id="pos-carrilero-derecho" data-name="Carrilero derecho" data-label="Carrilero Dcho"></div>
-    <div class="position" id="pos-mediocentro" data-name="Mediocentro" data-label="Mediocentro"></div>
-    <div class="position" id="pos-carrilero-izquierdo" data-name="Carrilero izquierdo" data-label="Carrilero Izq"></div>
-
-    <!-- Centrocampistas -->
-    <div class="position" id="pos-centrocampista-derecho" data-name="Centrocampista derecho" data-label="Centro Dcho"></div>
-    <div class="position" id="pos-centrocampista" data-name="Centrocampista" data-label="Centrocampista"></div>
-    <div class="position" id="pos-centrocampista-izquierdo" data-name="Centrocampista izquierdo" data-label="Centro Izq"></div>
-
-    <!-- Mediapuntas -->
-    <div class="position" id="pos-mediapunta-derecho" data-name="Mediapunta derecho" data-label="Mediapunta Dcho"></div>
-    <div class="position" id="pos-mediapunta" data-name="Mediapunta" data-label="Mediapunta"></div>
-    <div class="position" id="pos-mediapunta-izquierdo" data-name="Mediapunta izquierdo" data-label="Mediapunta Izq"></div>
-
-    <!-- Delantero -->
-    <div class="position" id="pos-delantero" data-name="Delantero" data-label="Delantero"></div>
+  <!-- LADO DERECHO ABAJO: DESPLEGABLE -->
+  <div class="right-side">
+    <div class="dropdown-panel" id="dropdown-panel">
+      <label for="position-select">Posición seleccionada:</label>
+      <select id="position-select">
+        <option value="">-- Elige una posición --</option>
+        <option value="Portero">Portero</option>
+        <option value="Lateral derecho">Lateral derecho</option>
+        <option value="Defensa central">Defensa central</option>
+        <option value="Lateral izquierdo">Lateral izquierdo</option>
+        <option value="Carrilero derecho">Carrilero derecho</option>
+        <option value="Mediocentro">Mediocentro</option>
+        <option value="Carrilero izquierdo">Carrilero izquierdo</option>
+        <option value="Centrocampista derecho">Centrocampista derecho</option>
+        <option value="Centrocampista">Centrocampista</option>
+        <option value="Centrocampista izquierdo">Centrocampista izquierdo</option>
+        <option value="Mediapunta derecho">Mediapunta derecho</option>
+        <option value="Mediapunta">Mediapunta</option>
+        <option value="Mediapunta izquierdo">Mediapunta izquierdo</option>
+        <option value="Delantero">Delantero</option>
+      </select>
+      <div class="selected-text" id="selected-text"></div>
+    </div>
   </div>
-
-  <p class="instructions" style="margin-top: 18px; opacity: 0.8; text-align: center;">
-    Haz clic en un punto para seleccionar la posición.<br>
-    Solo se puede elegir una a la vez.
-  </p>
 
   <script>
     const positions = document.querySelectorAll('.position');
-    const selectedName = document.getElementById('selected-name');
+    const panel = document.getElementById('dropdown-panel');
+    const select = document.getElementById('position-select');
+    const selectedText = document.getElementById('selected-text');
 
+    // Click en un punto del campo
     positions.forEach(pos => {
       pos.addEventListener('click', () => {
+        // Quitar selección anterior
         positions.forEach(p => p.classList.remove('selected'));
         pos.classList.add('selected');
-        selectedName.textContent = pos.dataset.name;
+
+        // Mostrar panel y sincronizar select
+        panel.classList.add('visible');
+        select.value = pos.dataset.name;
+        selectedText.textContent = pos.dataset.name;
       });
+    });
+
+    // Cambio en el desplegable
+    select.addEventListener('change', () => {
+      const value = select.value;
+
+      // Quitar todas las selecciones
+      positions.forEach(p => p.classList.remove('selected'));
+
+      if (value) {
+        // Buscar y seleccionar el punto correspondiente
+        const target = [...positions].find(p => p.dataset.name === value);
+        if (target) {
+          target.classList.add('selected');
+          selectedText.textContent = value;
+          panel.classList.add('visible');
+        }
+      } else {
+        selectedText.textContent = '';
+      }
     });
   </script>
 </body>
