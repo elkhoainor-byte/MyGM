@@ -136,39 +136,33 @@
       opacity: 1;
     }
 
-    /* Coordenadas aproximadas (porcentaje desde arriba/izquierda) */
+    /* ========== POSICIONES RECTAS (BANDAS ALINEADAS) ========== */
+
     /* Portero */
     #pos-portero { top: 92%; left: 50%; }
 
     /* Defensas */
-    #pos-lateral-derecho { top: 78%; left: 85%; }
+    #pos-lateral-derecho { top: 78%; left: 86%; }
     #pos-defensa-central { top: 80%; left: 50%; }
-    #pos-lateral-izquierdo { top: 78%; left: 15%; }
+    #pos-lateral-izquierdo { top: 78%; left: 14%; }
 
-    /* Carrileros / Mediocentro */
-    #pos-carrilero-derecho { top: 60%; left: 88%; }
+    /* Carrileros y Mediocentro */
+    #pos-carrilero-derecho { top: 60%; left: 86%; }
     #pos-mediocentro { top: 62%; left: 50%; }
-    #pos-carrilero-izquierdo { top: 60%; left: 12%; }
+    #pos-carrilero-izquierdo { top: 60%; left: 14%; }
 
     /* Centrocampistas */
-    #pos-centrocampista-derecho { top: 45%; left: 75%; }
+    #pos-centrocampista-derecho { top: 45%; left: 86%; }
     #pos-centrocampista { top: 48%; left: 50%; }
-    #pos-centrocampista-izquierdo { top: 45%; left: 25%; }
+    #pos-centrocampista-izquierdo { top: 45%; left: 14%; }
 
     /* Mediapuntas */
-    #pos-mediapunta-derecho { top: 30%; left: 70%; }
+    #pos-mediapunta-derecho { top: 30%; left: 86%; }
     #pos-mediapunta { top: 28%; left: 50%; }
-    #pos-mediapunta-izquierdo { top: 30%; left: 30%; }
+    #pos-mediapunta-izquierdo { top: 30%; left: 14%; }
 
     /* Delantero */
     #pos-delantero { top: 12%; left: 50%; }
-
-    .instructions {
-      margin-top: 18px;
-      font-size: 0.95rem;
-      opacity: 0.8;
-      text-align: center;
-    }
   </style>
 </head>
 <body>
@@ -206,7 +200,10 @@
     <div class="position" id="pos-delantero" data-name="Delantero" data-label="Delantero"></div>
   </div>
 
-  <p class="instructions">Haz clic en un punto para seleccionar la posición.<br>Solo se puede elegir una a la vez.</p>
+  <p class="instructions" style="margin-top: 18px; opacity: 0.8; text-align: center;">
+    Haz clic en un punto para seleccionar la posición.<br>
+    Solo se puede elegir una a la vez.
+  </p>
 
   <script>
     const positions = document.querySelectorAll('.position');
@@ -214,13 +211,8 @@
 
     positions.forEach(pos => {
       pos.addEventListener('click', () => {
-        // Quitar selección de todos
         positions.forEach(p => p.classList.remove('selected'));
-        
-        // Seleccionar el actual
         pos.classList.add('selected');
-        
-        // Actualizar texto
         selectedName.textContent = pos.dataset.name;
       });
     });
