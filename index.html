@@ -37,50 +37,42 @@
       position: relative;
       width: 280px;
       aspect-ratio: 68 / 105;
-      /* Fondo gris difuminado a negro de arriba abajo */
       background: linear-gradient(to bottom, #2a2a2a, #0a0a0a);
       border: 1.5px solid #ffffff;
       border-radius: 3px;
     }
 
-    /* Solo líneas blancas (sin relleno de áreas) */
+    /* Solo líneas blancas (sin relleno) */
     .pitch-container::before {
       content: '';
       position: absolute;
       inset: 0;
       pointer-events: none;
       background:
-        /* Línea central horizontal */
         linear-gradient(#fff, #fff) center / 100% 1.5px no-repeat,
-
-        /* Círculo central (solo borde) */
         radial-gradient(circle, transparent 38px, #fff 38px, #fff 39.5px, transparent 39.5px) center / 80px 80px no-repeat,
 
-        /* ===== ÁREA GRANDE INFERIOR (solo bordes) ===== */
-        /* línea izquierda */
+        /* Área grande inferior */
         linear-gradient(#fff, #fff) bottom 0 left calc(50% - 26%) / 1.5px 15% no-repeat,
-        /* línea derecha */
         linear-gradient(#fff, #fff) bottom 0 left calc(50% + 26%) / 1.5px 15% no-repeat,
-        /* línea superior del área */
         linear-gradient(#fff, #fff) bottom 15% left 50% / 52% 1.5px no-repeat,
 
-        /* ===== ÁREA PEQUEÑA INFERIOR (solo bordes) ===== */
+        /* Área pequeña inferior */
         linear-gradient(#fff, #fff) bottom 0 left calc(50% - 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) bottom 0 left calc(50% + 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) bottom 6.5% left 50% / 26% 1.5px no-repeat,
 
-        /* ===== ÁREA GRANDE SUPERIOR (solo bordes) ===== */
+        /* Área grande superior */
         linear-gradient(#fff, #fff) top 0 left calc(50% - 26%) / 1.5px 15% no-repeat,
         linear-gradient(#fff, #fff) top 0 left calc(50% + 26%) / 1.5px 15% no-repeat,
         linear-gradient(#fff, #fff) top 15% left 50% / 52% 1.5px no-repeat,
 
-        /* ===== ÁREA PEQUEÑA SUPERIOR (solo bordes) ===== */
+        /* Área pequeña superior */
         linear-gradient(#fff, #fff) top 0 left calc(50% - 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) top 0 left calc(50% + 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) top 6.5% left 50% / 26% 1.5px no-repeat;
     }
 
-    /* Círculos de posición */
     .position {
       position: absolute;
       width: 18px;
@@ -115,7 +107,6 @@
       font-weight: bold;
     }
 
-    /* Posiciones */
     #pos-portero                 { top: 92%; left: 50%; }
     #pos-lateral-derecho         { top: 78%; left: 86%; }
     #pos-defensa-central         { top: 80%; left: 50%; }
@@ -143,11 +134,51 @@
       max-height: calc(100vh - 40px);
     }
 
+    .info-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+      flex-wrap: wrap;
+    }
+
+    .info-row label {
+      color: #ccc;
+      min-width: 70px;
+    }
+
+    .info-row span {
+      color: #f5c518;
+      font-weight: 600;
+    }
+
+    .info-row select {
+      background: #0d0d0d;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      min-width: 160px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .info-row select:focus {
+      border-color: #f5c518;
+    }
+
+    .info-row select:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .stats-header {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 12px;
-      margin-bottom: 12px;
+      margin: 18px 0 12px;
       padding-bottom: 8px;
       border-bottom: 1px solid #333;
       font-weight: 600;
@@ -191,16 +222,6 @@
     .stat-row input:focus {
       border-color: #4fc3f7;
     }
-
-    .selected-pos {
-      margin-bottom: 12px;
-      font-size: 1.05rem;
-    }
-
-    .selected-pos span {
-      color: #f5c518;
-      font-weight: 600;
-    }
   </style>
 </head>
 <body>
@@ -226,10 +247,25 @@
     </div>
   </div>
 
-  <!-- PANEL DE ATRIBUTOS -->
+  <!-- PANEL -->
   <div class="stats-panel">
-    <div class="selected-pos">
-      Posición: <span id="selected-name">Ninguna</span>
+    <!-- Posición -->
+    <div class="info-row">
+      <label>Posición:</label>
+      <span id="selected-name">Ninguna</span>
+    </div>
+
+    <!-- ROL + TAREA -->
+    <div class="info-row">
+      <label>ROL:</label>
+      <select id="rol-select" disabled>
+        <option value="">-- Selecciona posición --</option>
+      </select>
+
+      <label style="margin-left: 20px;">TAREA:</label>
+      <select id="tarea-select" disabled>
+        <option value="">-- Selecciona rol --</option>
+      </select>
     </div>
 
     <div class="stats-header">
@@ -275,7 +311,7 @@
         <div class="stat-row"><label>Visión</label><input type="text" value="-"></div>
       </div>
 
-      <!-- FÍSICO (sin Altura, Peso, Estilo, Condición, Ritmo) -->
+      <!-- FÍSICO -->
       <div>
         <div class="stat-row"><label>Aceleración</label><input type="text" value="-"></div>
         <div class="stat-row"><label>Agilidad</label><input type="text" value="-"></div>
@@ -292,13 +328,80 @@
   <script>
     const positions = document.querySelectorAll('.position');
     const selectedName = document.getElementById('selected-name');
+    const rolSelect = document.getElementById('rol-select');
+    const tareaSelect = document.getElementById('tarea-select');
 
+    // Opciones de ROL para laterales
+    const rolesLaterales = [
+      "Lateral",
+      "Carrilero",
+      "Lateral práctico",
+      "Carrilero completo",
+      "Carrilero inverso",
+      "Lateral inverso"
+    ];
+
+    // Opciones de TAREA según el ROL
+    const tareasPorRol = {
+      "Lateral": ["Defensa", "Apoyo", "Ataque", "Automático"],
+      "Carrilero": ["Defensa", "Apoyo", "Ataque", "Automático"],
+      "Lateral práctico": ["Defensa"],
+      "Carrilero completo": ["Apoyo", "Ataque"],
+      "Carrilero inverso": ["Defensa", "Apoyo", "Ataque", "Automático"],
+      "Lateral inverso": ["Defensa"]
+    };
+
+    function clearSelect(select, placeholder) {
+      select.innerHTML = `<option value="">${placeholder}</option>`;
+      select.disabled = true;
+    }
+
+    function fillRoles(isLateral) {
+      clearSelect(rolSelect, "-- Selecciona rol --");
+      clearSelect(tareaSelect, "-- Selecciona rol --");
+
+      if (isLateral) {
+        rolesLaterales.forEach(rol => {
+          const opt = document.createElement('option');
+          opt.value = rol;
+          opt.textContent = rol;
+          rolSelect.appendChild(opt);
+        });
+        rolSelect.disabled = false;
+      }
+    }
+
+    function fillTareas(rol) {
+      clearSelect(tareaSelect, "-- Selecciona tarea --");
+
+      if (rol && tareasPorRol[rol]) {
+        tareasPorRol[rol].forEach(tarea => {
+          const opt = document.createElement('option');
+          opt.value = tarea;
+          opt.textContent = tarea;
+          tareaSelect.appendChild(opt);
+        });
+        tareaSelect.disabled = false;
+      }
+    }
+
+    // Click en posición
     positions.forEach(pos => {
       pos.addEventListener('click', () => {
         positions.forEach(p => p.classList.remove('selected'));
         pos.classList.add('selected');
-        selectedName.textContent = pos.dataset.name;
+
+        const name = pos.dataset.name;
+        selectedName.textContent = name;
+
+        const isLateral = (name === "Lateral izquierdo" || name === "Lateral derecho");
+        fillRoles(isLateral);
       });
+    });
+
+    // Cambio de ROL → actualiza TAREA
+    rolSelect.addEventListener('change', () => {
+      fillTareas(rolSelect.value);
     });
   </script>
 </body>
