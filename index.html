@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Selector de Posiciones</title>
+  <title>Selector de Posiciones + Atributos</title>
   <style>
     * {
       box-sizing: border-box;
@@ -14,282 +14,310 @@
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: #0d0d0d;
-      color: #eee;
+      color: #e0e0e0;
       min-height: 100vh;
       display: flex;
       padding: 20px;
       gap: 30px;
+      overflow-x: auto;
     }
 
-    /* ========== LADO IZQUIERDO: CAMPO ========== */
+    /* ===== CAMPO (izquierda) ===== */
     .left-side {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      flex-shrink: 0;
     }
 
     h1 {
-      margin-bottom: 16px;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
+      margin-bottom: 14px;
       color: #fff;
     }
 
     .pitch-container {
       position: relative;
-      width: 340px;
+      width: 280px;
       aspect-ratio: 68 / 105;
-      background: transparent;
-      border: 3px solid #ffffff;
-      border-radius: 4px;
+      background: #1c1c1c;
+      border: 1.5px solid #ffffff;
+      border-radius: 3px;
     }
 
-    /* Solo líneas blancas del campo */
+    /* Líneas del campo (más finas) */
     .pitch-container::before {
       content: '';
       position: absolute;
       inset: 0;
       pointer-events: none;
       background:
-        /* Línea de mediocampo */
-        linear-gradient(#fff, #fff) center / 100% 2px no-repeat,
+        /* Línea central */
+        linear-gradient(#fff, #fff) center / 100% 1.5px no-repeat,
         /* Círculo central */
-        radial-gradient(circle, transparent 42px, #fff 42px, #fff 44px, transparent 44px) center / 90px 90px no-repeat,
+        radial-gradient(circle, transparent 38px, #fff 38px, #fff 39.5px, transparent 39.5px) center / 80px 80px no-repeat,
         /* Área grande inferior */
-        linear-gradient(#fff, #fff) bottom 0 left 50% / 52% 16% no-repeat,
-        linear-gradient(#fff, #fff) bottom 0 left calc(50% - 26%) / 2px 16% no-repeat,
-        linear-gradient(#fff, #fff) bottom 0 left calc(50% + 26%) / 2px 16% no-repeat,
-        linear-gradient(#fff, #fff) bottom 16% left 50% / 52% 2px no-repeat,
+        linear-gradient(#fff, #fff) bottom 0 left 50% / 52% 15% no-repeat,
+        linear-gradient(#fff, #fff) bottom 0 left calc(50% - 26%) / 1.5px 15% no-repeat,
+        linear-gradient(#fff, #fff) bottom 0 left calc(50% + 26%) / 1.5px 15% no-repeat,
+        linear-gradient(#fff, #fff) bottom 15% left 50% / 52% 1.5px no-repeat,
         /* Área pequeña inferior */
-        linear-gradient(#fff, #fff) bottom 0 left 50% / 26% 7% no-repeat,
-        linear-gradient(#fff, #fff) bottom 0 left calc(50% - 13%) / 2px 7% no-repeat,
-        linear-gradient(#fff, #fff) bottom 0 left calc(50% + 13%) / 2px 7% no-repeat,
-        linear-gradient(#fff, #fff) bottom 7% left 50% / 26% 2px no-repeat,
+        linear-gradient(#fff, #fff) bottom 0 left 50% / 26% 6.5% no-repeat,
+        linear-gradient(#fff, #fff) bottom 0 left calc(50% - 13%) / 1.5px 6.5% no-repeat,
+        linear-gradient(#fff, #fff) bottom 0 left calc(50% + 13%) / 1.5px 6.5% no-repeat,
+        linear-gradient(#fff, #fff) bottom 6.5% left 50% / 26% 1.5px no-repeat,
         /* Área grande superior */
-        linear-gradient(#fff, #fff) top 0 left 50% / 52% 16% no-repeat,
-        linear-gradient(#fff, #fff) top 0 left calc(50% - 26%) / 2px 16% no-repeat,
-        linear-gradient(#fff, #fff) top 0 left calc(50% + 26%) / 2px 16% no-repeat,
-        linear-gradient(#fff, #fff) top 16% left 50% / 52% 2px no-repeat,
+        linear-gradient(#fff, #fff) top 0 left 50% / 52% 15% no-repeat,
+        linear-gradient(#fff, #fff) top 0 left calc(50% - 26%) / 1.5px 15% no-repeat,
+        linear-gradient(#fff, #fff) top 0 left calc(50% + 26%) / 1.5px 15% no-repeat,
+        linear-gradient(#fff, #fff) top 15% left 50% / 52% 1.5px no-repeat,
         /* Área pequeña superior */
-        linear-gradient(#fff, #fff) top 0 left 50% / 26% 7% no-repeat,
-        linear-gradient(#fff, #fff) top 0 left calc(50% - 13%) / 2px 7% no-repeat,
-        linear-gradient(#fff, #fff) top 0 left calc(50% + 13%) / 2px 7% no-repeat,
-        linear-gradient(#fff, #fff) top 7% left 50% / 26% 2px no-repeat;
+        linear-gradient(#fff, #fff) top 0 left 50% / 26% 6.5% no-repeat,
+        linear-gradient(#fff, #fff) top 0 left calc(50% - 13%) / 1.5px 6.5% no-repeat,
+        linear-gradient(#fff, #fff) top 0 left calc(50% + 13%) / 1.5px 6.5% no-repeat,
+        linear-gradient(#fff, #fff) top 6.5% left 50% / 26% 1.5px no-repeat;
+      opacity: 0.9;
     }
 
-    /* Puntos (círculos blancos) */
+    /* Círculos de posición (estilo imagen) */
     .position {
       position: absolute;
-      width: 22px;
-      height: 22px;
-      background: #ffffff;
-      border: 2px solid #ffffff;
+      width: 18px;
+      height: 18px;
+      background: #111;
+      border: 1.5px solid #ccc;
       border-radius: 50%;
       cursor: pointer;
       transform: translate(-50%, -50%);
       transition: all 0.2s ease;
       z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .position:hover {
-      transform: translate(-50%, -50%) scale(1.3);
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+      transform: translate(-50%, -50%) scale(1.25);
+      border-color: #fff;
     }
 
     .position.selected {
-      background: #e94560;
-      border-color: #e94560;
-      transform: translate(-50%, -50%) scale(1.35);
-      box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.45);
+      background: #111;
+      border: 2.5px solid #f5c518;
+      box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.3);
     }
 
-    /* Tooltip */
-    .position::after {
-      content: attr(data-label);
-      position: absolute;
-      bottom: 130%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.9);
+    .position.selected::before {
+      content: '✓';
       color: #fff;
-      padding: 4px 8px;
-      border-radius: 5px;
-      font-size: 0.68rem;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
+      font-size: 11px;
+      font-weight: bold;
     }
 
-    .position:hover::after,
-    .position.selected::after {
-      opacity: 1;
-    }
+    /* Posiciones */
+    #pos-portero                 { top: 92%; left: 50%; }
+    #pos-lateral-derecho         { top: 78%; left: 86%; }
+    #pos-defensa-central         { top: 80%; left: 50%; }
+    #pos-lateral-izquierdo       { top: 78%; left: 14%; }
+    #pos-carrilero-derecho       { top: 60%; left: 86%; }
+    #pos-mediocentro             { top: 62%; left: 50%; }
+    #pos-carrilero-izquierdo     { top: 60%; left: 14%; }
+    #pos-centrocampista-derecho  { top: 45%; left: 86%; }
+    #pos-centrocampista          { top: 48%; left: 50%; }
+    #pos-centrocampista-izquierdo{ top: 45%; left: 14%; }
+    #pos-mediapunta-derecho      { top: 30%; left: 86%; }
+    #pos-mediapunta              { top: 28%; left: 50%; }
+    #pos-mediapunta-izquierdo    { top: 30%; left: 14%; }
+    #pos-delantero               { top: 12%; left: 50%; }
 
-    /* Posiciones rectas */
-    #pos-portero              { top: 92%; left: 50%; }
-    #pos-lateral-derecho      { top: 78%; left: 86%; }
-    #pos-defensa-central      { top: 80%; left: 50%; }
-    #pos-lateral-izquierdo    { top: 78%; left: 14%; }
-    #pos-carrilero-derecho    { top: 60%; left: 86%; }
-    #pos-mediocentro          { top: 62%; left: 50%; }
-    #pos-carrilero-izquierdo  { top: 60%; left: 14%; }
-    #pos-centrocampista-derecho { top: 45%; left: 86%; }
-    #pos-centrocampista       { top: 48%; left: 50%; }
-    #pos-centrocampista-izquierdo { top: 45%; left: 14%; }
-    #pos-mediapunta-derecho   { top: 30%; left: 86%; }
-    #pos-mediapunta           { top: 28%; left: 50%; }
-    #pos-mediapunta-izquierdo { top: 30%; left: 14%; }
-    #pos-delantero            { top: 12%; left: 50%; }
-
-    /* ========== LADO DERECHO: PANEL ========== */
-    .right-side {
+    /* ===== PANEL DE ATRIBUTOS (derecha) ===== */
+    .stats-panel {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end; /* abajo */
-      align-items: flex-end;     /* derecha */
-      padding-bottom: 20px;
+      min-width: 620px;
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 18px 20px;
+      overflow-y: auto;
+      max-height: calc(100vh - 40px);
     }
 
-    .dropdown-panel {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 20px 24px;
-      min-width: 280px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-      display: none; /* se muestra al seleccionar */
-    }
-
-    .dropdown-panel.visible {
-      display: block;
-      animation: fadeIn 0.25s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .dropdown-panel label {
-      display: block;
-      margin-bottom: 10px;
+    .stats-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #333;
+      font-weight: 600;
       font-size: 0.95rem;
       color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .dropdown-panel select {
-      width: 100%;
-      padding: 12px 14px;
-      font-size: 1rem;
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px 16px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      font-size: 0.88rem;
+    }
+
+    .stat-row label {
+      color: #ccc;
+      flex: 1;
+    }
+
+    .stat-row input {
+      width: 70px;
       background: #0d0d0d;
-      color: #fff;
-      border: 1px solid #444;
-      border-radius: 8px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .dropdown-panel select:focus {
-      border-color: #e94560;
-    }
-
-    .selected-text {
-      margin-top: 14px;
-      font-size: 1.05rem;
-      color: #e94560;
-      font-weight: 600;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #4fc3f7;
       text-align: center;
+      padding: 3px 6px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .stat-row input:focus {
+      border-color: #4fc3f7;
+    }
+
+    .stat-row input.placeholder {
+      color: #666;
+    }
+
+    /* Sección física extra */
+    .physical-extra {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid #333;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+    }
+
+    .physical-extra .stat-row input {
+      width: 90px;
+    }
+
+    .selected-pos {
+      margin-bottom: 12px;
+      font-size: 1.05rem;
+    }
+
+    .selected-pos span {
+      color: #f5c518;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
 
-  <!-- LADO IZQUIERDO -->
+  <!-- CAMPO -->
   <div class="left-side">
-    <h1>⚽ Selector de Posición</h1>
-
-    <div class="pitch-container">
-      <div class="position" id="pos-portero" data-name="Portero" data-label="Portero"></div>
-      <div class="position" id="pos-lateral-derecho" data-name="Lateral derecho" data-label="Lateral Dcho"></div>
-      <div class="position" id="pos-defensa-central" data-name="Defensa central" data-label="Def. Central"></div>
-      <div class="position" id="pos-lateral-izquierdo" data-name="Lateral izquierdo" data-label="Lateral Izq"></div>
-      <div class="position" id="pos-carrilero-derecho" data-name="Carrilero derecho" data-label="Carrilero Dcho"></div>
-      <div class="position" id="pos-mediocentro" data-name="Mediocentro" data-label="Mediocentro"></div>
-      <div class="position" id="pos-carrilero-izquierdo" data-name="Carrilero izquierdo" data-label="Carrilero Izq"></div>
-      <div class="position" id="pos-centrocampista-derecho" data-name="Centrocampista derecho" data-label="Centro Dcho"></div>
-      <div class="position" id="pos-centrocampista" data-name="Centrocampista" data-label="Centrocampista"></div>
-      <div class="position" id="pos-centrocampista-izquierdo" data-name="Centrocampista izquierdo" data-label="Centro Izq"></div>
-      <div class="position" id="pos-mediapunta-derecho" data-name="Mediapunta derecho" data-label="Mediapunta Dcho"></div>
-      <div class="position" id="pos-mediapunta" data-name="Mediapunta" data-label="Mediapunta"></div>
-      <div class="position" id="pos-mediapunta-izquierdo" data-name="Mediapunta izquierdo" data-label="Mediapunta Izq"></div>
-      <div class="position" id="pos-delantero" data-name="Delantero" data-label="Delantero"></div>
+    <h1>⚽ Posición</h1>
+    <div class="pitch-container" id="pitch">
+      <div class="position" id="pos-portero" data-name="Portero"></div>
+      <div class="position" id="pos-lateral-derecho" data-name="Lateral derecho"></div>
+      <div class="position" id="pos-defensa-central" data-name="Defensa central"></div>
+      <div class="position" id="pos-lateral-izquierdo" data-name="Lateral izquierdo"></div>
+      <div class="position" id="pos-carrilero-derecho" data-name="Carrilero derecho"></div>
+      <div class="position" id="pos-mediocentro" data-name="Mediocentro"></div>
+      <div class="position" id="pos-carrilero-izquierdo" data-name="Carrilero izquierdo"></div>
+      <div class="position" id="pos-centrocampista-derecho" data-name="Centrocampista derecho"></div>
+      <div class="position" id="pos-centrocampista" data-name="Centrocampista"></div>
+      <div class="position" id="pos-centrocampista-izquierdo" data-name="Centrocampista izquierdo"></div>
+      <div class="position" id="pos-mediapunta-derecho" data-name="Mediapunta derecho"></div>
+      <div class="position" id="pos-mediapunta" data-name="Mediapunta"></div>
+      <div class="position" id="pos-mediapunta-izquierdo" data-name="Mediapunta izquierdo"></div>
+      <div class="position" id="pos-delantero" data-name="Delantero"></div>
     </div>
   </div>
 
-  <!-- LADO DERECHO ABAJO: DESPLEGABLE -->
-  <div class="right-side">
-    <div class="dropdown-panel" id="dropdown-panel">
-      <label for="position-select">Posición seleccionada:</label>
-      <select id="position-select">
-        <option value="">-- Elige una posición --</option>
-        <option value="Portero">Portero</option>
-        <option value="Lateral derecho">Lateral derecho</option>
-        <option value="Defensa central">Defensa central</option>
-        <option value="Lateral izquierdo">Lateral izquierdo</option>
-        <option value="Carrilero derecho">Carrilero derecho</option>
-        <option value="Mediocentro">Mediocentro</option>
-        <option value="Carrilero izquierdo">Carrilero izquierdo</option>
-        <option value="Centrocampista derecho">Centrocampista derecho</option>
-        <option value="Centrocampista">Centrocampista</option>
-        <option value="Centrocampista izquierdo">Centrocampista izquierdo</option>
-        <option value="Mediapunta derecho">Mediapunta derecho</option>
-        <option value="Mediapunta">Mediapunta</option>
-        <option value="Mediapunta izquierdo">Mediapunta izquierdo</option>
-        <option value="Delantero">Delantero</option>
-      </select>
-      <div class="selected-text" id="selected-text"></div>
+  <!-- PANEL DE ATRIBUTOS -->
+  <div class="stats-panel">
+    <div class="selected-pos">
+      Posición: <span id="selected-name">Ninguna</span>
+    </div>
+
+    <div class="stats-header">
+      <div>Técnico</div>
+      <div>Mental</div>
+      <div>Físico</div>
+    </div>
+
+    <div class="stats-grid">
+      <!-- TÉCNICO -->
+      <div>
+        <div class="stat-row"><label>Cabeceo</label><input type="text" placeholder="2-10" value="2-10"></div>
+        <div class="stat-row"><label>Centros</label><input type="text" placeholder="4-12" value="4-12"></div>
+        <div class="stat-row"><label>Control</label><input type="text" placeholder="8-14" value="8-14"></div>
+        <div class="stat-row"><label>Entradas</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Marcaje</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Pases</label><input type="text" placeholder="6-14" value="6-14"></div>
+        <div class="stat-row"><label>Penaltis</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Regate</label><input type="text" placeholder="4-10" value="4-10"></div>
+        <div class="stat-row"><label>Remate</label><input type="text" placeholder="9-15" value="9-15"></div>
+        <div class="stat-row"><label>Saques de esquina</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Saques largos</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Técnica</label><input type="text" placeholder="6-12" value="6-12"></div>
+        <div class="stat-row"><label>Tiros lejanos</label><input type="text" placeholder="3-9" value="3-9"></div>
+        <div class="stat-row"><label>Tiros libres</label><input type="text" placeholder="-" value="-"></div>
+      </div>
+
+      <!-- MENTAL -->
+      <div>
+        <div class="stat-row"><label>Agresividad</label><input type="text" placeholder="5-13" value="5-13"></div>
+        <div class="stat-row"><label>Anticipación</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Colocación</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Concentración</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Decisiones</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Desmarques</label><input type="text" placeholder="5-11" value="5-11"></div>
+        <div class="stat-row"><label>Determinación</label><input type="text" placeholder="4-10" value="4-10"></div>
+        <div class="stat-row"><label>Juego en equipo</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Liderazgo</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Sacrificio</label><input type="text" placeholder="4-10" value="4-10"></div>
+        <div class="stat-row"><label>Serenidad</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Talento</label><input type="text" placeholder="5-13" value="5-13"></div>
+        <div class="stat-row"><label>Valentía</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Visión</label><input type="text" placeholder="1-9" value="1-9"></div>
+      </div>
+
+      <!-- FÍSICO -->
+      <div>
+        <div class="stat-row"><label>Aceleración</label><input type="text" placeholder="12-20" value="12-20"></div>
+        <div class="stat-row"><label>Agilidad</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Alcance de salto</label><input type="text" placeholder="2-10" value="2-10"></div>
+        <div class="stat-row"><label>Equilibrio</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Fuerza</label><input type="text" placeholder="1-7" value="1-7"></div>
+        <div class="stat-row"><label>Recuperación física</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Resistencia</label><input type="text" placeholder="8-14" value="8-14"></div>
+        <div class="stat-row"><label>Velocidad</label><input type="text" placeholder="10-18" value="10-18"></div>
+        <div class="stat-row"><label>Altura</label><input type="text" placeholder="181 cm" value="181 cm"></div>
+        <div class="stat-row"><label>Peso</label><input type="text" placeholder="70 kg" value="70 kg"></div>
+        <div class="stat-row"><label>Estilo</label><input type="text" placeholder="Físico" value="Físico"></div>
+        <div class="stat-row"><label>Condición</label><input type="text" placeholder="♥" value="♥"></div>
+        <div class="stat-row"><label>Ritmo</label><input type="text" placeholder="-" value="-"></div>
+      </div>
     </div>
   </div>
 
   <script>
     const positions = document.querySelectorAll('.position');
-    const panel = document.getElementById('dropdown-panel');
-    const select = document.getElementById('position-select');
-    const selectedText = document.getElementById('selected-text');
+    const selectedName = document.getElementById('selected-name');
 
-    // Click en un punto del campo
     positions.forEach(pos => {
       pos.addEventListener('click', () => {
-        // Quitar selección anterior
         positions.forEach(p => p.classList.remove('selected'));
         pos.classList.add('selected');
-
-        // Mostrar panel y sincronizar select
-        panel.classList.add('visible');
-        select.value = pos.dataset.name;
-        selectedText.textContent = pos.dataset.name;
+        selectedName.textContent = pos.dataset.name;
       });
-    });
-
-    // Cambio en el desplegable
-    select.addEventListener('change', () => {
-      const value = select.value;
-
-      // Quitar todas las selecciones
-      positions.forEach(p => p.classList.remove('selected'));
-
-      if (value) {
-        // Buscar y seleccionar el punto correspondiente
-        const target = [...positions].find(p => p.dataset.name === value);
-        if (target) {
-          target.classList.add('selected');
-          selectedText.textContent = value;
-          panel.classList.add('visible');
-        }
-      } else {
-        selectedText.textContent = '';
-      }
     });
   </script>
 </body>
