@@ -3,13 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Selector de Posiciones + Atributos</title>
+  <title>Selector de Posiciones + Atributos + Entrenamiento</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
@@ -22,10 +18,7 @@
       overflow-x: auto;
     }
 
-    /* ===== CAMPO (izquierda) ===== */
-    .left-side {
-      flex-shrink: 0;
-    }
+    .left-side { flex-shrink: 0; }
 
     h1 {
       font-size: 1.3rem;
@@ -42,7 +35,6 @@
       border-radius: 3px;
     }
 
-    /* Solo líneas blancas (sin relleno) */
     .pitch-container::before {
       content: '';
       position: absolute;
@@ -51,23 +43,15 @@
       background:
         linear-gradient(#fff, #fff) center / 100% 1.5px no-repeat,
         radial-gradient(circle, transparent 38px, #fff 38px, #fff 39.5px, transparent 39.5px) center / 80px 80px no-repeat,
-
-        /* Área grande inferior */
         linear-gradient(#fff, #fff) bottom 0 left calc(50% - 26%) / 1.5px 15% no-repeat,
         linear-gradient(#fff, #fff) bottom 0 left calc(50% + 26%) / 1.5px 15% no-repeat,
         linear-gradient(#fff, #fff) bottom 15% left 50% / 52% 1.5px no-repeat,
-
-        /* Área pequeña inferior */
         linear-gradient(#fff, #fff) bottom 0 left calc(50% - 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) bottom 0 left calc(50% + 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) bottom 6.5% left 50% / 26% 1.5px no-repeat,
-
-        /* Área grande superior */
         linear-gradient(#fff, #fff) top 0 left calc(50% - 26%) / 1.5px 15% no-repeat,
         linear-gradient(#fff, #fff) top 0 left calc(50% + 26%) / 1.5px 15% no-repeat,
         linear-gradient(#fff, #fff) top 15% left 50% / 52% 1.5px no-repeat,
-
-        /* Área pequeña superior */
         linear-gradient(#fff, #fff) top 0 left calc(50% - 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) top 0 left calc(50% + 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) top 6.5% left 50% / 26% 1.5px no-repeat;
@@ -122,10 +106,9 @@
     #pos-mediapunta-izquierdo    { top: 30%; left: 14%; }
     #pos-delantero               { top: 12%; left: 50%; }
 
-    /* ===== PANEL DE ATRIBUTOS ===== */
     .stats-panel {
       flex: 1;
-      min-width: 620px;
+      min-width: 680px;
       background: #161616;
       border: 1px solid #2a2a2a;
       border-radius: 10px;
@@ -143,15 +126,8 @@
       flex-wrap: wrap;
     }
 
-    .info-row label {
-      color: #ccc;
-      min-width: 70px;
-    }
-
-    .info-row span {
-      color: #f5c518;
-      font-weight: 600;
-    }
+    .info-row label { color: #ccc; min-width: 70px; }
+    .info-row span { color: #f5c518; font-weight: 600; }
 
     .info-row select {
       background: #0d0d0d;
@@ -165,14 +141,8 @@
       cursor: pointer;
     }
 
-    .info-row select:focus {
-      border-color: #f5c518;
-    }
-
-    .info-row select:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    .info-row select:focus { border-color: #f5c518; }
+    .info-row select:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .stats-header {
       display: grid;
@@ -202,10 +172,7 @@
       font-size: 0.88rem;
     }
 
-    .stat-row label {
-      color: #ccc;
-      flex: 1;
-    }
+    .stat-row label { color: #ccc; flex: 1; }
 
     .stat-row input {
       width: 70px;
@@ -219,14 +186,56 @@
       outline: none;
     }
 
-    .stat-row input:focus {
-      border-color: #4fc3f7;
+    .stat-row input:focus { border-color: #4fc3f7; }
+
+    /* ===== ENTRENAMIENTO ===== */
+    .entrenamiento {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid #333;
     }
+
+    .entrenamiento h3 {
+      font-size: 1rem;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .entrenamiento-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+    }
+
+    .entrenamiento-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #222;
+    }
+
+    .entrenamiento-item .name { color: #ccc; }
+    .entrenamiento-item .value {
+      color: #4fc3f7;
+      font-weight: 600;
+      min-width: 50px;
+      text-align: right;
+    }
+
+    .entrenamiento-item.lowest {
+      background: rgba(245, 197, 24, 0.08);
+      border-radius: 4px;
+      padding: 5px 8px;
+    }
+
+    .entrenamiento-item.lowest .value { color: #f5c518; }
   </style>
 </head>
 <body>
 
-  <!-- CAMPO -->
   <div class="left-side">
     <h1>⚽ Posición</h1>
     <div class="pitch-container" id="pitch">
@@ -247,15 +256,12 @@
     </div>
   </div>
 
-  <!-- PANEL -->
   <div class="stats-panel">
-    <!-- Posición -->
     <div class="info-row">
       <label>Posición:</label>
       <span id="selected-name">Ninguna</span>
     </div>
 
-    <!-- ROL + TAREA -->
     <div class="info-row">
       <label>ROL:</label>
       <select id="rol-select" disabled>
@@ -277,50 +283,58 @@
     <div class="stats-grid">
       <!-- TÉCNICO -->
       <div>
-        <div class="stat-row"><label>Cabeceo</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Centros</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Control</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Entradas</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Marcaje</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Pases</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Penaltis</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Regate</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Remate</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Saques de esquina</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Saques largos</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Técnica</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Tiros lejanos</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Tiros libres</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Cabeceo</label><input type="text" data-attr="Cabeceo" value="-"></div>
+        <div class="stat-row"><label>Centros</label><input type="text" data-attr="Centros" value="-"></div>
+        <div class="stat-row"><label>Control</label><input type="text" data-attr="Control" value="-"></div>
+        <div class="stat-row"><label>Entradas</label><input type="text" data-attr="Entradas" value="-"></div>
+        <div class="stat-row"><label>Marcaje</label><input type="text" data-attr="Marcaje" value="-"></div>
+        <div class="stat-row"><label>Pases</label><input type="text" data-attr="Pases" value="-"></div>
+        <div class="stat-row"><label>Penaltis</label><input type="text" data-attr="Penaltis" value="-"></div>
+        <div class="stat-row"><label>Regate</label><input type="text" data-attr="Regate" value="-"></div>
+        <div class="stat-row"><label>Remate</label><input type="text" data-attr="Remate" value="-"></div>
+        <div class="stat-row"><label>Saques de esquina</label><input type="text" data-attr="Saques de esquina" value="-"></div>
+        <div class="stat-row"><label>Saques largos</label><input type="text" data-attr="Saques largos" value="-"></div>
+        <div class="stat-row"><label>Técnica</label><input type="text" data-attr="Técnica" value="-"></div>
+        <div class="stat-row"><label>Tiros lejanos</label><input type="text" data-attr="Tiros lejanos" value="-"></div>
+        <div class="stat-row"><label>Tiros libres</label><input type="text" data-attr="Tiros libres" value="-"></div>
       </div>
 
       <!-- MENTAL -->
       <div>
-        <div class="stat-row"><label>Agresividad</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Anticipación</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Colocación</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Concentración</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Decisiones</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Desmarques</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Determinación</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Juego en equipo</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Liderazgo</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Sacrificio</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Serenidad</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Talento</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Valentía</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Visión</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Agresividad</label><input type="text" data-attr="Agresividad" value="-"></div>
+        <div class="stat-row"><label>Anticipación</label><input type="text" data-attr="Anticipación" value="-"></div>
+        <div class="stat-row"><label>Colocación</label><input type="text" data-attr="Colocación" value="-"></div>
+        <div class="stat-row"><label>Concentración</label><input type="text" data-attr="Concentración" value="-"></div>
+        <div class="stat-row"><label>Decisiones</label><input type="text" data-attr="Decisiones" value="-"></div>
+        <div class="stat-row"><label>Desmarques</label><input type="text" data-attr="Desmarques" value="-"></div>
+        <div class="stat-row"><label>Determinación</label><input type="text" data-attr="Determinación" value="-"></div>
+        <div class="stat-row"><label>Juego en equipo</label><input type="text" data-attr="Juego en equipo" value="-"></div>
+        <div class="stat-row"><label>Liderazgo</label><input type="text" data-attr="Liderazgo" value="-"></div>
+        <div class="stat-row"><label>Sacrificio</label><input type="text" data-attr="Sacrificio" value="-"></div>
+        <div class="stat-row"><label>Serenidad</label><input type="text" data-attr="Serenidad" value="-"></div>
+        <div class="stat-row"><label>Talento</label><input type="text" data-attr="Talento" value="-"></div>
+        <div class="stat-row"><label>Valentía</label><input type="text" data-attr="Valentía" value="-"></div>
+        <div class="stat-row"><label>Visión</label><input type="text" data-attr="Visión" value="-"></div>
       </div>
 
       <!-- FÍSICO -->
       <div>
-        <div class="stat-row"><label>Aceleración</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Agilidad</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Alcance de salto</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Equilibrio</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Fuerza</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Recuperación física</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Resistencia</label><input type="text" value="-"></div>
-        <div class="stat-row"><label>Velocidad</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Aceleración</label><input type="text" data-attr="Aceleración" value="-"></div>
+        <div class="stat-row"><label>Agilidad</label><input type="text" data-attr="Agilidad" value="-"></div>
+        <div class="stat-row"><label>Alcance de salto</label><input type="text" data-attr="Alcance de salto" value="-"></div>
+        <div class="stat-row"><label>Equilibrio</label><input type="text" data-attr="Equilibrio" value="-"></div>
+        <div class="stat-row"><label>Fuerza</label><input type="text" data-attr="Fuerza" value="-"></div>
+        <div class="stat-row"><label>Recuperación física</label><input type="text" data-attr="Recuperación física" value="-"></div>
+        <div class="stat-row"><label>Resistencia</label><input type="text" data-attr="Resistencia" value="-"></div>
+        <div class="stat-row"><label>Velocidad</label><input type="text" data-attr="Velocidad" value="-"></div>
+      </div>
+    </div>
+
+    <!-- ENTRENAMIENTO -->
+    <div class="entrenamiento">
+      <h3>Entrenamiento</h3>
+      <div class="entrenamiento-list" id="entrenamiento-list">
+        <!-- Se rellena dinámicamente -->
       </div>
     </div>
   </div>
@@ -330,18 +344,13 @@
     const selectedName = document.getElementById('selected-name');
     const rolSelect = document.getElementById('rol-select');
     const tareaSelect = document.getElementById('tarea-select');
+    const entrenamientoList = document.getElementById('entrenamiento-list');
 
-    // Opciones de ROL para laterales
     const rolesLaterales = [
-      "Lateral",
-      "Carrilero",
-      "Lateral práctico",
-      "Carrilero completo",
-      "Carrilero inverso",
-      "Lateral inverso"
+      "Lateral", "Carrilero", "Lateral práctico",
+      "Carrilero completo", "Carrilero inverso", "Lateral inverso"
     ];
 
-    // Opciones de TAREA según el ROL
     const tareasPorRol = {
       "Lateral": ["Defensa", "Apoyo", "Ataque", "Automático"],
       "Carrilero": ["Defensa", "Apoyo", "Ataque", "Automático"],
@@ -351,6 +360,95 @@
       "Lateral inverso": ["Defensa"]
     };
 
+    // Lista de atributos permitidos SOLO para Lateral + Carrilero + Apoyo
+    const allowedForCarrileroApoyo = new Set([
+      "Centros", "Control", "Entradas", "Marcaje", "Pases", "Regate", "Técnica",
+      "Anticipación", "Colocación", "Concentración", "Decisiones", "Desmarques",
+      "Juego en equipo", "Sacrificio",
+      "Aceleración", "Agilidad", "Equilibrio", "Resistencia", "Velocidad"
+    ]);
+
+    // Definición de los cálculos de entrenamiento
+    const trainingDefs = [
+      { name: "Tiros libres",            attrs: ["Tiros libres", "Técnica"],               calc: (v) => v["Tiros libres"] + v["Técnica"] / 2 },
+      { name: "Lanzamientos de córner",  attrs: ["Saques de esquina", "Técnica"],         calc: (v) => v["Saques de esquina"] + v["Técnica"] / 2 },
+      { name: "Lanzamientos de penalti", attrs: ["Penaltis", "Técnica"],                  calc: (v) => v["Penaltis"] + v["Técnica"] / 2 },
+      { name: "Saques largos",           attrs: ["Saques largos"],                        calc: (v) => v["Saques largos"] },
+      { name: "Rapidez",                 attrs: ["Velocidad", "Aceleración"],             calc: (v) => v["Velocidad"] + v["Aceleración"] / 2 },
+      { name: "Agilidad y equilibrio",   attrs: ["Agilidad", "Equilibrio"],               calc: (v) => v["Agilidad"] + v["Equilibrio"] / 2 },
+      { name: "Fuerza",                  attrs: ["Fuerza", "Alcance de salto"],           calc: (v) => v["Fuerza"] + v["Alcance de salto"] / 2 },
+      { name: "Aguante",                 attrs: ["Resistencia", "Sacrificio"],            calc: (v) => v["Resistencia"] + v["Sacrificio"] / 2 },
+      { name: "Colocación defensiva",    attrs: ["Marcaje", "Colocación", "Decisiones"],  calc: (v) => (v["Marcaje"] + v["Colocación"] + v["Decisiones"]) / 3 },
+      { name: "Movimiento de ataque",    attrs: ["Desmarques", "Anticipación", "Decisiones"], calc: (v) => (v["Desmarques"] + v["Anticipación"] + v["Decisiones"]) / 3 },
+      { name: "Último tercio",           attrs: ["Serenidad", "Decisiones"],              calc: (v) => v["Serenidad"] + v["Decisiones"] / 2 },
+      { name: "Disparos",                attrs: ["Remate", "Tiros lejanos", "Técnica"],   calc: (v) => (v["Remate"] + v["Tiros lejanos"] + v["Técnica"]) / 3 },
+      { name: "Pases",                   attrs: ["Visión", "Pases", "Técnica"],           calc: (v) => (v["Visión"] + v["Pases"] + v["Técnica"]) / 3 },
+      { name: "Centros",                 attrs: ["Centros", "Técnica"],                   calc: (v) => v["Centros"] + v["Técnica"] / 2 },
+      { name: "Control de balón",        attrs: ["Control", "Regate", "Técnica"],         calc: (v) => (v["Control"] + v["Regate"] + v["Técnica"]) / 3 },
+      { name: "Juego aéreo",             attrs: ["Cabeceo", "Valentía"],                  calc: (v) => v["Cabeceo"] + v["Valentía"] / 2 }
+    ];
+
+    function getAttrValue(name) {
+      const input = document.querySelector(`input[data-attr="${name}"]`);
+      if (!input) return 0;
+      const val = input.value.trim();
+      if (val === "" || val === "-") return 0;
+      const num = parseFloat(val);
+      return isNaN(num) ? 0 : num;
+    }
+
+    function getAllValues() {
+      const values = {};
+      document.querySelectorAll('input[data-attr]').forEach(inp => {
+        values[inp.dataset.attr] = getAttrValue(inp.dataset.attr);
+      });
+      return values;
+    }
+
+    function isSpecialCase() {
+      const pos = selectedName.textContent;
+      const rol = rolSelect.value;
+      const tarea = tareaSelect.value;
+      return (pos === "Lateral derecho" || pos === "Lateral izquierdo") &&
+             rol === "Carrilero" &&
+             tarea === "Apoyo";
+    }
+
+    function updateEntrenamiento() {
+      const values = getAllValues();
+      const special = isSpecialCase();
+
+      let items = trainingDefs.map(def => {
+        const result = def.calc(values);
+        const allAllowed = def.attrs.every(a => allowedForCarrileroApoyo.has(a));
+        return {
+          name: def.name,
+          value: Math.round(result * 10) / 10, // 1 decimal
+          eligible: allAllowed
+        };
+      });
+
+      if (special) {
+        // Solo los que cumplen 100% de atributos en la lista permitida
+        items = items.filter(i => i.eligible);
+        if (items.length === 0) {
+          entrenamientoList.innerHTML = `<div class="entrenamiento-item"><span class="name">Ningún entrenamiento compatible</span></div>`;
+          return;
+        }
+        // Encontrar el de menor valor
+        const minVal = Math.min(...items.map(i => i.value));
+        items = items.filter(i => i.value === minVal);
+      }
+
+      // Render
+      entrenamientoList.innerHTML = items.map(i => `
+        <div class="entrenamiento-item ${special ? 'lowest' : ''}">
+          <span class="name">${i.name}</span>
+          <span class="value">${i.value}</span>
+        </div>
+      `).join('');
+    }
+
     function clearSelect(select, placeholder) {
       select.innerHTML = `<option value="">${placeholder}</option>`;
       select.disabled = true;
@@ -359,7 +457,6 @@
     function fillRoles(isLateral) {
       clearSelect(rolSelect, "-- Selecciona rol --");
       clearSelect(tareaSelect, "-- Selecciona rol --");
-
       if (isLateral) {
         rolesLaterales.forEach(rol => {
           const opt = document.createElement('option');
@@ -369,11 +466,11 @@
         });
         rolSelect.disabled = false;
       }
+      updateEntrenamiento();
     }
 
     function fillTareas(rol) {
       clearSelect(tareaSelect, "-- Selecciona tarea --");
-
       if (rol && tareasPorRol[rol]) {
         tareasPorRol[rol].forEach(tarea => {
           const opt = document.createElement('option');
@@ -383,26 +480,31 @@
         });
         tareaSelect.disabled = false;
       }
+      updateEntrenamiento();
     }
 
-    // Click en posición
+    // Eventos
     positions.forEach(pos => {
       pos.addEventListener('click', () => {
         positions.forEach(p => p.classList.remove('selected'));
         pos.classList.add('selected');
-
         const name = pos.dataset.name;
         selectedName.textContent = name;
-
         const isLateral = (name === "Lateral izquierdo" || name === "Lateral derecho");
         fillRoles(isLateral);
       });
     });
 
-    // Cambio de ROL → actualiza TAREA
-    rolSelect.addEventListener('change', () => {
-      fillTareas(rolSelect.value);
+    rolSelect.addEventListener('change', () => fillTareas(rolSelect.value));
+    tareaSelect.addEventListener('change', updateEntrenamiento);
+
+    // Recalcular cuando se cambie cualquier atributo
+    document.querySelectorAll('input[data-attr]').forEach(inp => {
+      inp.addEventListener('input', updateEntrenamiento);
     });
+
+    // Inicial
+    updateEntrenamiento();
   </script>
 </body>
 </html>
