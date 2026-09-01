@@ -37,46 +37,50 @@
       position: relative;
       width: 280px;
       aspect-ratio: 68 / 105;
-      background: #1c1c1c;
+      /* Fondo gris difuminado a negro de arriba abajo */
+      background: linear-gradient(to bottom, #2a2a2a, #0a0a0a);
       border: 1.5px solid #ffffff;
       border-radius: 3px;
     }
 
-    /* Líneas del campo (más finas) */
+    /* Solo líneas blancas (sin relleno de áreas) */
     .pitch-container::before {
       content: '';
       position: absolute;
       inset: 0;
       pointer-events: none;
       background:
-        /* Línea central */
+        /* Línea central horizontal */
         linear-gradient(#fff, #fff) center / 100% 1.5px no-repeat,
-        /* Círculo central */
+
+        /* Círculo central (solo borde) */
         radial-gradient(circle, transparent 38px, #fff 38px, #fff 39.5px, transparent 39.5px) center / 80px 80px no-repeat,
-        /* Área grande inferior */
-        linear-gradient(#fff, #fff) bottom 0 left 50% / 52% 15% no-repeat,
+
+        /* ===== ÁREA GRANDE INFERIOR (solo bordes) ===== */
+        /* línea izquierda */
         linear-gradient(#fff, #fff) bottom 0 left calc(50% - 26%) / 1.5px 15% no-repeat,
+        /* línea derecha */
         linear-gradient(#fff, #fff) bottom 0 left calc(50% + 26%) / 1.5px 15% no-repeat,
+        /* línea superior del área */
         linear-gradient(#fff, #fff) bottom 15% left 50% / 52% 1.5px no-repeat,
-        /* Área pequeña inferior */
-        linear-gradient(#fff, #fff) bottom 0 left 50% / 26% 6.5% no-repeat,
+
+        /* ===== ÁREA PEQUEÑA INFERIOR (solo bordes) ===== */
         linear-gradient(#fff, #fff) bottom 0 left calc(50% - 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) bottom 0 left calc(50% + 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) bottom 6.5% left 50% / 26% 1.5px no-repeat,
-        /* Área grande superior */
-        linear-gradient(#fff, #fff) top 0 left 50% / 52% 15% no-repeat,
+
+        /* ===== ÁREA GRANDE SUPERIOR (solo bordes) ===== */
         linear-gradient(#fff, #fff) top 0 left calc(50% - 26%) / 1.5px 15% no-repeat,
         linear-gradient(#fff, #fff) top 0 left calc(50% + 26%) / 1.5px 15% no-repeat,
         linear-gradient(#fff, #fff) top 15% left 50% / 52% 1.5px no-repeat,
-        /* Área pequeña superior */
-        linear-gradient(#fff, #fff) top 0 left 50% / 26% 6.5% no-repeat,
+
+        /* ===== ÁREA PEQUEÑA SUPERIOR (solo bordes) ===== */
         linear-gradient(#fff, #fff) top 0 left calc(50% - 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) top 0 left calc(50% + 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) top 6.5% left 50% / 26% 1.5px no-repeat;
-      opacity: 0.9;
     }
 
-    /* Círculos de posición (estilo imagen) */
+    /* Círculos de posición */
     .position {
       position: absolute;
       width: 18px;
@@ -127,7 +131,7 @@
     #pos-mediapunta-izquierdo    { top: 30%; left: 14%; }
     #pos-delantero               { top: 12%; left: 50%; }
 
-    /* ===== PANEL DE ATRIBUTOS (derecha) ===== */
+    /* ===== PANEL DE ATRIBUTOS ===== */
     .stats-panel {
       flex: 1;
       min-width: 620px;
@@ -188,24 +192,6 @@
       border-color: #4fc3f7;
     }
 
-    .stat-row input.placeholder {
-      color: #666;
-    }
-
-    /* Sección física extra */
-    .physical-extra {
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid #333;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 20px;
-    }
-
-    .physical-extra .stat-row input {
-      width: 90px;
-    }
-
     .selected-pos {
       margin-bottom: 12px;
       font-size: 1.05rem;
@@ -255,55 +241,50 @@
     <div class="stats-grid">
       <!-- TÉCNICO -->
       <div>
-        <div class="stat-row"><label>Cabeceo</label><input type="text" placeholder="2-10" value="2-10"></div>
-        <div class="stat-row"><label>Centros</label><input type="text" placeholder="4-12" value="4-12"></div>
-        <div class="stat-row"><label>Control</label><input type="text" placeholder="8-14" value="8-14"></div>
-        <div class="stat-row"><label>Entradas</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Marcaje</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Pases</label><input type="text" placeholder="6-14" value="6-14"></div>
-        <div class="stat-row"><label>Penaltis</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Regate</label><input type="text" placeholder="4-10" value="4-10"></div>
-        <div class="stat-row"><label>Remate</label><input type="text" placeholder="9-15" value="9-15"></div>
-        <div class="stat-row"><label>Saques de esquina</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Saques largos</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Técnica</label><input type="text" placeholder="6-12" value="6-12"></div>
-        <div class="stat-row"><label>Tiros lejanos</label><input type="text" placeholder="3-9" value="3-9"></div>
-        <div class="stat-row"><label>Tiros libres</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Cabeceo</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Centros</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Control</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Entradas</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Marcaje</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Pases</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Penaltis</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Regate</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Remate</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Saques de esquina</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Saques largos</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Técnica</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Tiros lejanos</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Tiros libres</label><input type="text" value="-"></div>
       </div>
 
       <!-- MENTAL -->
       <div>
-        <div class="stat-row"><label>Agresividad</label><input type="text" placeholder="5-13" value="5-13"></div>
-        <div class="stat-row"><label>Anticipación</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Colocación</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Concentración</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Decisiones</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Desmarques</label><input type="text" placeholder="5-11" value="5-11"></div>
-        <div class="stat-row"><label>Determinación</label><input type="text" placeholder="4-10" value="4-10"></div>
-        <div class="stat-row"><label>Juego en equipo</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Liderazgo</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Sacrificio</label><input type="text" placeholder="4-10" value="4-10"></div>
-        <div class="stat-row"><label>Serenidad</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Talento</label><input type="text" placeholder="5-13" value="5-13"></div>
-        <div class="stat-row"><label>Valentía</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Visión</label><input type="text" placeholder="1-9" value="1-9"></div>
+        <div class="stat-row"><label>Agresividad</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Anticipación</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Colocación</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Concentración</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Decisiones</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Desmarques</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Determinación</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Juego en equipo</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Liderazgo</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Sacrificio</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Serenidad</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Talento</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Valentía</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Visión</label><input type="text" value="-"></div>
       </div>
 
-      <!-- FÍSICO -->
+      <!-- FÍSICO (sin Altura, Peso, Estilo, Condición, Ritmo) -->
       <div>
-        <div class="stat-row"><label>Aceleración</label><input type="text" placeholder="12-20" value="12-20"></div>
-        <div class="stat-row"><label>Agilidad</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Alcance de salto</label><input type="text" placeholder="2-10" value="2-10"></div>
-        <div class="stat-row"><label>Equilibrio</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Fuerza</label><input type="text" placeholder="1-7" value="1-7"></div>
-        <div class="stat-row"><label>Recuperación física</label><input type="text" placeholder="-" value="-"></div>
-        <div class="stat-row"><label>Resistencia</label><input type="text" placeholder="8-14" value="8-14"></div>
-        <div class="stat-row"><label>Velocidad</label><input type="text" placeholder="10-18" value="10-18"></div>
-        <div class="stat-row"><label>Altura</label><input type="text" placeholder="181 cm" value="181 cm"></div>
-        <div class="stat-row"><label>Peso</label><input type="text" placeholder="70 kg" value="70 kg"></div>
-        <div class="stat-row"><label>Estilo</label><input type="text" placeholder="Físico" value="Físico"></div>
-        <div class="stat-row"><label>Condición</label><input type="text" placeholder="♥" value="♥"></div>
-        <div class="stat-row"><label>Ritmo</label><input type="text" placeholder="-" value="-"></div>
+        <div class="stat-row"><label>Aceleración</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Agilidad</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Alcance de salto</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Equilibrio</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Fuerza</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Recuperación física</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Resistencia</label><input type="text" value="-"></div>
+        <div class="stat-row"><label>Velocidad</label><input type="text" value="-"></div>
       </div>
     </div>
   </div>
