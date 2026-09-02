@@ -6,7 +6,6 @@
   <title>Selector de Posiciones + Atributos + Entrenamiento</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: #0d0d0d;
@@ -17,15 +16,12 @@
       gap: 30px;
       overflow-x: auto;
     }
-
     .left-side { flex-shrink: 0; }
-
     h1 {
       font-size: 1.3rem;
       margin-bottom: 14px;
       color: #fff;
     }
-
     .pitch-container {
       position: relative;
       width: 280px;
@@ -34,7 +30,6 @@
       border: 1.5px solid #ffffff;
       border-radius: 3px;
     }
-
     .pitch-container::before {
       content: '';
       position: absolute;
@@ -56,7 +51,6 @@
         linear-gradient(#fff, #fff) top 0 left calc(50% + 13%) / 1.5px 6.5% no-repeat,
         linear-gradient(#fff, #fff) top 6.5% left 50% / 26% 1.5px no-repeat;
     }
-
     .position {
       position: absolute;
       width: 18px;
@@ -72,25 +66,21 @@
       align-items: center;
       justify-content: center;
     }
-
     .position:hover {
       transform: translate(-50%, -50%) scale(1.25);
       border-color: #fff;
     }
-
     .position.selected {
       background: #111;
       border: 2.5px solid #f5c518;
       box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.3);
     }
-
     .position.selected::before {
       content: '✓';
       color: #fff;
       font-size: 11px;
       font-weight: bold;
     }
-
     #pos-portero                 { top: 92%; left: 50%; }
     #pos-lateral-derecho         { top: 78%; left: 86%; }
     #pos-defensa-central         { top: 80%; left: 50%; }
@@ -105,7 +95,6 @@
     #pos-mediapunta              { top: 28%; left: 50%; }
     #pos-mediapunta-izquierdo    { top: 30%; left: 14%; }
     #pos-delantero               { top: 12%; left: 50%; }
-
     .stats-panel {
       flex: 1;
       min-width: 680px;
@@ -116,7 +105,6 @@
       overflow-y: auto;
       max-height: calc(100vh - 40px);
     }
-
     .info-row {
       display: flex;
       align-items: center;
@@ -125,10 +113,8 @@
       font-size: 1.05rem;
       flex-wrap: wrap;
     }
-
     .info-row label { color: #ccc; min-width: 70px; }
     .info-row span { color: #f5c518; font-weight: 600; }
-
     .info-row select {
       background: #0d0d0d;
       border: 1px solid #444;
@@ -140,10 +126,8 @@
       outline: none;
       cursor: pointer;
     }
-
     .info-row select:focus { border-color: #f5c518; }
     .info-row select:disabled { opacity: 0.5; cursor: not-allowed; }
-
     .stats-header {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -157,13 +141,11 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-
     .stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 8px 16px;
     }
-
     .stat-row {
       display: flex;
       justify-content: space-between;
@@ -171,9 +153,7 @@
       padding: 4px 0;
       font-size: 0.88rem;
     }
-
     .stat-row label { color: #ccc; flex: 1; }
-
     .stat-row input {
       width: 70px;
       background: #0d0d0d;
@@ -185,15 +165,12 @@
       font-size: 0.85rem;
       outline: none;
     }
-
     .stat-row input:focus { border-color: #4fc3f7; }
-
     .entrenamiento {
       margin-top: 28px;
       padding-top: 16px;
       border-top: 1px solid #333;
     }
-
     .entrenamiento h3 {
       font-size: 1rem;
       color: #aaa;
@@ -201,13 +178,11 @@
       letter-spacing: 0.5px;
       margin-bottom: 12px;
     }
-
     .entrenamiento-list {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px 24px;
     }
-
     .entrenamiento-item {
       display: flex;
       justify-content: space-between;
@@ -215,7 +190,6 @@
       font-size: 0.9rem;
       border-bottom: 1px solid #222;
     }
-
     .entrenamiento-item .name { color: #ccc; }
     .entrenamiento-item .value {
       color: #4fc3f7;
@@ -223,18 +197,15 @@
       min-width: 50px;
       text-align: right;
     }
-
     .entrenamiento-item.lowest {
       background: rgba(245, 197, 24, 0.08);
       border-radius: 4px;
       padding: 5px 8px;
     }
-
     .entrenamiento-item.lowest .value { color: #f5c518; }
   </style>
 </head>
 <body>
-
   <div class="left-side">
     <h1>⚽ Posición</h1>
     <div class="pitch-container" id="pitch">
@@ -254,31 +225,26 @@
       <div class="position" id="pos-delantero" data-name="Delantero"></div>
     </div>
   </div>
-
   <div class="stats-panel">
     <div class="info-row">
       <label>Posición:</label>
       <span id="selected-name">Ninguna</span>
     </div>
-
     <div class="info-row">
       <label>ROL:</label>
       <select id="rol-select" disabled>
         <option value="">-- Selecciona posición --</option>
       </select>
-
       <label style="margin-left: 20px;">TAREA:</label>
       <select id="tarea-select" disabled>
         <option value="">-- Selecciona rol --</option>
       </select>
     </div>
-
     <div class="stats-header">
       <div>Técnico</div>
       <div>Mental</div>
       <div>Físico</div>
     </div>
-
     <div class="stats-grid">
       <!-- TÉCNICO -->
       <div>
@@ -297,7 +263,6 @@
         <div class="stat-row"><label>Tiros lejanos</label><input type="text" data-attr="Tiros lejanos" value="-"></div>
         <div class="stat-row"><label>Tiros libres</label><input type="text" data-attr="Tiros libres" value="-"></div>
       </div>
-
       <!-- MENTAL -->
       <div>
         <div class="stat-row"><label>Agresividad</label><input type="text" data-attr="Agresividad" value="-"></div>
@@ -315,7 +280,6 @@
         <div class="stat-row"><label>Valentía</label><input type="text" data-attr="Valentía" value="-"></div>
         <div class="stat-row"><label>Visión</label><input type="text" data-attr="Visión" value="-"></div>
       </div>
-
       <!-- FÍSICO -->
       <div>
         <div class="stat-row"><label>Aceleración</label><input type="text" data-attr="Aceleración" value="-"></div>
@@ -328,13 +292,11 @@
         <div class="stat-row"><label>Velocidad</label><input type="text" data-attr="Velocidad" value="-"></div>
       </div>
     </div>
-
     <div class="entrenamiento">
       <h3>Entrenamiento</h3>
       <div class="entrenamiento-list" id="entrenamiento-list"></div>
     </div>
   </div>
-
   <script>
     const positions = document.querySelectorAll('.position');
     const selectedName = document.getElementById('selected-name');
@@ -364,13 +326,65 @@
       "Falso nueve": ["Apoyo"]
     };
 
-    // Lista especial solo para Laterales + Carrilero + Apoyo
-    const allowedForCarrileroApoyo = new Set([
-      "Centros", "Control", "Entradas", "Marcaje", "Pases", "Regate", "Técnica",
-      "Anticipación", "Colocación", "Concentración", "Decisiones", "Desmarques",
-      "Juego en equipo", "Sacrificio",
-      "Aceleración", "Agilidad", "Equilibrio", "Resistencia", "Velocidad"
-    ]);
+    // Atributos permitidos por combinación Posición + Rol + Tarea
+    const allowedAttrsByCombo = {
+      // Laterales + Carrilero + Apoyo
+      "Lateral derecho|Carrilero|Apoyo": new Set([
+        "Centros", "Control", "Entradas", "Marcaje", "Pases", "Regate", "Técnica",
+        "Anticipación", "Colocación", "Concentración", "Decisiones", "Desmarques",
+        "Juego en equipo", "Sacrificio",
+        "Aceleración", "Agilidad", "Equilibrio", "Resistencia", "Velocidad"
+      ]),
+      "Lateral izquierdo|Carrilero|Apoyo": new Set([
+        "Centros", "Control", "Entradas", "Marcaje", "Pases", "Regate", "Técnica",
+        "Anticipación", "Colocación", "Concentración", "Decisiones", "Desmarques",
+        "Juego en equipo", "Sacrificio",
+        "Aceleración", "Agilidad", "Equilibrio", "Resistencia", "Velocidad"
+      ]),
+      // Defensa central + Defensa con toque + Defensa
+      "Defensa central|Defensa con toque|Defensa": new Set([
+        "Cabeceo", "Control", "Entradas", "Marcaje", "Pases", "Técnica",
+        "Agresividad", "Anticipación", "Colocación", "Concentración", "Decisiones",
+        "Serenidad", "Valentía", "Visión",
+        "Alcance de salto", "Fuerza", "Velocidad"
+      ]),
+      // Mediocentro + Pivote organizador + Defensa
+      "Mediocentro|Pivote organizador|Defensa": new Set([
+        "Control", "Entradas", "Pases", "Técnica",
+        "Anticipación", "Colocación", "Decisiones", "Juego en equipo", "Serenidad", "Visión",
+        "Equilibrio"
+      ]),
+      // Centrocampista + Centrocampista + Apoyo
+      "Centrocampista|Centrocampista|Apoyo": new Set([
+        "Control", "Entradas", "Pases", "Técnica",
+        "Anticipación", "Concentración", "Decisiones", "Desmarques", "Juego en equipo",
+        "Sacrificio", "Serenidad", "Visión",
+        "Resistencia"
+      ]),
+      // Centrocampista + Organizador adelantado + Ataque
+      "Centrocampista|Organizador adelantado|Ataque": new Set([
+        "Control", "Pases", "Regate", "Técnica",
+        "Anticipación", "Decisiones", "Desmarques", "Juego en equipo", "Serenidad", "Talento", "Visión",
+        "Aceleración", "Agilidad"
+      ]),
+      // Mediapunta izquierdo/derecho + Delantero interior + Apoyo
+      "Mediapunta derecho|Delantero interior|Apoyo": new Set([
+        "Control", "Pases", "Regate", "Remate", "Técnica", "Tiros lejanos",
+        "Anticipación", "Desmarques", "Sacrificio", "Serenidad", "Talento",
+        "Aceleración", "Agilidad", "Equilibrio", "Resistencia", "Velocidad"
+      ]),
+      "Mediapunta izquierdo|Delantero interior|Apoyo": new Set([
+        "Control", "Pases", "Regate", "Remate", "Técnica", "Tiros lejanos",
+        "Anticipación", "Desmarques", "Sacrificio", "Serenidad", "Talento",
+        "Aceleración", "Agilidad", "Equilibrio", "Resistencia", "Velocidad"
+      ]),
+      // Delantero + Falso nueve + Apoyo
+      "Delantero|Falso nueve|Apoyo": new Set([
+        "Control", "Pases", "Regate", "Remate", "Técnica",
+        "Anticipación", "Decisiones", "Desmarques", "Juego en equipo", "Serenidad", "Talento", "Visión",
+        "Aceleración", "Agilidad", "Equilibrio"
+      ])
+    };
 
     const trainingDefs = [
       { name: "Tiros libres",            attrs: ["Tiros libres", "Técnica"],               calc: (v) => v["Tiros libres"] + v["Técnica"] / 2 },
@@ -408,22 +422,25 @@
       return values;
     }
 
-    function isSpecialCase() {
+    function getCurrentAllowedSet() {
       const pos = selectedName.textContent;
       const rol = rolSelect.value;
       const tarea = tareaSelect.value;
-      return (pos === "Lateral derecho" || pos === "Lateral izquierdo") &&
-             rol === "Carrilero" &&
-             tarea === "Apoyo";
+      if (!pos || !rol || !tarea) return null;
+      const key = `${pos}|${rol}|${tarea}`;
+      return allowedAttrsByCombo[key] || null;
     }
 
     function updateEntrenamiento() {
       const values = getAllValues();
-      const special = isSpecialCase();
+      const allowedSet = getCurrentAllowedSet();
+      const isRestricted = allowedSet !== null;
 
       let items = trainingDefs.map(def => {
         const result = def.calc(values);
-        const allAllowed = def.attrs.every(a => allowedForCarrileroApoyo.has(a));
+        const allAllowed = isRestricted
+          ? def.attrs.every(a => allowedSet.has(a))
+          : true;
         return {
           name: def.name,
           value: Math.round(result * 10) / 10,
@@ -431,7 +448,7 @@
         };
       });
 
-      if (special) {
+      if (isRestricted) {
         items = items.filter(i => i.eligible);
         if (items.length === 0) {
           entrenamientoList.innerHTML = `<div class="entrenamiento-item"><span class="name">Ningún entrenamiento compatible</span></div>`;
@@ -442,7 +459,7 @@
       }
 
       entrenamientoList.innerHTML = items.map(i => `
-        <div class="entrenamiento-item ${special ? 'lowest' : ''}">
+        <div class="entrenamiento-item ${isRestricted ? 'lowest' : ''}">
           <span class="name">${i.name}</span>
           <span class="value">${i.value}</span>
         </div>
@@ -457,7 +474,6 @@
     function fillRoles(posName) {
       clearSelect(rolSelect, "-- Selecciona rol --");
       clearSelect(tareaSelect, "-- Selecciona rol --");
-
       const roles = rolesPorPosicion[posName];
       if (roles && roles.length > 0) {
         roles.forEach(rol => {
@@ -467,7 +483,6 @@
           rolSelect.appendChild(opt);
         });
         rolSelect.disabled = false;
-
         // Auto-seleccionar el primero
         rolSelect.value = roles[0];
         fillTareas(roles[0]);
@@ -503,7 +518,6 @@
 
     rolSelect.addEventListener('change', () => fillTareas(rolSelect.value));
     tareaSelect.addEventListener('change', updateEntrenamiento);
-
     document.querySelectorAll('input[data-attr]').forEach(inp => {
       inp.addEventListener('input', updateEntrenamiento);
     });
