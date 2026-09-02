@@ -188,7 +188,6 @@
 
     .stat-row input:focus { border-color: #4fc3f7; }
 
-    /* ===== ENTRENAMIENTO ===== */
     .entrenamiento {
       margin-top: 28px;
       padding-top: 16px;
@@ -330,12 +329,9 @@
       </div>
     </div>
 
-    <!-- ENTRENAMIENTO -->
     <div class="entrenamiento">
       <h3>Entrenamiento</h3>
-      <div class="entrenamiento-list" id="entrenamiento-list">
-        <!-- Se rellena dinámicamente -->
-      </div>
+      <div class="entrenamiento-list" id="entrenamiento-list"></div>
     </div>
   </div>
 
@@ -346,21 +342,12 @@
     const tareaSelect = document.getElementById('tarea-select');
     const entrenamientoList = document.getElementById('entrenamiento-list');
 
-    const rolesLaterales = [
-      "Lateral", "Carrilero", "Lateral práctico",
-      "Carrilero completo", "Carrilero inverso", "Lateral inverso"
-    ];
-
+    // SOLO queda Carrilero - Apoyo para los laterales
+    const rolesLaterales = ["Carrilero"];
     const tareasPorRol = {
-      "Lateral": ["Defensa", "Apoyo", "Ataque", "Automático"],
-      "Carrilero": ["Defensa", "Apoyo", "Ataque", "Automático"],
-      "Lateral práctico": ["Defensa"],
-      "Carrilero completo": ["Apoyo", "Ataque"],
-      "Carrilero inverso": ["Defensa", "Apoyo", "Ataque", "Automático"],
-      "Lateral inverso": ["Defensa"]
+      "Carrilero": ["Apoyo"]
     };
 
-    // Lista de atributos permitidos SOLO para Lateral + Carrilero + Apoyo
     const allowedForCarrileroApoyo = new Set([
       "Centros", "Control", "Entradas", "Marcaje", "Pases", "Regate", "Técnica",
       "Anticipación", "Colocación", "Concentración", "Decisiones", "Desmarques",
@@ -368,7 +355,6 @@
       "Aceleración", "Agilidad", "Equilibrio", "Resistencia", "Velocidad"
     ]);
 
-    // Definición de los cálculos de entrenamiento
     const trainingDefs = [
       { name: "Tiros libres",            attrs: ["Tiros libres", "Técnica"],               calc: (v) => v["Tiros libres"] + v["Técnica"] / 2 },
       { name: "Lanzamientos de córner",  attrs: ["Saques de esquina", "Técnica"],         calc: (v) => v["Saques de esquina"] + v["Técnica"] / 2 },
@@ -423,24 +409,21 @@
         const allAllowed = def.attrs.every(a => allowedForCarrileroApoyo.has(a));
         return {
           name: def.name,
-          value: Math.round(result * 10) / 10, // 1 decimal
+          value: Math.round(result * 10) / 10,
           eligible: allAllowed
         };
       });
 
       if (special) {
-        // Solo los que cumplen 100% de atributos en la lista permitida
         items = items.filter(i => i.eligible);
         if (items.length === 0) {
           entrenamientoList.innerHTML = `<div class="entrenamiento-item"><span class="name">Ningún entrenamiento compatible</span></div>`;
           return;
         }
-        // Encontrar el de menor valor
         const minVal = Math.min(...items.map(i => i.value));
         items = items.filter(i => i.value === minVal);
       }
 
-      // Render
       entrenamientoList.innerHTML = items.map(i => `
         <div class="entrenamiento-item ${special ? 'lowest' : ''}">
           <span class="name">${i.name}</span>
@@ -457,7 +440,9 @@
     function fillRoles(isLateral) {
       clearSelect(rolSelect, "-- Selecciona rol --");
       clearSelect(tareaSelect, "-- Selecciona rol --");
+
       if (isLateral) {
+        // Solo Carrilero
         rolesLaterales.forEach(rol => {
           const opt = document.createElement('option');
           opt.value = rol;
@@ -465,6 +450,10 @@
           rolSelect.appendChild(opt);
         });
         rolSelect.disabled = false;
+
+        // Auto-seleccionar Carrilero y rellenar TAREA
+        rolSelect.value = "Carrilero";
+        fillTareas("Carrilero");
       }
       updateEntrenamiento();
     }
@@ -479,11 +468,15 @@
           tareaSelect.appendChild(opt);
         });
         tareaSelect.disabled = false;
+
+        // Auto-seleccionar Apoyo
+        if (tareasPorRol[rol].includes("Apoyo")) {
+          tareaSelect.value = "Apoyo";
+        }
       }
       updateEntrenamiento();
     }
 
-    // Eventos
     positions.forEach(pos => {
       pos.addEventListener('click', () => {
         positions.forEach(p => p.classList.remove('selected'));
@@ -498,12 +491,10 @@
     rolSelect.addEventListener('change', () => fillTareas(rolSelect.value));
     tareaSelect.addEventListener('change', updateEntrenamiento);
 
-    // Recalcular cuando se cambie cualquier atributo
     document.querySelectorAll('input[data-attr]').forEach(inp => {
       inp.addEventListener('input', updateEntrenamiento);
     });
 
-    // Inicial
     updateEntrenamiento();
   </script>
 </body>
