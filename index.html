@@ -136,7 +136,7 @@
       padding: 6px 10px;
       border-radius: 6px;
       font-size: 0.95rem;
-      min-width: 160px;
+      min-width: 180px;
       outline: none;
       cursor: pointer;
     }
@@ -342,12 +342,29 @@
     const tareaSelect = document.getElementById('tarea-select');
     const entrenamientoList = document.getElementById('entrenamiento-list');
 
-    // SOLO queda Carrilero - Apoyo para los laterales
-    const rolesLaterales = ["Carrilero"];
-    const tareasPorRol = {
-      "Carrilero": ["Apoyo"]
+    // Roles y tareas por posición
+    const rolesPorPosicion = {
+      "Lateral derecho": ["Carrilero"],
+      "Lateral izquierdo": ["Carrilero"],
+      "Defensa central": ["Defensa con toque"],
+      "Mediocentro": ["Pivote organizador"],
+      "Centrocampista": ["Centrocampista", "Organizador adelantado"],
+      "Mediapunta derecho": ["Delantero interior"],
+      "Mediapunta izquierdo": ["Delantero interior"],
+      "Delantero": ["Falso nueve"]
     };
 
+    const tareasPorRol = {
+      "Carrilero": ["Apoyo"],
+      "Defensa con toque": ["Defensa"],
+      "Pivote organizador": ["Defensa"],
+      "Centrocampista": ["Apoyo"],
+      "Organizador adelantado": ["Ataque"],
+      "Delantero interior": ["Apoyo"],
+      "Falso nueve": ["Apoyo"]
+    };
+
+    // Lista especial solo para Laterales + Carrilero + Apoyo
     const allowedForCarrileroApoyo = new Set([
       "Centros", "Control", "Entradas", "Marcaje", "Pases", "Regate", "Técnica",
       "Anticipación", "Colocación", "Concentración", "Decisiones", "Desmarques",
@@ -437,13 +454,13 @@
       select.disabled = true;
     }
 
-    function fillRoles(isLateral) {
+    function fillRoles(posName) {
       clearSelect(rolSelect, "-- Selecciona rol --");
       clearSelect(tareaSelect, "-- Selecciona rol --");
 
-      if (isLateral) {
-        // Solo Carrilero
-        rolesLaterales.forEach(rol => {
+      const roles = rolesPorPosicion[posName];
+      if (roles && roles.length > 0) {
+        roles.forEach(rol => {
           const opt = document.createElement('option');
           opt.value = rol;
           opt.textContent = rol;
@@ -451,9 +468,9 @@
         });
         rolSelect.disabled = false;
 
-        // Auto-seleccionar Carrilero y rellenar TAREA
-        rolSelect.value = "Carrilero";
-        fillTareas("Carrilero");
+        // Auto-seleccionar el primero
+        rolSelect.value = roles[0];
+        fillTareas(roles[0]);
       }
       updateEntrenamiento();
     }
@@ -468,11 +485,8 @@
           tareaSelect.appendChild(opt);
         });
         tareaSelect.disabled = false;
-
-        // Auto-seleccionar Apoyo
-        if (tareasPorRol[rol].includes("Apoyo")) {
-          tareaSelect.value = "Apoyo";
-        }
+        // Auto-seleccionar la primera (o única)
+        tareaSelect.value = tareasPorRol[rol][0];
       }
       updateEntrenamiento();
     }
@@ -483,8 +497,7 @@
         pos.classList.add('selected');
         const name = pos.dataset.name;
         selectedName.textContent = name;
-        const isLateral = (name === "Lateral izquierdo" || name === "Lateral derecho");
-        fillRoles(isLateral);
+        fillRoles(name);
       });
     });
 
